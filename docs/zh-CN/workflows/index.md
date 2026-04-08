@@ -28,16 +28,16 @@ ZCF 通过 MCP + 工作流模板帮助团队标准化开发流程。本章介绍
 
 ### Codex
 
-在 Codex 中使用以下命令（注意 `/prompts:` 前缀）：
-- `/prompts:workflow` - 六阶段工作流
-- `/prompts:git-commit` - Git 提交命令
-- `/prompts:git-rollback` - Git 回滚命令
-- `/prompts:git-cleanBranches` - 清理已合并分支
-- `/prompts:git-worktree` - Git 工作树管理
+在 Codex 中使用以下技能：
+- `$zcf-six-step <任务描述>` - 六阶段工作流
+- `$zcf-git-commit [参数]` - Git 提交命令
+- `$zcf-git-rollback [参数]` - Git 回滚命令
+- `$zcf-git-clean-branches [参数]` - 清理已合并分支
+- `$zcf-git-worktree [参数]` - Git 工作树管理
 
 > ⚠️ **注意**：Codex 目前仅支持六阶段工作流和 Git 工作流。功能开发工作流（feat）、项目初始化（init-project）和 BMad 工作流暂未在 Codex 中提供。
 
-> 💡 **提示**：Codex 使用 `/prompts:` 前缀访问所有工作流命令，这是 Codex 的命令格式规范。
+> 💡 **提示**：Codex 使用 `skills` 机制访问工作流，可先输入 `/skills` 查看已安装技能。
 
 ## 使用建议
 

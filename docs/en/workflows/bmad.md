@@ -34,7 +34,7 @@ Use the following command in Claude Code to initialize BMad workflow:
 
 > ⚠️ **Note**: BMad workflow is currently only available in Claude Code. Codex does not support this workflow yet.
 
-If you need similar enterprise-level agile development processes, you can use `/prompts:workflow` six-stage workflow in Codex to implement similar functionality.
+If you need similar enterprise-level agile development processes, you can use `$zcf-six-step` in Codex as the six-stage workflow alternative.
 
 ## Core Features
 
@@ -293,5 +293,4 @@ May not be suitable for:
 - ⚠️ **One-Time Scripts**: Scripts that don't require continuous maintenance
 
 > 💡 **Tip**: BMad workflow is an important part of ZCF workflow ecosystem, particularly suitable for standardized development of enterprise-level projects. It's recommended to introduce BMad workflow early in the project to gain maximum benefits. Combined with other ZCF workflows and tools, you can build a complete AI-driven development process.
-
 

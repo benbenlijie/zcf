@@ -417,7 +417,7 @@ npx zcf update
 
 # ワークフローディレクトリを確認
 ls -la ~/.claude/workflows/
-ls -la ~/.codex/prompts/
+ls -la ~/.codex/skills/
 ```
 
 ## 関連リソース

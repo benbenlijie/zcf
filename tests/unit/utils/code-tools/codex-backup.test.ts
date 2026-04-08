@@ -196,9 +196,9 @@ describe('codex backup mechanism', () => {
   })
 
   describe('backupCodexPrompts', () => {
-    it('should backup prompts directory to backup directory', async () => {
+    it('should backup workflow skills to backup directory', async () => {
       // Arrange
-      const promptsDir = join(CODEX_DIR, 'prompts')
+      const skillDir = join(CODEX_DIR, 'skills', 'zcf-six-step')
       mockExists.mockReturnValue(true)
 
       // Act
@@ -206,13 +206,13 @@ describe('codex backup mechanism', () => {
       const result = backupCodexPrompts()
 
       // Assert
-      const expectedBackupPath = join(BACKUP_BASE_DIR, 'backup_2024-01-01_14-30-00', 'prompts')
+      const expectedBackupPath = join(BACKUP_BASE_DIR, 'backup_2024-01-01_14-30-00', 'skills')
       expect(result).toBe(expectedBackupPath)
-      expect(mockEnsureDir).toHaveBeenCalled()
-      expect(mockCopyDir).toHaveBeenCalledWith(promptsDir, expectedBackupPath)
+      expect(mockEnsureDir).toHaveBeenCalledWith(expectedBackupPath)
+      expect(mockCopyDir).toHaveBeenCalledWith(skillDir, join(expectedBackupPath, 'zcf-six-step'))
     })
 
-    it('should return null when prompts directory does not exist', async () => {
+    it('should return null when workflow skills do not exist', async () => {
       // Arrange
       mockExists.mockReturnValue(false)
 

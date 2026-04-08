@@ -30,18 +30,18 @@ Use the following command in Claude Code:
 
 ### Codex
 
-Use the following command in Codex (note different prefix):
+Use the following skill invocation in Codex:
 
 ```
-/prompts:workflow <task description>
+$zcf-six-step <task description>
 ```
 
 **Example**:
 ```
-/prompts:workflow Implement user login functionality, supporting email and phone number login
+$zcf-six-step Implement user login functionality, supporting email and phone number login
 ```
 
-> 💡 **Tip**: Codex uses `/prompts:` prefix, while Claude Code uses `/zcf:` prefix.
+> 💡 **Tip**: Codex uses the `skills` mechanism. Type `/skills` first to inspect installed skills, while Claude Code uses `/zcf:` prefix.
 
 ## Six Stages Explained
 
@@ -141,7 +141,7 @@ Use the following command in Codex (note different prefix):
 
 ### Basic Flow
 
-1. **Enter Command**: Enter `/zcf:workflow` or `/prompts:workflow` and describe task
+1. **Enter Command**: Enter `/zcf:workflow` or `$zcf-six-step` and describe task
 2. **Stage Execution**: AI executes six stages in order
 3. **User Confirmation**: Wait for user confirmation after each stage completes
 4. **Continue Next Step**: Enter next stage after user confirmation
@@ -325,5 +325,4 @@ For very complex tasks:
 - [Workflow System](../features/workflows.md) - Detailed workflow information
 
 > 💡 **Tip**: The six-stage workflow is ZCF's core functionality, suitable for most development tasks. It's recommended to start with small tasks to familiarize yourself with the process, then gradually apply to more complex projects. Proper use of stage confirmation mechanism can provide better development experience.
-
 

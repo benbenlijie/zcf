@@ -28,16 +28,16 @@ Use the following commands in Claude Code:
 
 ### Codex
 
-Use the following commands in Codex (note the `/prompts:` prefix):
-- `/prompts:workflow` - Six-stage workflow
-- `/prompts:git-commit` - Git commit command
-- `/prompts:git-rollback` - Git rollback command
-- `/prompts:git-cleanBranches` - Clean merged branches
-- `/prompts:git-worktree` - Git worktree management
+Use the following skills in Codex:
+- `$zcf-six-step <task description>` - Six-stage workflow
+- `$zcf-git-commit [args]` - Git commit command
+- `$zcf-git-rollback [args]` - Git rollback command
+- `$zcf-git-clean-branches [args]` - Clean merged branches
+- `$zcf-git-worktree [args]` - Git worktree management
 
 > ⚠️ **Note**: Codex currently only supports six-stage workflow and Git workflows. Feature development workflow (feat), project initialization (init-project), and BMad workflow are not yet available in Codex.
 
-> 💡 **Tip**: Codex uses `/prompts:` prefix to access all workflow commands, which is Codex's command format specification.
+> 💡 **Tip**: Codex uses the `skills` mechanism for workflows. Type `/skills` to inspect installed skills first.
 
 ## Usage Recommendations
 

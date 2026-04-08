@@ -59,10 +59,11 @@ ZCF creates the following directory structure for Codex:
 ├── config.toml          # Codex main configuration file (TOML format)
 ├── auth.json            # Authentication information
 ├── AGENTS.md            # AI agent configuration and system prompts
-├── prompts/             # Workflow prompt directory
-│   ├── zcf/
-│   │   ├── workflow.md  # Six-stage workflow
-│   │   └── ...
+├── skills/              # Codex skills installed by ZCF
+│   ├── zcf-six-step/
+│   │   └── SKILL.md     # Six-stage workflow
+│   ├── zcf-git-commit/
+│   │   └── SKILL.md
 │   └── ...
 └── backup/              # Configuration backup directory
     └── YYYY-MM-DD_HH-mm-ss/
@@ -74,7 +75,7 @@ ZCF provides a complete backup mechanism:
 
 - **Automatic Backup**: Automatically creates timestamped backups on each configuration modification
 - **Backup Location**: `~/.codex/backup/YYYY-MM-DD_HH-mm-ss/`
-- **Backup Content**: Includes all configuration files, authentication, workflows, prompts
+- **Backup Content**: Includes configuration files, authentication, system prompt, and ZCF-managed workflow skills
 - **Selective Backup**: Supports backing up only specific items (config, auth, API, MCP, etc.)
 
 > 💡 **Restore Configuration**: If you need to restore previous configuration, you can restore corresponding files from the backup directory.
@@ -181,18 +182,19 @@ MCP service configuration is saved in the `[mcp_server]` entries of `~/.codex/co
 
 ## Workflow System
 
-Codex currently supports the following workflow templates (using `/prompts:` prefix):
+Codex currently supports the following workflow templates, invoked via `skills` after installation:
 
 | Workflow | Codex Command | Claude Code Command | Description |
 |--------|-----------|-----------------|------|
-| **Six-Stage Workflow** | `/prompts:workflow` | `/zcf:workflow` | Complete six-stage development process (Research→Ideation→Planning→Execution→Optimization→Review) |
-| **Git Workflow** | `/prompts:git-commit` | `/git-commit` | Smart Git commit |
-| | `/prompts:git-rollback` | `/git-rollback` | Safe rollback |
-| | `/prompts:git-cleanBranches` | `/git-cleanBranches` | Clean merged branches |
-| | `/prompts:git-worktree` | `/git-worktree` | Git worktree management |
+| **Six-Stage Workflow** | `$zcf-six-step <task-description>` | `/zcf:workflow` | Complete six-stage development process (Research→Ideation→Planning→Execution→Optimization→Review) |
+| **Git Workflow** | `$zcf-git-commit [args]` | `/git-commit` | Smart Git commit |
+| | `$zcf-git-rollback [args]` | `/git-rollback` | Safe rollback |
+| | `$zcf-git-clean-branches [args]` | `/git-cleanBranches` | Clean merged branches |
+| | `$zcf-git-worktree [args]` | `/git-worktree` | Git worktree management |
 
 > 💡 **Tip**:
-> - Codex uses `/prompts:` prefix to access workflow commands, which is Codex's command format specification
+> - Type `/skills` first if you want to inspect installed skills
+> - ZCF installs workflows into `~/.codex/skills/zcf-*`, not the legacy `~/.codex/prompts/`
 > - Codex currently only supports six-stage workflow and Git workflows. Feature development workflow (feat), project initialization (init-project), and BMad workflow are not yet available in Codex
 
 ### Differences from Claude Code
@@ -201,10 +203,10 @@ Although Codex and Claude Code share the same MCP services, there are difference
 
 | Workflow Type | Claude Code | Codex |
 |-----------|------------|-------|
-| Six-Stage Workflow | ✅ `/zcf:workflow` | ✅ `/prompts:workflow` |
+| Six-Stage Workflow | ✅ `/zcf:workflow` | ✅ `$zcf-six-step` |
 | Feature Development Workflow | ✅ `/zcf:feat` | ❌ Not yet supported |
 | Project Initialization | ✅ `/init-project` | ❌ Not yet supported |
-| Git Workflow | ✅ `/git-commit` etc. | ✅ `/prompts:git-commit` etc. |
+| Git Workflow | ✅ `/git-commit` etc. | ✅ `$zcf-git-commit` etc. |
 | BMad Workflow | ✅ `/bmad-init` | ❌ Not yet supported |
 
 ### Import Workflows
@@ -220,7 +222,7 @@ npx zcf i -s -T codex --workflows commonTools,sixStepsWorkflow
 npx zcf → Select S (Switch to Codex) → Select 4 (Import Workflows)
 ```
 
-Workflow files are saved in the `~/.codex/prompts/` directory.
+Workflow skills are saved in the `~/.codex/skills/zcf-*` directories.
 
 ## System Prompts and Output Styles
 
@@ -332,5 +334,4 @@ Learn more about Codex related features:
 - 📚 [Workflow Details](../workflows/) - Learn about workflows available in Codex
 - 🔧 [Configuration Management](../advanced/configuration.md) - Deep dive into Codex configuration management
 - 🎯 [MCP Service Integration](mcp.md) - Detailed information about MCP service usage in Codex
-
 

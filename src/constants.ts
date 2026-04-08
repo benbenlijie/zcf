@@ -14,7 +14,22 @@ export const CODEX_DIR = join(homedir(), '.codex')
 export const CODEX_CONFIG_FILE = join(CODEX_DIR, 'config.toml')
 export const CODEX_AUTH_FILE = join(CODEX_DIR, 'auth.json')
 export const CODEX_AGENTS_FILE = join(CODEX_DIR, 'AGENTS.md')
+export const CODEX_SKILLS_DIR = join(CODEX_DIR, 'skills')
 export const CODEX_PROMPTS_DIR = join(CODEX_DIR, 'prompts')
+export const CODEX_ZCF_SKILL_NAMES = [
+  'zcf-six-step',
+  'zcf-git-commit',
+  'zcf-git-rollback',
+  'zcf-git-clean-branches',
+  'zcf-git-worktree',
+] as const
+export const CODEX_LEGACY_WORKFLOW_PROMPT_FILES = [
+  'workflow.md',
+  'git-commit.md',
+  'git-rollback.md',
+  'git-cleanBranches.md',
+  'git-worktree.md',
+] as const
 
 // ZCF configuration paths
 export const ZCF_CONFIG_DIR = join(homedir(), '.ufomiao', 'zcf')

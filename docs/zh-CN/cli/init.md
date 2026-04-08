@@ -417,7 +417,7 @@ npx zcf update
 
 # 检查工作流目录
 ls -la ~/.claude/workflows/
-ls -la ~/.codex/prompts/
+ls -la ~/.codex/skills/
 ```
 
 ## 相关资源

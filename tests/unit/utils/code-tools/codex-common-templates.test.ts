@@ -170,7 +170,7 @@ describe('codex - common templates usage', () => {
       const codex = await import('../../../../src/utils/code-tools/codex')
 
       mockInquirer.default.prompt.mockResolvedValue({
-        workflows: ['/project/templates/common/workflow/zh-CN/git/git-commit.md'],
+        workflows: ['/project/templates/common/workflow/git/zh-CN/git-commit.md'],
       })
 
       const capturedReadPaths: string[] = []
@@ -191,20 +191,24 @@ describe('codex - common templates usage', () => {
       }
     })
 
-    it('should ensure prompts directory exists before writing', async () => {
+    it('should ensure skills directory exists before writing', async () => {
       const codex = await import('../../../../src/utils/code-tools/codex')
 
       mockInquirer.default.prompt.mockResolvedValue({
-        workflows: ['/project/templates/common/workflow/zh-CN/git/git-commit.md'],
+        workflows: ['/project/templates/common/workflow/git/zh-CN/git-commit.md'],
       })
 
       await codex.runCodexWorkflowSelection()
 
-      // Verify ensureDir was called for prompts directory
+      // Verify ensureDir was called for skills directory
       expect(mockFsOperations.ensureDir).toHaveBeenCalled()
       const ensureDirCalls = mockFsOperations.ensureDir.mock.calls
-      const promptsDirCall = ensureDirCalls.some((call: any) => String(call[0]).includes('prompts'))
-      expect(promptsDirCall).toBe(true)
+      const skillsDirCall = ensureDirCalls.some((call: any) => String(call[0]).includes('skills'))
+      expect(skillsDirCall).toBe(true)
+
+      const writeFileCalls = mockFsOperations.writeFile.mock.calls
+      const skillFileCall = writeFileCalls.some((call: any) => String(call[0]).endsWith('SKILL.md'))
+      expect(skillFileCall).toBe(true)
     })
   })
 
@@ -260,7 +264,7 @@ describe('codex - common templates usage', () => {
       const codex = await import('../../../../src/utils/code-tools/codex')
 
       mockInquirer.default.prompt.mockResolvedValue({
-        workflows: ['__GIT_GROUP_SENTINEL__'], // Special marker for git group
+        workflows: ['::gitGroup'],
       })
 
       const capturedReadPaths: string[] = []
@@ -291,8 +295,8 @@ describe('codex - common templates usage', () => {
       // Provide actual git workflow paths instead of sentinel
       mockInquirer.default.prompt.mockResolvedValue({
         workflows: [
-          '/project/templates/common/workflow/zh-CN/git/git-commit.md',
-          '/project/templates/common/workflow/zh-CN/git/git-rollback.md',
+          '/project/templates/common/workflow/git/zh-CN/git-commit.md',
+          '/project/templates/common/workflow/git/zh-CN/git-rollback.md',
         ],
       })
 
@@ -327,9 +331,7 @@ describe('codex - common templates usage', () => {
       })
 
       // Skip-prompt mode with workflows
-      await codex.runCodexWorkflowSelection({
-        workflows: ['Git Workflow'],
-      })
+      await codex.runCodexWorkflowSelection({ skipPrompt: true })
 
       // Should still use common templates
       const commonTemplatePath = capturedPaths.find(p => p.includes('common/workflow'))

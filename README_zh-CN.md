@@ -64,12 +64,160 @@ GLM CODING PLAN 是专为AI编码打造的订阅套餐，每月最低仅需20元
 npx zcf i        # 完整初始化：安装 + 工作流 + API/CCR + MCP
 npx zcf u        # 仅更新工作流
 npx zcf --lang zh-CN  # 切换界面语言示例
+npx zcf i -s -T codex # 非交互完成 Codex 安装
 ```
 
 - 无交互示例（预设提供商）：
 
 ```bash
 npx zcf i -s -p 302ai -k "sk-xxx"
+```
+
+- 本地开发验证请使用仓库内命令，而不是裸 `npx zcf`。
+
+### 本地仓库如何使用
+
+如果你正在这个仓库里改代码，最重要的一点是：
+
+- `npx zcf` 调用的是 npm 上已发布版本，不会自动使用你当前仓库里的本地修改。
+- 想直接运行你本地刚改过的源码，请优先使用 `pnpm dev -- ...`。
+
+#### 1. 首次准备
+
+```bash
+pnpm install
+```
+
+#### 2. 最简单的本地用法
+
+如果你不想记参数，直接打开本地交互式菜单：
+
+```bash
+pnpm dev --
+```
+
+这会直接运行 `src/cli.ts`，也就是你当前仓库里的最新源码。
+
+#### 3. 本地安装 Codex，仍然走交互式流程
+
+如果你只是想明确指定目标是 Codex，但其它选项仍然通过菜单选择：
+
+```bash
+pnpm dev -- i -T codex
+```
+
+这个命令的意思是：
+
+- `pnpm dev --`：运行本地源码入口
+- `i`：执行 `init`，也就是完整初始化
+- `-T codex`：目标工具指定为 Codex
+
+#### 4. 本地非交互安装 Codex
+
+如果你想一次性跑完，适合脚本化或重复验证：
+
+```bash
+pnpm dev -- i -s -T codex -p 302ai -k "sk-xxx"
+```
+
+这个命令的意思是：
+
+- `i`：完整初始化
+- `-s` / `--skip-prompt`：跳过交互式提问
+- `-T codex`：安装目标是 Codex
+- `-p 302ai` / `--provider 302ai`：使用内置提供商预设
+- `-k "sk-xxx"` / `--api-key`：写入 API Key
+
+#### 5. 只想更新 Codex 的 skills / 工作流
+
+当你修改了模板或 Codex 安装逻辑，通常不需要重新走完整初始化，只更新即可：
+
+```bash
+pnpm dev -- u -T codex
+```
+
+#### 6. 想验证打包后的入口
+
+如果你不是要验证源码，而是要验证“发布后用户实际执行的入口”，先构建，再跑打包产物：
+
+```bash
+pnpm build
+pnpm start -- i -T codex
+
+# 或者直接跑打包后的 bin 入口
+node bin/zcf.mjs i -T codex
+```
+
+这里要注意：
+
+- `pnpm start` 和 `node bin/zcf.mjs` 走的是 `dist/cli.mjs`
+- 所以它们只会读取你最近一次 `pnpm build` 生成的内容
+- 如果你刚改了 `src/` 但没重新 build，这两个命令不会体现最新改动
+
+### 常用参数说明
+
+下面这些参数是本地调试 Codex 时最常用的：
+
+| 参数 | 含义 | 常见示例 |
+| --- | --- | --- |
+| `i` / `init` | 完整初始化 | `pnpm dev -- i -T codex` |
+| `u` / `update` | 更新工作流/模板 | `pnpm dev -- u -T codex` |
+| `-T codex` | 指定目标工具为 Codex | `pnpm dev -- i -T codex` |
+| `-s` | 跳过所有交互提问 | `pnpm dev -- i -s -T codex` |
+| `-p <provider>` | 使用提供商预设 | `-p 302ai`、`-p glm` |
+| `-k <key>` | API Key | `-k "sk-xxx"` |
+| `-t <type>` | API 类型 | `-t api_key`、`-t auth_token`、`-t ccr_proxy`、`-t skip` |
+| `-u <url>` | 自定义 API 地址 | `-u "https://api.example.com/v1"` |
+| `-w <list>` | 只安装指定工作流 | `-w sixStepsWorkflow,gitWorkflow` |
+| `-m <list>` | 只安装指定 MCP 服务 | `-m context7,exa` |
+| `-g <lang>` | 一次性设置全部语言参数 | `-g zh-CN` 或 `-g en` |
+| `-l <lang>` | 设置 ZCF 界面语言 | `-l zh-CN` |
+
+### 更简单的使用方法
+
+如果你的目标只是“先用起来”，不需要一次把所有参数记住，可以按下面三档来选：
+
+#### 方案 A：最省心
+
+```bash
+pnpm dev --
+```
+
+适合：
+
+- 正在本地开发
+- 想确保一定走本地源码
+- 不想记参数
+
+#### 方案 B：只指定 Codex，其它都交互选择
+
+```bash
+pnpm dev -- i -T codex
+```
+
+适合：
+
+- 明确要测 Codex
+- 但 provider、MCP、workflow 想现场选
+
+#### 方案 C：完全脚本化
+
+```bash
+pnpm dev -- i -s -T codex -p 302ai -k "sk-xxx"
+```
+
+适合：
+
+- 重复验证安装结果
+- 写 CI / 自动化脚本
+- 快速回归测试
+
+#### 查看完整帮助
+
+```bash
+pnpm dev -- --help
+pnpm dev -- init --help
+pnpm dev -- update --help
 ```
 
 更多用法、参数与工作流说明请查看文档。

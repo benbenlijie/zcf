@@ -152,7 +152,7 @@ ZCF 提供以下预置输出风格：
 
 输出风格的优先级：
 
-1. **项目特定风格**（`.claude/output-style/` 或 `.codex/output-style/`）
+1. **项目特定风格**（`.claude/output-style/`；Codex 当前不使用 `.codex/output-style/`）
 2. **全局默认风格**（`~/.claude/prompts/output-style/` 中的默认设置）
 3. **内置风格**（`default`、`explanatory`、`learning`）
 
@@ -337,8 +337,8 @@ git commit -m "Update output style standards"
 ### 风格文件位置
 
 - **Claude Code**：`~/.claude/prompts/output-style/`
-- **Codex**：`~/.codex/prompts/output-style/`（如果支持）
-- **项目级别**：`.claude/output-style/` 或 `.codex/output-style/`
+- **Codex**：`~/.codex/AGENTS.md`（由 ZCF 写入系统提示）
+- **项目级别**：`.claude/output-style/`（Codex 当前不通过 `.codex/output-style/` 管理输出风格）
 
 ### 风格冲突处理
 

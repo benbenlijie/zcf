@@ -190,7 +190,7 @@ cat ~/.codex/config.toml | grep modelProvider
 ```bash
 # 1. 检查工作流目录
 ls -la ~/.claude/workflows/
-ls -la ~/.codex/prompts/
+ls -la ~/.codex/skills/
 
 # 2. 重新导入工作流
 npx zcf update -w all
@@ -212,7 +212,7 @@ cat ~/.claude/workflows/zcf-workflow/workflow.md
 ```bash
 # 1. 检查工作流文件位置
 # Claude Code: ~/.claude/workflows/
-# Codex: ~/.codex/prompts/
+# Codex: ~/.codex/skills/
 
 # 2. 验证工作流文件格式
 head -20 ~/.claude/workflows/zcf-workflow/workflow.md
@@ -221,7 +221,7 @@ head -20 ~/.claude/workflows/zcf-workflow/workflow.md
 
 # 4. 检查命令前缀
 # Claude Code: /zcf:workflow 或 /workflow
-# Codex: /prompts:workflow
+# Codex: $zcf-six-step
 ```
 
 ### 3. 工作流模板过时
@@ -464,12 +464,15 @@ npx zcf init -T codex -s -p 302ai -k "sk-xxx"
 **解决方案**：
 
 ```bash
-# Codex 使用不同的命令前缀
-# 正确格式：/prompts:workflow
+# Codex 使用 skills 机制
+# 正确格式：$zcf-six-step <任务描述>
 # 错误格式：/zcf:workflow
 
-# 检查工作流文件
-ls -la ~/.codex/prompts/
+# 查看已安装技能
+/skills
+
+# 检查工作流技能
+ls -la ~/.codex/skills/
 
 # 重新导入工作流
 npx zcf update -T codex -g zh-CN

@@ -205,7 +205,7 @@ Spec Workflow can be combined with other ZCF workflows:
 /zcf:feat User comment feature
 ```
 
-In Codex, although Spec Workflow can be used as MCP service, there's no corresponding `/prompts:` command, need to use directly in conversation.
+In Codex, although Spec Workflow can be used as an MCP service, there is no dedicated `$zcf-*` skill for it, so use it directly in conversation.
 
 ## Best Practices
 
@@ -335,5 +335,4 @@ May not be suitable for:
 - ⚠️ **Personal Projects**: Personal projects may not need such detailed requirements documents
 
 > 💡 **Tip**: Spec Workflow is an important part of ZCF workflow ecosystem. It's recommended to introduce it early in the project to gain maximum benefits. Combined with other ZCF workflows and tools, you can build a complete development process.
-
 

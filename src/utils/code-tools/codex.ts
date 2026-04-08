@@ -10,7 +10,7 @@ import { dirname, join } from 'pathe'
 import semver from 'semver'
 import { x } from 'tinyexec'
 // Removed MCP config imports; MCP configuration moved to codex-configure.ts
-import { AI_OUTPUT_LANGUAGES, CODEX_AGENTS_FILE, CODEX_AUTH_FILE, CODEX_CONFIG_FILE, CODEX_DIR, CODEX_PROMPTS_DIR, SUPPORTED_LANGS, ZCF_CONFIG_FILE } from '../../constants'
+import { AI_OUTPUT_LANGUAGES, CODEX_AGENTS_FILE, CODEX_AUTH_FILE, CODEX_CONFIG_FILE, CODEX_DIR, CODEX_SKILLS_DIR, CODEX_ZCF_SKILL_NAMES, SUPPORTED_LANGS, ZCF_CONFIG_FILE } from '../../constants'
 import { ensureI18nInitialized, format, i18n } from '../../i18n'
 import { applyAiLanguageDirective } from '../config'
 import { copyDir, copyFile, ensureDir, exists, readFile, writeFile } from '../fs-operations'
@@ -269,21 +269,200 @@ export function backupCodexAgents(): string | null {
   }
 }
 
-export function backupCodexPrompts(): string | null {
+function getInstalledZcfSkillDirs(): string[] {
+  return CODEX_ZCF_SKILL_NAMES
+    .map(skillName => join(CODEX_SKILLS_DIR, skillName))
+    .filter(skillPath => exists(skillPath))
+}
+
+export function backupCodexSkills(): string | null {
   if (process.env.ZCF_CODEX_SKIP_PROMPT_SINGLE_BACKUP === 'true' && cachedSkipPromptBackup)
     return cachedSkipPromptBackup
-  if (!exists(CODEX_PROMPTS_DIR))
+
+  const installedSkillDirs = getInstalledZcfSkillDirs()
+  if (installedSkillDirs.length === 0)
     return null
 
   try {
     const timestamp = dayjs().format('YYYY-MM-DD_HH-mm-ss')
     const backupDir = createBackupDirectory(timestamp)
-    const backupPath = join(backupDir, 'prompts')
-    copyDir(CODEX_PROMPTS_DIR, backupPath)
+    const backupPath = join(backupDir, 'skills')
+    ensureDir(backupPath)
+
+    for (const skillDir of installedSkillDirs) {
+      const skillName = skillDir.split(/[\\/]/).pop()
+      if (skillName)
+        copyDir(skillDir, join(backupPath, skillName))
+    }
+
     return backupPath
   }
   catch {
     return null
+  }
+}
+
+export function backupCodexPrompts(): string | null {
+  return backupCodexSkills()
+}
+
+interface CodexWorkflowSkill {
+  folderName: string
+  invocation: string
+  defaultArgumentHint: Record<SupportedLang, string>
+}
+
+const CODEX_WORKFLOW_SKILL_MAP: Record<string, CodexWorkflowSkill> = {
+  'workflow.md': {
+    folderName: 'zcf-six-step',
+    invocation: '$zcf-six-step',
+    defaultArgumentHint: {
+      'zh-CN': '<任务描述>',
+      'en': '<task-description>',
+    },
+  },
+  'git-commit.md': {
+    folderName: 'zcf-git-commit',
+    invocation: '$zcf-git-commit',
+    defaultArgumentHint: {
+      'zh-CN': '[--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]',
+      'en': '[--no-verify] [--all] [--amend] [--signoff] [--emoji] [--scope <scope>] [--type <type>]',
+    },
+  },
+  'git-rollback.md': {
+    folderName: 'zcf-git-rollback',
+    invocation: '$zcf-git-rollback',
+    defaultArgumentHint: {
+      'zh-CN': '[--dry-run] [--target <commit>] [--mode <soft|mixed|hard>]',
+      'en': '[--dry-run] [--target <commit>] [--mode <soft|mixed|hard>]',
+    },
+  },
+  'git-cleanBranches.md': {
+    folderName: 'zcf-git-clean-branches',
+    invocation: '$zcf-git-clean-branches',
+    defaultArgumentHint: {
+      'zh-CN': '[--dry-run] [--merged] [--stale] [--base <branch>] [--yes]',
+      'en': '[--dry-run] [--merged] [--stale] [--base <branch>] [--yes]',
+    },
+  },
+  'git-worktree.md': {
+    folderName: 'zcf-git-worktree',
+    invocation: '$zcf-git-worktree',
+    defaultArgumentHint: {
+      'zh-CN': '<子命令或参数>',
+      'en': '<subcommand-or-arguments>',
+    },
+  },
+}
+
+function parseMarkdownFrontmatter(content: string): { frontmatterLines: string[], body: string } {
+  const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
+
+  if (!frontmatterMatch) {
+    return {
+      frontmatterLines: [],
+      body: content.trimStart(),
+    }
+  }
+
+  return {
+    frontmatterLines: frontmatterMatch[1].split(/\r?\n/),
+    body: frontmatterMatch[2].trimStart(),
+  }
+}
+
+function getFrontmatterValue(frontmatterLines: string[], key: string): string | null {
+  const matchedLine = frontmatterLines.find(line => line.trim().startsWith(`${key}:`))
+  if (!matchedLine)
+    return null
+
+  const rawValue = matchedLine.slice(matchedLine.indexOf(':') + 1).trim()
+  return rawValue.replace(/^['"]|['"]$/g, '')
+}
+
+function buildCodexSkillIntro(skill: CodexWorkflowSkill, preferredLang: SupportedLang, argumentHint: string): string {
+  const command = `${skill.invocation} ${argumentHint}`.trim()
+
+  if (preferredLang === 'zh-CN') {
+    return [
+      '## Codex Skill 用法',
+      '',
+      '在 Codex 中显式调用此技能，请输入：',
+      '',
+      '```bash',
+      command,
+      '```',
+      '',
+      '也可以先输入 `/skills` 查看已安装技能。',
+      '如果下文仍出现旧的 slash command 写法，请以这里的 skill 调用方式为准。',
+    ].join('\n')
+  }
+
+  return [
+    '## Codex Skill Usage',
+    '',
+    'To invoke this skill explicitly in Codex, run:',
+    '',
+    '```bash',
+    command,
+    '```',
+    '',
+    'You can also type `/skills` first to inspect installed skills.',
+    'If the original template still mentions slash commands below, treat this skill invocation as the source of truth.',
+  ].join('\n')
+}
+
+function toYamlQuotedString(value: string): string {
+  return JSON.stringify(value)
+}
+
+function renderCodexSkillContent(content: string, workflowPath: string, preferredLang: SupportedLang): { folderName: string, content: string } | null {
+  const filename = workflowPath.split(/[\\/]/).pop() || ''
+  const skill = CODEX_WORKFLOW_SKILL_MAP[filename]
+
+  if (!skill)
+    return null
+
+  const { frontmatterLines, body } = parseMarkdownFrontmatter(content)
+  const description = getFrontmatterValue(frontmatterLines, 'description')
+  const argumentHint = getFrontmatterValue(frontmatterLines, 'argument-hint') || skill.defaultArgumentHint[preferredLang]
+  const resolvedDescription = description || (
+    preferredLang === 'zh-CN'
+      ? 'ZCF 为 Codex 提供的结构化工作流技能'
+      : 'Structured Codex workflow skill provided by ZCF'
+  )
+
+  return {
+    folderName: skill.folderName,
+    content: [
+      '---',
+      `name: ${skill.folderName}`,
+      `description: ${toYamlQuotedString(resolvedDescription)}`,
+      '---',
+      '',
+      buildCodexSkillIntro(skill, preferredLang, argumentHint),
+      '',
+      body,
+    ].join('\n'),
+  }
+}
+
+async function installCodexWorkflowSkills(workflowPaths: string[], preferredLang: SupportedLang): Promise<void> {
+  ensureDir(CODEX_SKILLS_DIR)
+
+  const installedSkillNames = new Set<string>()
+
+  for (const workflowPath of workflowPaths) {
+    const rawContent = readFile(workflowPath)
+    const renderedSkill = renderCodexSkillContent(rawContent, workflowPath, preferredLang)
+
+    if (!renderedSkill || installedSkillNames.has(renderedSkill.folderName))
+      continue
+
+    const skillDir = join(CODEX_SKILLS_DIR, renderedSkill.folderName)
+    ensureDir(skillDir)
+    writeFile(join(skillDir, 'SKILL.md'), renderedSkill.content)
+    installedSkillNames.add(renderedSkill.folderName)
   }
 }
 
@@ -1241,7 +1420,7 @@ export async function runCodexWorkflowSelection(options?: CodexFullInitOptions):
   const zcfConfig = readZcfConfig()
   // Use templateLang with fallback to preferredLang for backward compatibility
   const templateLang = zcfConfig?.templateLang || zcfConfig?.preferredLang || 'en'
-  let preferredLang = templateLang === 'en' ? 'en' : 'zh-CN'
+  let preferredLang: SupportedLang = templateLang === 'en' ? 'en' : 'zh-CN'
 
   // Workflows are now in templates/common/workflow/{category}/{lang}
   const workflowSrc = join(rootDir, 'templates', 'common', 'workflow')
@@ -1262,11 +1441,7 @@ export async function runCodexWorkflowSelection(options?: CodexFullInitOptions):
 
   // Handle skipPrompt mode
   if (skipPrompt) {
-    // Ensure prompts directory exists
-    ensureDir(CODEX_PROMPTS_DIR)
-
-    // Create backup before modifying prompts directory
-    const backupPath = backupCodexPrompts()
+    const backupPath = backupCodexSkills()
     if (backupPath) {
       console.log(ansis.gray(getBackupMessage(backupPath)))
     }
@@ -1286,13 +1461,7 @@ export async function runCodexWorkflowSelection(options?: CodexFullInitOptions):
       workflowsToInstall = expandSelectedWorkflowPaths(allWorkflows.map(w => w.path), workflowSrc, preferredLang)
     }
 
-    // Copy selected workflow files to prompts directory (flattened)
-    for (const workflowPath of workflowsToInstall) {
-      const content = readFile(workflowPath)
-      const filename = workflowPath.split('/').pop() || 'workflow.md'
-      const targetPath = join(CODEX_PROMPTS_DIR, filename)
-      writeFile(targetPath, content)
-    }
+    await installCodexWorkflowSkills(workflowsToInstall, preferredLang)
 
     return
   }
@@ -1312,11 +1481,7 @@ export async function runCodexWorkflowSelection(options?: CodexFullInitOptions):
   if (!workflows || workflows.length === 0)
     return
 
-  // Ensure prompts directory exists
-  ensureDir(CODEX_PROMPTS_DIR)
-
-  // Create backup before modifying prompts directory
-  const backupPath = backupCodexPrompts()
+  const backupPath = backupCodexSkills()
   if (backupPath) {
     console.log(ansis.gray(getBackupMessage(backupPath)))
   }
@@ -1324,19 +1489,13 @@ export async function runCodexWorkflowSelection(options?: CodexFullInitOptions):
   // Expand grouped selections (e.g., Git) to concrete files
   const finalWorkflowPaths = expandSelectedWorkflowPaths(workflows, workflowSrc, preferredLang)
 
-  // Copy selected workflow files to prompts directory (flattened)
-  for (const workflowPath of finalWorkflowPaths) {
-    const content = readFile(workflowPath)
-    const filename = workflowPath.split('/').pop() || 'workflow.md'
-    const targetPath = join(CODEX_PROMPTS_DIR, filename)
-    writeFile(targetPath, content)
-  }
+  await installCodexWorkflowSkills(finalWorkflowPaths, preferredLang)
 }
 
 // Sentinel value for grouped Git workflow option
 const GIT_GROUP_SENTINEL = '::gitGroup'
 
-function getAllWorkflowFiles(workflowSrc: string, preferredLang: string): Array<{ name: string, path: string }> {
+function getAllWorkflowFiles(workflowSrc: string, preferredLang: SupportedLang): Array<{ name: string, path: string }> {
   const workflows: Array<{ name: string, path: string }> = []
 
   // workflowSrc is templates/common/workflow/
@@ -1363,7 +1522,7 @@ function getAllWorkflowFiles(workflowSrc: string, preferredLang: string): Array<
 }
 
 // Expand grouped selections to actual file paths
-function expandSelectedWorkflowPaths(paths: string[], workflowSrc: string, preferredLang: string): string[] {
+function expandSelectedWorkflowPaths(paths: string[], workflowSrc: string, preferredLang: SupportedLang): string[] {
   const expanded: string[] = []
   for (const p of paths) {
     if (p === GIT_GROUP_SENTINEL) {
@@ -1377,7 +1536,7 @@ function expandSelectedWorkflowPaths(paths: string[], workflowSrc: string, prefe
 }
 
 // Resolve actual Git prompt files from templates
-function getGitPromptFiles(workflowSrc: string, preferredLang: string): string[] {
+function getGitPromptFiles(workflowSrc: string, preferredLang: SupportedLang): string[] {
   const gitPromptsDir = join(workflowSrc, 'git', preferredLang)
   const files = [
     'git-commit.md',

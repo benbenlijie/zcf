@@ -10,16 +10,16 @@ Git workflow provides a series of smart Git operation commands to simplify versi
 
 | Command | Claude Code | Codex | Description |
 |------|------------|-------|------|
-| **Smart Commit** | `/git-commit` | `/prompts:git-commit` | Intelligently generate commit messages and split commits |
-| **Safe Rollback** | `/git-rollback` | `/prompts:git-rollback` | Safely rollback to specified commit |
-| **Clean Branches** | `/git-cleanBranches` | `/prompts:git-cleanBranches` | Clean merged branches |
-| **Worktree Management** | `/git-worktree` | `/prompts:git-worktree` | Manage Git Worktree, support create, migrate, delete |
+| **Smart Commit** | `/git-commit` | `$zcf-git-commit` | Intelligently generate commit messages and split commits |
+| **Safe Rollback** | `/git-rollback` | `$zcf-git-rollback` | Safely rollback to specified commit |
+| **Clean Branches** | `/git-cleanBranches` | `$zcf-git-clean-branches` | Clean merged branches |
+| **Worktree Management** | `/git-worktree` | `$zcf-git-worktree` | Manage Git Worktree, support create, migrate, delete |
 
-> 💡 **Tip**: Codex uses `/prompts:` prefix, while Claude Code directly uses `/` prefix.
+> 💡 **Tip**: Codex invokes these Git workflows through `skills`. Type `/skills` to inspect installed skills first, while Claude Code directly uses `/`.
 
 ## Command Details
 
-### `/git-commit` / `/prompts:git-commit`
+### `/git-commit` / `$zcf-git-commit`
 
 Smart Git commit command with features including:
 
@@ -33,10 +33,10 @@ Smart Git commit command with features including:
 ```
 /git-commit
 # Or in Codex:
-/prompts:git-commit
+$zcf-git-commit
 ```
 
-### `/git-rollback` / `/prompts:git-rollback`
+### `/git-rollback` / `$zcf-git-rollback`
 
 Safe rollback command with features including:
 
@@ -50,10 +50,10 @@ Safe rollback command with features including:
 ```
 /git-rollback
 # Or in Codex:
-/prompts:git-rollback
+$zcf-git-rollback
 ```
 
-### `/git-cleanBranches` / `/prompts:git-cleanBranches`
+### `/git-cleanBranches` / `$zcf-git-clean-branches`
 
 Safely clean merged branches with features including:
 
@@ -66,10 +66,10 @@ Safely clean merged branches with features including:
 ```
 /git-cleanBranches
 # Or in Codex:
-/prompts:git-cleanBranches
+$zcf-git-clean-branches
 ```
 
-### `/git-worktree` / `/prompts:git-worktree`
+### `/git-worktree` / `$zcf-git-worktree`
 
 Git worktree management with features including:
 
@@ -82,7 +82,7 @@ Git worktree management with features including:
 ```
 /git-worktree Create new feat/add-i18n and open
 # Or in Codex:
-/prompts:git-worktree Create new feat/add-i18n and open
+$zcf-git-worktree Create new feat/add-i18n and open
 ```
 
 ## Usage Tips
@@ -92,5 +92,4 @@ Git worktree management with features including:
 - After project initialization, it's recommended to run `/init-project` (Claude Code) first to generate project configuration
 
 > ⚠️ **Note**: Project initialization tool (init-project) is only available in Claude Code. Codex does not support it yet.
-
 

@@ -417,7 +417,7 @@ npx zcf update
 
 # Check workflow directories
 ls -la ~/.claude/workflows/
-ls -la ~/.codex/prompts/
+ls -la ~/.codex/skills/
 ```
 
 ## Related Resources
@@ -428,5 +428,4 @@ ls -la ~/.codex/prompts/
 - [MCP Services](../features/mcp.md) - Detailed MCP service information
 
 > 💡 **Tip**: For first-time use, it's recommended to use interactive mode (without `-s` parameter), so you can better understand the meaning of each option. After familiarizing yourself, you can use non-interactive mode to improve efficiency.
-
 

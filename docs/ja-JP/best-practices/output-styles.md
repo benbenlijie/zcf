@@ -138,8 +138,8 @@ cp team-output-styles/team-standards.md ~/.claude/prompts/output-style/
 - ⚠️ **Claude Code 1.0.81 以上**で出力スタイルが利用可能。`npx zcf check-updates` で確認。
 - スタイルファイルの場所  
   - Claude Code: `~/.claude/prompts/output-style/`  
-  - Codex: `~/.codex/prompts/output-style/`  
-  - プロジェクト: `.claude/output-style/` or `.codex/output-style/`
+  - Codex: `~/.codex/AGENTS.md`（ZCF がシステムプロンプトとして管理）  
+  - プロジェクト: `.claude/output-style/`（Codex は現在 `.codex/output-style/` を使用しません）
 - 複数スタイルがある場合、プロジェクトレベルが最優先、次にグローバル、最後に内蔵スタイル。
 
 ## 関連リソース

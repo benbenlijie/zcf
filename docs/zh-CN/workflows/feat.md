@@ -37,7 +37,7 @@ title: 功能开发工作流
 
 > ⚠️ **注意**：功能开发工作流（feat）目前仅在 Claude Code 中提供，Codex 暂不支持此工作流。
 
-如果需要类似功能，可以在 Codex 中使用 `/prompts:workflow` 六阶段工作流来实现功能开发任务。
+如果需要类似功能，可以在 Codex 中使用 `$zcf-six-step` 六阶段工作流来实现功能开发任务。
 
 ## 工作流阶段
 
@@ -250,7 +250,7 @@ title: 功能开发工作流
 
 ```bash
 # Codex 中使用六阶段工作流替代
-/prompts:workflow 实现用户评论功能
+$zcf-six-step 实现用户评论功能
 ```
 
 ### 代理依赖

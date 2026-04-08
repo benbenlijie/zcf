@@ -54,7 +54,9 @@ describe('codexUninstaller', () => {
   const CODEX_CONFIG_FILE = join(CODEX_DIR, 'config.toml')
   const CODEX_AUTH_FILE = join(CODEX_DIR, 'auth.json')
   const CODEX_AGENTS_FILE = join(CODEX_DIR, 'AGENTS.md')
-  const CODEX_PROMPTS_DIR = join(CODEX_DIR, 'prompts')
+  const CODEX_SKILLS_DIR = join(CODEX_DIR, 'skills')
+  const SIX_STEP_SKILL_DIR = join(CODEX_SKILLS_DIR, 'zcf-six-step')
+  const LEGACY_WORKFLOW_FILE = join(CODEX_DIR, 'prompts', 'workflow.md')
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -145,15 +147,20 @@ describe('codexUninstaller', () => {
   })
 
   describe('removeWorkflow', () => {
-    it('should successfully remove workflow directory', async () => {
-      mockPathExists.mockResolvedValue(true as any)
+    it('should successfully remove workflow skills and legacy prompt files', async () => {
+      mockPathExists.mockImplementation(async (targetPath: any) =>
+        targetPath === SIX_STEP_SKILL_DIR || targetPath === LEGACY_WORKFLOW_FILE,
+      )
 
       const result = await uninstaller.removeWorkflow()
 
-      expect(mockPathExists).toHaveBeenCalledWith(CODEX_PROMPTS_DIR)
-      expect(mockMoveToTrash).toHaveBeenCalledWith(CODEX_PROMPTS_DIR)
+      expect(mockPathExists).toHaveBeenCalledWith(SIX_STEP_SKILL_DIR)
+      expect(mockPathExists).toHaveBeenCalledWith(LEGACY_WORKFLOW_FILE)
+      expect(mockMoveToTrash).toHaveBeenCalledWith(SIX_STEP_SKILL_DIR)
+      expect(mockMoveToTrash).toHaveBeenCalledWith(LEGACY_WORKFLOW_FILE)
       expect(result.success).toBe(true)
-      expect(result.removed).toContain('prompts/')
+      expect(result.removed).toContain('skills/zcf-six-step/')
+      expect(result.removed).toContain('prompts/workflow.md')
     })
   })
 

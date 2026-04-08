@@ -190,7 +190,7 @@ cat ~/.codex/config.toml | grep modelProvider
 ```bash
 # 1. Check workflow directories
 ls -la ~/.claude/workflows/
-ls -la ~/.codex/prompts/
+ls -la ~/.codex/skills/
 
 # 2. Reimport workflows
 npx zcf update -w all
@@ -212,7 +212,7 @@ cat ~/.claude/workflows/zcf-workflow/workflow.md
 ```bash
 # 1. Check workflow file locations
 # Claude Code: ~/.claude/workflows/
-# Codex: ~/.codex/prompts/
+# Codex: ~/.codex/skills/
 
 # 2. Verify workflow file format
 head -20 ~/.claude/workflows/zcf-workflow/workflow.md
@@ -221,7 +221,7 @@ head -20 ~/.claude/workflows/zcf-workflow/workflow.md
 
 # 4. Check command prefix
 # Claude Code: /zcf:workflow or /workflow
-# Codex: /prompts:workflow
+# Codex: $zcf-six-step
 ```
 
 ### 3. Workflow Templates Outdated
@@ -464,12 +464,15 @@ npx zcf init -T codex -s -p 302ai -k "sk-xxx"
 **Solutions**:
 
 ```bash
-# Codex uses different command prefix
-# Correct format: /prompts:workflow
+# Codex uses the skills mechanism
+# Correct format: $zcf-six-step <task description>
 # Wrong format: /zcf:workflow
 
-# Check workflow files
-ls -la ~/.codex/prompts/
+# Inspect installed skills
+/skills
+
+# Check workflow skills
+ls -la ~/.codex/skills/
 
 # Reimport workflows
 npx zcf update -T codex -g zh-CN
@@ -790,5 +793,4 @@ cp -r ~/.claude/backup/backup_YYYY-MM-DD_HH-mm-ss/* ~/.claude/
 - **Documentation**: View complete documentation for more information
 
 > 💡 **Tip**: When encountering problems, first check common problems in this document. If the problem persists, please collect relevant information and report it in GitHub Issues.
-
 

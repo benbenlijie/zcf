@@ -16,7 +16,7 @@ vi.mock('../../../../src/i18n', () => ({
         'workflow:workflowOption.gitWorkflow': 'Git 指令 (commit + rollback + cleanBranches + worktree)',
         'codex:systemPromptPrompt': '请选择系统提示词风格',
         'codex:workflowSelectionPrompt': '选择要安装的工作流类型（多选）',
-        'codex:workflowInstall': '✔ 已安装 Codex 工作流模板',
+        'codex:workflowInstall': '✔ 已安装 Codex 工作流技能',
         'codex:updatingWorkflows': '🔄 正在更新 Codex 工作流...',
         'codex:updateSuccess': '✔ Codex 工作流已更新',
         'codex:checkingVersion': '检查版本中...',
@@ -863,7 +863,7 @@ describe('codex code tool utilities', () => {
       expect(fsOps.copyDir).toHaveBeenCalled()
     })
 
-    it('backupCodexPrompts should backup prompts directory', async () => {
+    it('backupCodexPrompts should backup workflow skills', async () => {
       const fsOps = await import('../../../../src/utils/fs-operations')
       vi.mocked(fsOps.exists).mockReturnValue(true)
       vi.mocked(fsOps.copyDir).mockImplementation(() => {})
@@ -872,7 +872,7 @@ describe('codex code tool utilities', () => {
       const codexModule = await import('../../../../src/utils/code-tools/codex')
       const result = codexModule.backupCodexPrompts()
 
-      expect(result).toMatch(/backup.*prompts$/)
+      expect(result).toMatch(/backup.*skills$/)
       expect(fsOps.copyDir).toHaveBeenCalled()
     })
   })
@@ -2046,30 +2046,13 @@ model_provider = ""
       // Assert
       // Should install both sixStep and all git workflows (5 files total)
       expect(writeFileSpy).toHaveBeenCalledTimes(5)
+      const writtenPaths = writeFileSpy.mock.calls.map(call => String(call[0]))
 
-      // Verify sixStep workflow was installed
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('workflow.md'),
-        expect.any(String),
-      )
-
-      // Verify git workflows were installed
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-commit.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-rollback.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-cleanBranches.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-worktree.md'),
-        expect.any(String),
-      )
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-six-step/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-commit/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-rollback/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-clean-branches/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-worktree/SKILL.md')
     })
 
     it('should install only specified workflows when presetWorkflows contains valid names', async () => {
@@ -2088,17 +2071,9 @@ model_provider = ""
       // Assert
       // Should only install sixStep workflow (1 file)
       expect(writeFileSpy).toHaveBeenCalledTimes(1)
-
-      // Verify only sixStep workflow was installed
       expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('workflow.md'),
-        expect.any(String),
-      )
-
-      // Verify git workflows were NOT installed
-      expect(writeFileSpy).not.toHaveBeenCalledWith(
-        expect.stringContaining('git-commit.md'),
-        expect.any(String),
+        '/home/test/.codex/skills/zcf-six-step/SKILL.md',
+        expect.stringContaining('$zcf-six-step'),
       )
     })
 
@@ -2122,11 +2097,9 @@ model_provider = ""
       // Assert
       // Should only install the valid sixStep workflow (1 file)
       expect(writeFileSpy).toHaveBeenCalledTimes(1)
-
-      // Verify only sixStep workflow was installed
       expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('workflow.md'),
-        expect.any(String),
+        '/home/test/.codex/skills/zcf-six-step/SKILL.md',
+        expect.stringContaining('$zcf-six-step'),
       )
     })
 
@@ -2146,30 +2119,33 @@ model_provider = ""
       // Assert
       // Should install all 4 git workflow files
       expect(writeFileSpy).toHaveBeenCalledTimes(4)
+      const writtenPaths = writeFileSpy.mock.calls.map(call => String(call[0]))
 
-      // Verify all git workflows were installed
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-commit.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-rollback.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-cleanBranches.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-worktree.md'),
-        expect.any(String),
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-commit/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-rollback/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-clean-branches/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-worktree/SKILL.md')
+      expect(writtenPaths).not.toContain('/home/test/.codex/skills/zcf-six-step/SKILL.md')
+    })
+
+    it('should generate YAML-safe frontmatter for git skills', async () => {
+      const options = {
+        skipPrompt: true,
+        workflows: ['Git 指令 (commit + rollback + cleanBranches + worktree)'],
+      }
+
+      const writeFileSpy = vi.mocked(fsOps.writeFile)
+
+      await codexModule.runCodexWorkflowSelection(options)
+
+      const gitCommitSkill = writeFileSpy.mock.calls.find(call =>
+        String(call[0]).includes('/home/test/.codex/skills/zcf-git-commit/SKILL.md'),
       )
 
-      // Verify sixStep workflow was NOT installed
-      expect(writeFileSpy).not.toHaveBeenCalledWith(
-        expect.stringContaining('workflow.md'),
-        expect.any(String),
-      )
+      expect(gitCommitSkill).toBeDefined()
+      expect(String(gitCommitSkill?.[1])).toContain('description: "')
+      expect(String(gitCommitSkill?.[1])).not.toContain('allowed-tools:')
+      expect(String(gitCommitSkill?.[1])).not.toContain('argument-hint:')
     })
 
     it('should install multiple workflows when presetWorkflows contains multiple valid names', async () => {
@@ -2191,30 +2167,13 @@ model_provider = ""
       // Assert
       // Should install sixStep (1 file) + git workflows (4 files) = 5 files total
       expect(writeFileSpy).toHaveBeenCalledTimes(5)
+      const writtenPaths = writeFileSpy.mock.calls.map(call => String(call[0]))
 
-      // Verify sixStep workflow was installed
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('workflow.md'),
-        expect.any(String),
-      )
-
-      // Verify all git workflows were installed
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-commit.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-rollback.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-cleanBranches.md'),
-        expect.any(String),
-      )
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        expect.stringContaining('git-worktree.md'),
-        expect.any(String),
-      )
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-six-step/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-commit/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-rollback/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-clean-branches/SKILL.md')
+      expect(writtenPaths).toContain('/home/test/.codex/skills/zcf-git-worktree/SKILL.md')
     })
 
     it('should not install any workflows when all presetWorkflows are invalid', async () => {

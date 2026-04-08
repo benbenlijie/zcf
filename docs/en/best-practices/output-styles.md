@@ -152,7 +152,7 @@ Project-specific styles override global styles but only take effect in that proj
 
 Output style priority:
 
-1. **Project-Specific Style** (`.claude/output-style/` or `.codex/output-style/`)
+1. **Project-Specific Style** (`.claude/output-style/`; Codex does not currently use `.codex/output-style/`)
 2. **Global Default Style** (default settings in `~/.claude/prompts/output-style/`)
 3. **Built-in Style** (`default`, `explanatory`, `learning`)
 
@@ -337,8 +337,8 @@ This style defines our team's development standards and quality standards.
 ### Style File Locations
 
 - **Claude Code**: `~/.claude/prompts/output-style/`
-- **Codex**: `~/.codex/prompts/output-style/` (if supported)
-- **Project Level**: `.claude/output-style/` or `.codex/output-style/`
+- **Codex**: `~/.codex/AGENTS.md` (managed by ZCF as the system prompt)
+- **Project Level**: `.claude/output-style/` (Codex does not currently use `.codex/output-style/` for output styles)
 
 ### Style Conflict Handling
 
@@ -355,5 +355,3 @@ If multiple styles exist simultaneously:
 - [Usage Tips](tips.md) - More practical tips
 
 > 💡 **Tip**: Proper use of output styles can greatly improve code quality and development efficiency. It's recommended to unify output style standards within teams and customize appropriately based on project characteristics. Output styles should be concise and clear, focusing on core standards and key requirements.
-
-

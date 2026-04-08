@@ -294,7 +294,7 @@ npx zcf → Select S (Switch Tool) → Select 1 (Complete Initialization)
 ### Codex Configuration Features
 
 - **Configuration File**: `~/.codex/config.toml` (TOML format)
-- **Workflow Location**: `~/.codex/prompts/`
+- **Workflow Location**: `~/.codex/skills/zcf-*`
 - **System Prompt**: `~/.codex/AGENTS.md`
 - **Shared MCP**: Uses the same MCP service configuration as Claude Code
 
@@ -354,18 +354,18 @@ According to the tool used, try the following commands in the command palette:
 
 **Codex:**
 ```
-/prompts:workflow  # Six-stage development workflow
-/prompts:git-commit    # Git commit command
-/prompts:git-rollback  # Git rollback command
-/prompts:git-cleanBranches  # Clean merged branches
-/prompts:git-worktree  # Git worktree management
+$zcf-six-step <task description>  # Six-stage development workflow
+$zcf-git-commit                   # Git commit command
+$zcf-git-rollback                 # Git rollback command
+$zcf-git-clean-branches           # Clean merged branches
+$zcf-git-worktree                 # Git worktree management
 ```
 
 > ⚠️ **Note**: Codex currently only supports six-stage workflow and Git workflows. Feature development workflow (feat), project initialization (init-project), and BMad workflow are not yet available in Codex.
 
 > ✅ **Success Indicator**: If commands can execute normally and display the workflow interface, the workflow import was successful.
 > 
-> 💡 **Tip**: Codex uses `/prompts:` prefix, while Claude Code uses `/zcf:` or direct `/` prefix.
+> 💡 **Tip**: Codex uses the `skills` mechanism. Type `/skills` first to inspect installed skills, while Claude Code uses `/zcf:` or direct `/` prefix.
 
 ### 3. Verify MCP Services
 
@@ -467,7 +467,7 @@ After entering the CCR management menu, you can choose:
 
 **A**: Check the following locations:
 - Claude Code: `~/.claude/workflows/`
-- Codex: `~/.codex/prompts/`
+- Codex: `~/.codex/skills/zcf-*`
 
 If files don't exist, run `npx zcf update` to re-import.
 

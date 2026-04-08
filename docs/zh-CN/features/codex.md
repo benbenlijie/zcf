@@ -59,10 +59,11 @@ ZCF 为 Codex 创建以下目录结构：
 ├── config.toml          # Codex 主配置文件（TOML 格式）
 ├── auth.json            # 认证信息
 ├── AGENTS.md            # AI 代理配置和系统提示
-├── prompts/             # 工作流提示词目录
-│   ├── zcf/
-│   │   ├── workflow.md  # 六阶段工作流
-│   │   └── ...
+├── skills/              # ZCF 安装的 Codex Skills
+│   ├── zcf-six-step/
+│   │   └── SKILL.md     # 六阶段工作流
+│   ├── zcf-git-commit/
+│   │   └── SKILL.md
 │   └── ...
 └── backup/              # 配置备份目录
     └── YYYY-MM-DD_HH-mm-ss/
@@ -74,7 +75,7 @@ ZCF 提供完整的备份机制：
 
 - **自动备份**：每次配置修改时自动创建时间戳备份
 - **备份位置**：`~/.codex/backup/YYYY-MM-DD_HH-mm-ss/`
-- **备份内容**：包含所有配置文件、授权、工作流、提示词
+- **备份内容**：包含所有配置文件、认证信息、系统提示与 ZCF 安装的 workflow skills
 - **选择性备份**：支持仅备份特定项目（配置、授权、API、MCP 等）
 
 > 💡 **恢复配置**：如果需要恢复之前的配置，可以从备份目录中恢复相应文件。
@@ -181,18 +182,19 @@ MCP 服务配置保存在 `~/.codex/config.toml` 的 `[mcp_server]` 条目中。
 
 ## 工作流系统
 
-Codex 目前支持以下工作流模板（使用 `/prompts:` 前缀）：
+Codex 目前支持以下工作流模板，安装后通过 `skills` 调用：
 
 | 工作流 | Codex 命令 | Claude Code 命令 | 说明 |
 |--------|-----------|-----------------|------|
-| **六阶段工作流** | `/prompts:workflow` | `/zcf:workflow` | 完整的六阶段开发流程（研究→构思→计划→执行→优化→评审） |
-| **Git 工作流** | `/prompts:git-commit` | `/git-commit` | 智能 Git 提交 |
-| | `/prompts:git-rollback` | `/git-rollback` | 安全回滚 |
-| | `/prompts:git-cleanBranches` | `/git-cleanBranches` | 清理已合并分支 |
-| | `/prompts:git-worktree` | `/git-worktree` | Git 工作树管理 |
+| **六阶段工作流** | `$zcf-six-step <任务描述>` | `/zcf:workflow` | 完整的六阶段开发流程（研究→构思→计划→执行→优化→评审） |
+| **Git 工作流** | `$zcf-git-commit [参数]` | `/git-commit` | 智能 Git 提交 |
+| | `$zcf-git-rollback [参数]` | `/git-rollback` | 安全回滚 |
+| | `$zcf-git-clean-branches [参数]` | `/git-cleanBranches` | 清理已合并分支 |
+| | `$zcf-git-worktree [参数]` | `/git-worktree` | Git 工作树管理 |
 
 > 💡 **提示**：
-> - Codex 使用 `/prompts:` 前缀来访问工作流命令，这是 Codex 的命令格式规范
+> - 可以先输入 `/skills` 查看已安装技能
+> - ZCF 会将工作流安装到 `~/.codex/skills/zcf-*`，而不是旧版的 `~/.codex/prompts/`
 > - Codex 目前仅支持六阶段工作流和 Git 工作流，功能开发工作流（feat）、项目初始化（init-project）和 BMad 工作流暂未在 Codex 中提供
 
 ### 与 Claude Code 的差异
@@ -201,10 +203,10 @@ Codex 目前支持以下工作流模板（使用 `/prompts:` 前缀）：
 
 | 工作流类型 | Claude Code | Codex |
 |-----------|------------|-------|
-| 六阶段工作流 | ✅ `/zcf:workflow` | ✅ `/prompts:workflow` |
+| 六阶段工作流 | ✅ `/zcf:workflow` | ✅ `$zcf-six-step` |
 | 功能开发工作流 | ✅ `/zcf:feat` | ❌ 暂不支持 |
 | 项目初始化 | ✅ `/init-project` | ❌ 暂不支持 |
-| Git 工作流 | ✅ `/git-commit` 等 | ✅ `/prompts:git-commit` 等 |
+| Git 工作流 | ✅ `/git-commit` 等 | ✅ `$zcf-git-commit` 等 |
 | BMad 工作流 | ✅ `/bmad-init` | ❌ 暂不支持 |
 
 ### 导入工作流
@@ -220,7 +222,7 @@ npx zcf i -s -T codex --workflows commonTools,sixStepsWorkflow
 npx zcf → 选择 S（切换到 Codex）→ 选择 4（导入工作流）
 ```
 
-工作流文件保存在 `~/.codex/prompts/` 目录中。
+工作流技能保存在 `~/.codex/skills/zcf-*` 目录中。
 
 ## 系统提示与输出风格
 

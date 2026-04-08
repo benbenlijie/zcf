@@ -63,6 +63,7 @@ Get 10% OFF GLM CODING PLAN：https://z.ai/subscribe?ic=8JVLJQFSKB
 npx zcf i        # Full initialization: install + workflows + API/CCR + MCP
 npx zcf u        # Update workflows only
 npx zcf --lang zh-CN  # Switch interface language (example)
+npx zcf i -s -T codex # Non-interactive Codex setup
 ```
 
 - Non-interactive example (provider preset):
@@ -70,6 +71,16 @@ npx zcf --lang zh-CN  # Switch interface language (example)
 ```bash
 npx zcf i -s -p 302ai -k "sk-xxx"
 ```
+
+- For local development validation, use the repo entrypoints instead of bare `npx zcf`:
+
+```bash
+pnpm dev -- i -s -T codex
+pnpm start -- i -s -T codex
+node bin/zcf.mjs i -s -T codex
+```
+
+Bare `npx zcf` resolves the published npm package, so it will not automatically use your local repository changes.
 
 More usage, options, and workflows: see documentation.
 

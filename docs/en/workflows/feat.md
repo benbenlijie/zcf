@@ -37,7 +37,7 @@ Use the following command in Claude Code:
 
 > ⚠️ **Note**: Feature development workflow (feat) is currently only available in Claude Code. Codex does not support this workflow yet.
 
-If you need similar functionality, you can use `/prompts:workflow` six-stage workflow in Codex to implement feature development tasks.
+If you need similar functionality, you can use `$zcf-six-step` in Codex as the six-stage workflow alternative for feature development tasks.
 
 ## Workflow Stages
 
@@ -250,7 +250,7 @@ Feature development workflow is currently only available in Claude Code. If usin
 
 ```bash
 # Use six-stage workflow in Codex as alternative
-/prompts:workflow Implement user comment functionality
+$zcf-six-step Implement user comment functionality
 ```
 
 ### Agent Dependencies
@@ -279,5 +279,4 @@ Planning results output by feature development workflow should:
 - [Workflow System](../features/workflows.md) - Detailed workflow information
 
 > 💡 **Tip**: Feature development workflow is an ideal tool for planning new features. Through structured requirements analysis, solution design, and implementation planning, you can ensure quality and completeness of feature development. It's recommended to use feature development workflow for complete planning before starting coding.
-
 

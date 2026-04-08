@@ -1,7 +1,7 @@
 import type { SupportedLang } from '../../constants'
 import { pathExists } from 'fs-extra'
 import { join } from 'pathe'
-import { CODEX_AGENTS_FILE, CODEX_AUTH_FILE, CODEX_CONFIG_FILE, CODEX_DIR, CODEX_PROMPTS_DIR } from '../../constants'
+import { CODEX_AGENTS_FILE, CODEX_AUTH_FILE, CODEX_CONFIG_FILE, CODEX_DIR, CODEX_LEGACY_WORKFLOW_PROMPT_FILES, CODEX_PROMPTS_DIR, CODEX_SKILLS_DIR, CODEX_ZCF_SKILL_NAMES } from '../../constants'
 import { i18n } from '../../i18n'
 import { moveToTrash } from '../trash'
 
@@ -139,7 +139,7 @@ export class CodexUninstaller {
   }
 
   /**
-   * Remove workflow directory (prompts/)
+   * Remove workflow skills installed by ZCF and legacy prompt files
    */
   async removeWorkflow(): Promise<CodexUninstallResult> {
     const result: CodexUninstallResult = {
@@ -151,12 +151,34 @@ export class CodexUninstaller {
     }
 
     try {
-      if (await pathExists(CODEX_PROMPTS_DIR)) {
-        const trashResult = await moveToTrash(CODEX_PROMPTS_DIR)
+      const workflowTargets = [
+        ...CODEX_ZCF_SKILL_NAMES.map(skillName => ({
+          path: join(CODEX_SKILLS_DIR, skillName),
+          label: `skills/${skillName}/`,
+        })),
+        ...CODEX_LEGACY_WORKFLOW_PROMPT_FILES.map(filename => ({
+          path: join(CODEX_PROMPTS_DIR, filename),
+          label: `prompts/${filename}`,
+        })),
+      ]
+
+      let removedAnything = false
+
+      for (const target of workflowTargets) {
+        if (!(await pathExists(target.path)))
+          continue
+
+        const trashResult = await moveToTrash(target.path)
         if (!trashResult[0]?.success) {
           result.warnings.push(trashResult[0]?.error || 'Failed to move to trash')
+          continue
         }
-        result.removed.push('prompts/')
+
+        result.removed.push(target.label)
+        removedAnything = true
+      }
+
+      if (removedAnything) {
         result.success = true
       }
       else {

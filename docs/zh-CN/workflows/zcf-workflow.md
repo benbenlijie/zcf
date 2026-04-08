@@ -30,18 +30,18 @@ title: ZCF 六阶段工作流
 
 ### Codex
 
-在 Codex 中使用以下命令（注意前缀不同）：
+在 Codex 中使用以下技能调用：
 
 ```
-/prompts:workflow <任务描述>
+$zcf-six-step <任务描述>
 ```
 
 **示例**：
 ```
-/prompts:workflow 实现用户登录功能，支持邮箱和手机号登录
+$zcf-six-step 实现用户登录功能，支持邮箱和手机号登录
 ```
 
-> 💡 **提示**：Codex 使用 `/prompts:` 前缀，而 Claude Code 使用 `/zcf:` 前缀。
+> 💡 **提示**：Codex 使用 `skills` 机制，可先输入 `/skills` 查看已安装技能；Claude Code 使用 `/zcf:` 前缀。
 
 ## 六阶段详解
 
@@ -141,7 +141,7 @@ title: ZCF 六阶段工作流
 
 ### 基本流程
 
-1. **输入命令**：输入 `/zcf:workflow` 或 `/prompts:workflow` 并描述任务
+1. **输入命令**：输入 `/zcf:workflow` 或 `$zcf-six-step` 并描述任务
 2. **阶段执行**：AI 按顺序执行六个阶段
 3. **用户确认**：每个阶段完成后等待用户确认
 4. **继续下一步**：用户确认后进入下一阶段

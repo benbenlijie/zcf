@@ -294,7 +294,7 @@ npx zcf → 选择 S（切换工具）→ 选择 1（完整初始化）
 ### Codex 配置特点
 
 - **配置文件**：`~/.codex/config.toml`（TOML 格式）
-- **工作流位置**：`~/.codex/prompts/`
+- **工作流位置**：`~/.codex/skills/zcf-*`
 - **系统提示**：`~/.codex/AGENTS.md`
 - **共享 MCP**：与 Claude Code 使用相同的 MCP 服务配置
 
@@ -354,18 +354,18 @@ npx zcf --version
 
 **Codex：**
 ```
-/prompts:workflow  # 六阶段开发工作流
-/prompts:git-commit    # Git 提交命令
-/prompts:git-rollback  # Git 回滚命令
-/prompts:git-cleanBranches  # 清理已合并分支
-/prompts:git-worktree  # Git 工作树管理
+$zcf-six-step <任务描述>  # 六阶段开发工作流
+$zcf-git-commit          # Git 提交命令
+$zcf-git-rollback        # Git 回滚命令
+$zcf-git-clean-branches  # 清理已合并分支
+$zcf-git-worktree        # Git 工作树管理
 ```
 
 > ⚠️ **注意**：Codex 目前仅支持六阶段工作流和 Git 工作流，功能开发工作流（feat）、项目初始化（init-project）和 BMad 工作流暂未在 Codex 中提供。
 
 > ✅ **成功标志**：如果命令能够正常执行并显示工作流界面，说明工作流导入成功。
 > 
-> 💡 **提示**：Codex 使用 `/prompts:` 前缀，而 Claude Code 使用 `/zcf:` 或直接 `/` 前缀。
+> 💡 **提示**：Codex 使用 `skills` 机制，可先输入 `/skills` 查看已安装技能；Claude Code 使用 `/zcf:` 或直接 `/` 前缀。
 
 ### 3. 验证 MCP 服务
 
@@ -467,7 +467,7 @@ npx zcf ccr
 
 **A**: 检查以下位置：
 - Claude Code：`~/.claude/workflows/`
-- Codex：`~/.codex/prompts/`
+- Codex：`~/.codex/skills/zcf-*`
 
 如果文件不存在，运行 `npx zcf update` 重新导入。
 

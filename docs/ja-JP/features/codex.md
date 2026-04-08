@@ -55,7 +55,7 @@ npx zcf init -s -T codex -t api_key -k "sk-xxx" -u "https://api.example.com/v1" 
 
 ## ワークフローと MCP
 
-- `~/.codex/prompts/zcf/` に 6 段階ワークフローや Git スマートコマンドを導入  
+- `~/.codex/skills/zcf-*` に 6 段階ワークフローや Git スマートコマンドを導入  
 - MCP も Claude Code と同じ一覧をインストール可能（Context7 / Open Web Search / Spec Workflow など）
 
 ## クリーンアップ
@@ -68,5 +68,5 @@ npx zcf uninstall --mode custom --items codex
 ## ヒント
 
 - Codex 用でも `--all-lang` / `--config-lang` / `--ai-output-lang` を同様に利用可能  
-- 出力スタイルは `~/.codex/prompts/output-style/` （サポートされる場合）で管理  
+- 出力スタイルは `~/.codex/AGENTS.md` にシステムプロンプトとして書き込まれます  
 - 問題が起きたらバックアップから復元し、`npx zcf init -T codex --config-action merge` で再適用してください。
