@@ -10,10 +10,10 @@ title: CCR Proxy Management
 
 ```bash
 # Open CCR management menu
-npx zcf ccr
+npx @benbenwu/zcf ccr
 
 # Or access through main menu
-npx zcf
+npx @benbenwu/zcf
 # Then select R. CCR Management
 ```
 
@@ -59,7 +59,7 @@ Running `zcf ccr` will display the following menu:
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 1
 # Complete configuration according to prompts
 ```
@@ -87,7 +87,7 @@ npx zcf ccr
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 2
 # After service starts, access http://localhost:3456/ui
 ```
@@ -109,7 +109,7 @@ npx zcf ccr
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 3
 ```
 
@@ -124,7 +124,7 @@ npx zcf ccr
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 4
 ```
 
@@ -138,7 +138,7 @@ npx zcf ccr
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 5
 ```
 
@@ -153,7 +153,7 @@ npx zcf ccr
 
 **Example**:
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 6
 ```
 
@@ -270,7 +270,7 @@ CCR supports flexible route rule configuration, which can be set through Web UI 
 ZCF supports multiple CCR provider presets to simplify configuration:
 
 ```bash
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Select 1. Initialize CCR
 # Select provider preset
 ```

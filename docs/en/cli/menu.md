@@ -4,7 +4,7 @@ title: Main Menu
 
 # Main Menu
 
-Running `npx zcf` enters the interactive menu system. The menu is ZCF's core interactive interface, providing visual operation options without needing to remember complex command parameters.
+Running `npx @benbenwu/zcf` enters the interactive menu system. The menu is ZCF's core interactive interface, providing visual operation options without needing to remember complex command parameters.
 
 ## Menu Features
 
@@ -53,7 +53,7 @@ The menu in Codex mode adjusts to Codex corresponding operations:
 The menu supports quick input without confirmation key:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Enter 1 then Enter, directly enter complete initialization
 # Enter R then Enter, directly enter CCR management
 ```
@@ -63,7 +63,7 @@ npx zcf
 If invalid characters are entered, CLI will prompt to re-enter:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Enter X (invalid option)
 # CLI prompts: Invalid option, please re-enter
 ```
@@ -81,7 +81,7 @@ You can quickly navigate in the menu:
 Enter `0` in the main menu to switch CLI language:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Enter 0
 # Select language: zh-CN or en
 # Menu will redisplay after language switch
@@ -92,7 +92,7 @@ npx zcf
 Use `S` to switch between Claude Code and Codex:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Current mode: Claude Code
 # Enter S
 # Switch to: Codex mode
@@ -103,7 +103,7 @@ npx zcf
 
 ### Complete Initialization (Option 1)
 
-Equivalent to running `npx zcf init`, will guide you through:
+Equivalent to running `npx @benbenwu/zcf init`, will guide you through:
 
 - Select code tool type
 - Configure API (official login/API Key/CCR proxy)
@@ -114,7 +114,7 @@ Equivalent to running `npx zcf init`, will guide you through:
 
 ### Import/Update Workflows (Option 2)
 
-Equivalent to running `npx zcf update`, will:
+Equivalent to running `npx @benbenwu/zcf update`, will:
 
 - Update workflow templates
 - Update prompt content
@@ -237,7 +237,7 @@ If you need to customize the menu, you can:
 When using ZCF for the first time, it's recommended to start from the menu:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Select 1 (Complete Initialization)
 # Complete configuration according to prompts
 ```
@@ -248,10 +248,10 @@ In daily use, you can directly use commands or through menu:
 
 ```bash
 # Quick update workflows
-npx zcf update
+npx @benbenwu/zcf update
 
 # Or through menu
-npx zcf
+npx @benbenwu/zcf
 # Select 2
 ```
 
@@ -260,7 +260,7 @@ npx zcf
 When unfamiliar with commands, use menu to explore features:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Browse all available options
 # Try different features
 ```
@@ -287,7 +287,7 @@ node --version  # Requires >= 18
 # Ensure terminal supports ANSI color codes
 
 # 3. Use commands directly
-npx zcf init
+npx @benbenwu/zcf init
 ```
 
 ### Menu Option No Response
@@ -299,10 +299,10 @@ If menu option has no response after selection:
 ls -la ~/.ufomiao/zcf/
 
 # 2. View detailed errors
-npx zcf --verbose
+npx @benbenwu/zcf --verbose
 
 # 3. Reinitialize configuration
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ### Tool Switch Failed
@@ -314,8 +314,8 @@ If `S` option fails to switch tools:
 cat ~/.ufomiao/zcf/config.toml | grep codeToolType
 
 # 2. Manually switch
-npx zcf init -T codex  # Switch to Codex
-npx zcf init -T claude-code  # Switch to Claude Code
+npx @benbenwu/zcf init -T codex  # Switch to Codex
+npx @benbenwu/zcf init -T claude-code  # Switch to Claude Code
 ```
 
 ## Related Resources

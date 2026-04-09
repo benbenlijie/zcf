@@ -6,22 +6,22 @@ title: Version Check
 
 `zcf check-updates` is used to detect and update various components in the ZCF toolchain, including ZCF itself, Claude Code, CCR, CCometixLine, Codex, and other tools.
 
-> **Alias**: `zcf check` provides the same command with a shorter name (`npx zcf check -T cx`).
+> **Alias**: `zcf check` provides the same command with a shorter name (`npx @benbenwu/zcf check -T cx`).
 
 ## Command Format
 
 ```bash
 # Check all tool updates (Claude Code mode)
-npx zcf check
+npx @benbenwu/zcf check
 
 # Check Codex related tool updates
-npx zcf check -T cx
+npx @benbenwu/zcf check -T cx
 
 # Non-interactive mode (auto update, skip confirmation)
-npx zcf check -s
+npx @benbenwu/zcf check -s
 
 # Access through main menu
-npx zcf
+npx @benbenwu/zcf
 # Then select +. Check Updates
 ```
 
@@ -119,7 +119,7 @@ It's recommended to regularly check for updates to get latest features and fixes
 
 ```bash
 # Check once per week
-npx zcf check
+npx @benbenwu/zcf check
 ```
 
 ### Automated Updates
@@ -128,7 +128,7 @@ Use non-interactive mode in CI/CD or automation scripts:
 
 ```bash
 # Automatically update all tools
-npx zcf check -s
+npx @benbenwu/zcf check -s
 ```
 
 ### Targeted Updates
@@ -137,7 +137,7 @@ Only check updates for specific tool types:
 
 ```bash
 # Only check Codex related tools
-npx zcf check -T cx
+npx @benbenwu/zcf check -T cx
 ```
 
 ## Update Strategy
@@ -175,14 +175,14 @@ Common failure reasons:
 - **Permission Issues**: Need sudo permissions (macOS/Linux)
   ```bash
   # Execute with sudo
-  sudo npx zcf check
+  sudo npx @benbenwu/zcf check
   ```
 
 - **Port Occupied**: Service is running and cannot update
   ```bash
   # Stop service first then update
   ccr stop
-  npx zcf check
+  npx @benbenwu/zcf check
   ```
 
 ## Version Compatibility
@@ -241,9 +241,9 @@ codex --version
 
 ```bash
 # Initialize before updating (will backup configuration)
-npx zcf init
+npx @benbenwu/zcf init
 # Or manually use backup functionality
-npx zcf i -s -r backup
+npx @benbenwu/zcf i -s -r backup
 ```
 
 ## Common Questions
@@ -262,7 +262,7 @@ A:
 A: 
 1. Check if tools are correctly installed: `which ccr`
 2. View error logs
-3. Try reinstall: `npx zcf ccr` (for CCR)
+3. Try reinstall: `npx @benbenwu/zcf ccr` (for CCR)
 
 ### Q: How to rollback to old version?
 

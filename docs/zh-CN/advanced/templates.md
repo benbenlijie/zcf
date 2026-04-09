@@ -88,16 +88,16 @@ templates/codex/
 
 ```bash
 # 安装所有输出风格
-npx zcf init -o all
+npx @benbenwu/zcf init -o all
 
 # 安装特定风格
-npx zcf init -o engineer-professional,nekomata-engineer
+npx @benbenwu/zcf init -o engineer-professional,nekomata-engineer
 
 # 设置默认输出风格
-npx zcf init -o all -d engineer-professional
+npx @benbenwu/zcf init -o all -d engineer-professional
 
 # 跳过输出风格安装
-npx zcf init -o skip
+npx @benbenwu/zcf init -o skip
 ```
 
 ### 切换输出风格
@@ -193,13 +193,13 @@ git commit -m "Add custom output style"
 
 ```bash
 # 安装所有工作流
-npx zcf init -w all
+npx @benbenwu/zcf init -w all
 
 # 安装特定工作流
-npx zcf init -w sixStepsWorkflow,gitWorkflow
+npx @benbenwu/zcf init -w sixStepsWorkflow,gitWorkflow
 
 # 跳过工作流安装
-npx zcf init -w skip
+npx @benbenwu/zcf init -w skip
 ```
 
 ### 自定义工作流
@@ -221,7 +221,7 @@ npm link
 2. **在初始化时使用**：
 ```bash
 # 使用自定义模板目录初始化
-npx zcf init -w custom
+npx @benbenwu/zcf init -w custom
 ```
 
 3. **团队发布自定义模板**：
@@ -276,7 +276,7 @@ npm publish @your-org/zcf-templates
 3. **定期更新**：
 ```bash
 # 更新模板和提示词
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 ```
 
 ## 模板语言支持
@@ -301,13 +301,13 @@ ZCF 支持两种语言的模板：
 
 ```bash
 # 使用中文模板初始化
-npx zcf init -c zh-CN
+npx @benbenwu/zcf init -c zh-CN
 
 # 使用英文模板初始化
-npx zcf init -c en
+npx @benbenwu/zcf init -c en
 
 # 更新时切换语言
-npx zcf update -c en
+npx @benbenwu/zcf update -c en
 ```
 
 ## 模板更新策略
@@ -316,9 +316,9 @@ npx zcf update -c en
 
 | 方式 | 命令 | 说明 |
 |------|------|------|
-| **完整更新** | `npx zcf update` | 更新所有模板 |
-| **仅更新文档** | `npx zcf init --config-action docs-only` | 仅更新提示词和文档 |
-| **合并更新** | `npx zcf init --config-action merge` | 合并新模板到现有配置 |
+| **完整更新** | `npx @benbenwu/zcf update` | 更新所有模板 |
+| **仅更新文档** | `npx @benbenwu/zcf init --config-action docs-only` | 仅更新提示词和文档 |
+| **合并更新** | `npx @benbenwu/zcf init --config-action merge` | 合并新模板到现有配置 |
 
 ### 保留自定义内容
 
@@ -384,7 +384,7 @@ cp -r team-* ~/.claude/workflows/
 
 ```bash
 # 重新安装模板
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 
 # 检查模板目录
 ls -la ~/.claude/workflows/
@@ -409,10 +409,10 @@ git checkout HEAD -- ~/.claude/workflows/custom/
 
 ```bash
 # 重新初始化并指定语言
-npx zcf init --config-action backup -c zh-CN
+npx @benbenwu/zcf init --config-action backup -c zh-CN
 
 # 或仅更新模板语言
-npx zcf update -c zh-CN
+npx @benbenwu/zcf update -c zh-CN
 ```
 
 ## 相关资源

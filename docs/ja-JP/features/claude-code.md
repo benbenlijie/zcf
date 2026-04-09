@@ -4,7 +4,7 @@ title: Claude Code 設定
 
 # Claude Code 設定
 
-`npx zcf init` だけで Claude Code の環境構築・ワークフロー導入・出力スタイル設定まで一括で完了します。
+`npx @benbenwu/zcf init` だけで Claude Code の環境構築・ワークフロー導入・出力スタイル設定まで一括で完了します。
 
 ## コア機能
 
@@ -55,8 +55,8 @@ title: Claude Code 設定
 
 - **公式ログイン**：最小手順で利用開始  
 - **API Key**：`-t api_key -k <key> -u <baseUrl> -M <model>` 形式  
-- **CCR プロキシ**：`npx zcf ccr start` でルーターを起動し、`settings.json` に自動設定
-- モデルデフォルト：`npx zcf init --model-id claude-sonnet-4-5 --fallback-model-id claude-haiku-4-5`
+- **CCR プロキシ**：`npx @benbenwu/zcf ccr start` でルーターを起動し、`settings.json` に自動設定
+- モデルデフォルト：`npx @benbenwu/zcf init --model-id claude-sonnet-4-5 --fallback-model-id claude-haiku-4-5`
 
 ## ワークフロー・テンプレート
 
@@ -67,27 +67,27 @@ title: Claude Code 設定
 ## 出力スタイルと AI メモリ
 
 - `~/.claude/prompts/output-style/` に複数スタイルを同梱。`/output-style engineer-professional` などで切替。
-- AI メモリ（グローバル指示）は `~/.claude/CLAUDE.md` に保存。`npx zcf` → 6 で編集可能。
+- AI メモリ（グローバル指示）は `~/.claude/CLAUDE.md` に保存。`npx @benbenwu/zcf` → 6 で編集可能。
 
 ## MCP サービス
 
-Context7 / Open Web Search / Spec Workflow / DeepWiki / Playwright / Exa / Serena をプリセット。`npx zcf` → 4 で選択導入。API Key が必要なサービスは環境変数を案内します。
+Context7 / Open Web Search / Spec Workflow / DeepWiki / Playwright / Exa / Serena をプリセット。`npx @benbenwu/zcf` → 4 で選択導入。API Key が必要なサービスは環境変数を案内します。
 
 ## ツール連携
 
-- **CCometixLine**：ステータスバーを `npx zcf` → L でインストール/更新  
-- **ccusage (ccu)**：利用状況を `npx zcf ccu` で確認  
-- **config-switch**：`npx zcf config-switch work` で複数設定を切替
+- **CCometixLine**：ステータスバーを `npx @benbenwu/zcf` → L でインストール/更新  
+- **ccusage (ccu)**：利用状況を `npx @benbenwu/zcf ccu` で確認  
+- **config-switch**：`npx @benbenwu/zcf config-switch work` で複数設定を切替
 
 ## よくある操作
 
 ```bash
 # 公式ログイン + 全ワークフロー/スタイル導入
-npx zcf init
+npx @benbenwu/zcf init
 
 # API Key + MCP 全部導入
-npx zcf init -s -t api_key -k "sk-xxx" -u "https://api.302.ai/v1" --mcp-services all
+npx @benbenwu/zcf init -s -t api_key -k "sk-xxx" -u "https://api.302.ai/v1" --mcp-services all
 
 # プロキシ CCR で利用
-npx zcf init -s -t ccr && npx zcf ccr start
+npx @benbenwu/zcf init -s -t ccr && npx @benbenwu/zcf ccr start
 ```

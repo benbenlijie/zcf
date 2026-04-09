@@ -227,11 +227,11 @@ Use different API configurations in different Worktrees:
 
 ```bash
 # Main branch uses GLM provider configuration
-npx zcf config-switch glm-provider
+npx @benbenwu/zcf config-switch glm-provider
 
 # Worktree uses 302.AI provider configuration
 cd ../.zcf/project-name/feat/test
-npx zcf config-switch 302ai-provider
+npx @benbenwu/zcf config-switch 302ai-provider
 ```
 
 ### 5. Project Progress Documents

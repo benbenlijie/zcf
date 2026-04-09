@@ -22,13 +22,13 @@ title: zcf update
 
 ```bash
 # 保存された設定を使用して更新
-npx zcf update
+npx @benbenwu/zcf update
 
 # または省略形を使用
-npx zcf u
+npx @benbenwu/zcf u
 
 # またはメインメニューから
-npx zcf
+npx @benbenwu/zcf
 # 次に 2 (ワークフローをインポート) を選択
 ```
 
@@ -43,19 +43,19 @@ npx zcf
 
 ```bash
 # デフォルト言語設定を使用して更新
-npx zcf u -s
+npx @benbenwu/zcf u -s
 
 # テンプレート言語を指定
-npx zcf u -s -c zh-CN
+npx @benbenwu/zcf u -s -c zh-CN
 
 # AI 出力言語を指定
-npx zcf u -s -a zh-CN
+npx @benbenwu/zcf u -s -a zh-CN
 
 # テンプレートと出力言語を同時に指定
-npx zcf u -s -g zh-CN
+npx @benbenwu/zcf u -s -g zh-CN
 
 # コードツールタイプを指定
-npx zcf u -s -T codex
+npx @benbenwu/zcf u -s -T codex
 ```
 
 ## よく使うパラメータ
@@ -76,7 +76,7 @@ npx zcf u -s -T codex
 
 ```bash
 # 最新のワークフローテンプレートを取得するために定期的に実行
-npx zcf u
+npx @benbenwu/zcf u
 
 # 週に1回更新（推奨）
 # cron タスクまたは CI/CD プロセスに追加できます
@@ -86,27 +86,27 @@ npx zcf u
 
 ```bash
 # Claude Code ワークフローを更新
-npx zcf u -T claude-code -c zh-CN
+npx @benbenwu/zcf u -T claude-code -c zh-CN
 
 # Codex ワークフローを更新
-npx zcf u -T codex -c zh-CN
+npx @benbenwu/zcf u -T codex -c zh-CN
 ```
 
 ### シナリオ 3：言語設定を同期
 
 ```bash
 # すべての言語設定を中国語に切替
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # テンプレートは中国語、AI 出力は英語
-npx zcf u -c zh-CN -a en
+npx @benbenwu/zcf u -c zh-CN -a en
 ```
 
 ### シナリオ 4：自動化更新
 
 ```bash
 # 非対話式更新（スクリプトに適している）
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## 実行フロー
@@ -200,10 +200,10 @@ npx zcf u -s -g zh-CN -T claude-code
 
 ```bash
 # 週に1回更新
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # または cron タスクに追加
-0 0 * * 0 /usr/local/bin/npx zcf u -s -g zh-CN
+0 0 * * 0 /usr/local/bin/npx @benbenwu/zcf u -s -g zh-CN
 ```
 
 ### 2. 更新前の確認
@@ -236,7 +236,7 @@ ls -la ~/.claude/backup/
 
 ```bash
 # チーム統一の更新コマンド
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## トラブルシューティング
@@ -263,7 +263,7 @@ mkdir -p ~/.claude/backup ~/.codex/backup
 
 ```bash
 # ワークフローを強制的に再インストール
-npx zcf init --config-action new -w all
+npx @benbenwu/zcf init --config-action new -w all
 
 # または手動でワークフローディレクトリを確認
 ls -la ~/.claude/workflows/
@@ -275,7 +275,7 @@ ls -la ~/.claude/workflows/
 
 1. **Claude Code がインストールされていることを確認**：`claude-code` コマンドが利用可能か確認
 2. **手動でバージョンを確認**：`claude-code --version` を使用
-3. **check-updates コマンドを使用**：`npx zcf check-updates` を実行
+3. **check-updates コマンドを使用**：`npx @benbenwu/zcf check-updates` を実行
 
 ## init との違い
 

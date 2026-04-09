@@ -6,24 +6,24 @@ title: Config Switch
 
 `zcf config-switch` is used to quickly switch between multiple API configurations, suitable for users who use different API providers for different projects.
 
-> **Alias**: `zcf cs` provides the same functionality, so any example can be shortened (for example `npx zcf cs --list`).
+> **Alias**: `zcf cs` provides the same functionality, so any example can be shortened (for example `npx @benbenwu/zcf cs --list`).
 
 ## Command Format
 
 ```bash
 # Interactive switch (recommended)
-npx zcf cs
+npx @benbenwu/zcf cs
 
 # List all available configurations
-npx zcf cs --list
+npx @benbenwu/zcf cs --list
 
 # Directly switch to specified configuration (Claude Code)
-npx zcf cs provider1
+npx @benbenwu/zcf cs provider1
 
 # Specify tool type (Supports short alias -T cc/cx)
-npx zcf cs --list -T cc      # List Claude Code configs
-npx zcf cs --list -T cx      # List Codex configs
-npx zcf cs provider1 -T cx   # Switch Codex config
+npx @benbenwu/zcf cs --list -T cc      # List Claude Code configs
+npx @benbenwu/zcf cs --list -T cx      # List Codex configs
+npx @benbenwu/zcf cs provider1 -T cx   # Switch Codex config
 ```
 
 ## Parameter Descriptions
@@ -67,7 +67,7 @@ Supports switching Codex model providers:
 The most common method, select configuration through interactive menu:
 
 ```bash
-npx zcf cs
+npx @benbenwu/zcf cs
 ```
 
 **Claude Code Interactive Interface**:
@@ -95,10 +95,10 @@ View all currently available configurations:
 
 ```bash
 # Claude Code configurations
-npx zcf cs --list -T cc
+npx @benbenwu/zcf cs --list -T cc
 
 # Codex configurations
-npx zcf cs --list -T cx
+npx @benbenwu/zcf cs --list -T cx
 ```
 
 **Output Example**:
@@ -117,10 +117,10 @@ If you know the configuration name, you can switch directly:
 
 ```bash
 # Switch to specified Profile (using provider English name)
-npx zcf cs glm-provider
+npx @benbenwu/zcf cs glm-provider
 
 # Codex switch provider
-npx zcf cs glm-provider -T cx
+npx @benbenwu/zcf cs glm-provider -T cx
 ```
 
 **Supported Matching Methods**:
@@ -135,7 +135,7 @@ Create multiple API configurations during initialization:
 
 ```bash
 # Use multi-configuration parameters
-npx zcf init --api-configs '[
+npx @benbenwu/zcf init --api-configs '[
   {
     "name": "GLM Provider",
     "provider": "glm",
@@ -189,33 +189,33 @@ After switching configuration:
 
 ```bash
 # Project A uses GLM
-npx zcf cs glm-provider
+npx @benbenwu/zcf cs glm-provider
 
 # Project B uses 302.AI
-npx zcf cs 302ai-provider
+npx @benbenwu/zcf cs 302ai-provider
 
 # Project C uses MiniMax
-npx zcf cs minimax-provider
+npx @benbenwu/zcf cs minimax-provider
 ```
 
 ### 2. Test New Configuration
 
 ```bash
 # Switch to test configuration
-npx zcf cs kimi-provider
+npx @benbenwu/zcf cs kimi-provider
 
 # Switch back after testing
-npx zcf cs glm-provider
+npx @benbenwu/zcf cs glm-provider
 ```
 
 ### 3. Switch Codex Provider
 
 ```bash
 # List Codex providers
-npx zcf cs -T cx --list
+npx @benbenwu/zcf cs -T cx --list
 
 # Switch to specified provider
-npx zcf cs glm-provider -T cx
+npx @benbenwu/zcf cs glm-provider -T cx
 ```
 
 ## Best Practices
@@ -238,14 +238,14 @@ Use different configurations in different Worktrees:
 
 ```bash
 # Main branch uses GLM configuration
-npx zcf cs glm-provider
+npx @benbenwu/zcf cs glm-provider
 
 # Create feature branch Worktree
 /git-worktree add feat/new-feature -o
 
 # Switch configuration in feature branch
 cd ../.zcf/project-name/feat/new-feature
-npx zcf cs 302ai-provider
+npx @benbenwu/zcf cs 302ai-provider
 ```
 
 ## Common Questions
@@ -261,7 +261,7 @@ A:
 
 A: You can manage configurations through the ZCF Main Menu:
 
-1. Run `npx zcf` to enter the main menu
+1. Run `npx @benbenwu/zcf` to enter the main menu
 2. Select **"3. API Config"**
 3. Select **"Custom API Config"**
 

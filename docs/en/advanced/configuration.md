@@ -86,10 +86,10 @@ In non-interactive mode (`--skip-prompt`), ZCF will automatically apply default 
 
 ```bash
 # Specify configuration handling strategy
-npx zcf init -s --config-action merge
+npx @benbenwu/zcf init -s --config-action merge
 
 # Only update documents
-npx zcf init -s --config-action docs-only
+npx @benbenwu/zcf init -s --config-action docs-only
 ```
 
 ### Merge Strategy Details
@@ -120,7 +120,7 @@ When configuring API settings, you can specify each model individually:
 
 ```bash
 # Configure all four models
-npx zcf i -s \
+npx @benbenwu/zcf i -s \
   --api-key "sk-xxx" \
   --api-model "claude-sonnet-4-5" \
   --api-haiku-model "claude-haiku-4-5" \
@@ -201,7 +201,7 @@ The `applyAiLanguageDirective` function will write corresponding language direct
 Using `custom` option allows input of custom language directives:
 
 ```bash
-npx zcf init --ai-output-lang custom
+npx @benbenwu/zcf init --ai-output-lang custom
 # Enter: Reply in Japanese, maintain professional and polite tone
 ```
 
@@ -233,10 +233,10 @@ Template language and AI output language are independent of each other and can b
 
 ```bash
 # Chinese templates + English output (suitable for projects requiring English code comments)
-npx zcf init --config-lang zh-CN --ai-output-lang en
+npx @benbenwu/zcf init --config-lang zh-CN --ai-output-lang en
 
 # English templates + Chinese output (suitable for international teams)
-npx zcf init --config-lang en --ai-output-lang zh-CN
+npx @benbenwu/zcf init --config-lang en --ai-output-lang zh-CN
 ```
 
 ### Template Language Effects
@@ -283,7 +283,7 @@ git add ~/.claude/
 git commit -m "Before update"
 
 # Execute update
-npx zcf update
+npx @benbenwu/zcf update
 
 # View differences
 git diff ~/.claude/
@@ -369,7 +369,7 @@ If upgrading from old version of ZCF:
 
 ```bash
 # ZCF will automatically detect and migrate configuration
-npx zcf init
+npx @benbenwu/zcf init
 
 # Or manually check migration
 cat ~/.ufomiao/zcf/config.toml
@@ -385,7 +385,7 @@ Migrate from Claude Code to Codex:
 cp -r ~/.claude ~/.claude.backup
 
 # 2. Initialize Codex
-npx zcf init -T codex
+npx @benbenwu/zcf init -T codex
 
 # 3. Manually migrate workflows and templates (if needed)
 # Note: Template formats for Claude Code and Codex may differ
@@ -399,14 +399,14 @@ If you encounter configuration conflicts:
 
 ```bash
 # 1. View conflict details
-npx zcf init
+npx @benbenwu/zcf init
 # View conflict prompts when selecting merge strategy
 
 # 2. Manually merge configuration
 # Edit configuration file, manually merge conflicting items
 
 # 3. Use backup strategy to start over
-npx zcf init --config-action backup
+npx @benbenwu/zcf init --config-action backup
 ```
 
 ### Configuration Lost
@@ -421,7 +421,7 @@ ls -lt ~/.claude/backup/ | head -5
 cp -r ~/.claude/backup/backup_latest_timestamp/* ~/.claude/
 
 # 3. Reinitialize (if backup unavailable)
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ### Configuration File Corrupted
@@ -436,7 +436,7 @@ cat ~/.claude/settings.json | jq .
 cp ~/.claude/backup/backup_*/settings.json ~/.claude/
 
 # 3. Or reinitialize
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ## Related Resources

@@ -109,26 +109,26 @@ ZCF provides both direct commands and an interactive menu system with advanced i
 
 ```bash
 # Interactive menu (recommended)
-npx zcf                    # Opens main menu with all options
+npx @benbenwu/zcf                    # Opens main menu with all options
 
 # Direct commands
-npx zcf i                  # Full initialization
-npx zcf u                  # Update workflows only
-npx zcf ccr [--lang <en|zh-CN>]  # Claude Code Router management
-npx zcf ccu [args...]      # Run ccusage with arguments
-npx zcf check-updates [--lang <en|zh-CN>] [--code-type <claude-code|codex>]  # Check tool updates
-npx zcf config-switch [target] [--code-type <claude-code|codex>]  # Switch configurations
-npx zcf uninstall [--mode <complete|custom|interactive>] [--items <items>] [--lang <en|zh-CN>]  # ZCF uninstallation
+npx @benbenwu/zcf i                  # Full initialization
+npx @benbenwu/zcf u                  # Update workflows only
+npx @benbenwu/zcf ccr [--lang <en|zh-CN>]  # Claude Code Router management
+npx @benbenwu/zcf ccu [args...]      # Run ccusage with arguments
+npx @benbenwu/zcf check-updates [--lang <en|zh-CN>] [--code-type <claude-code|codex>]  # Check tool updates
+npx @benbenwu/zcf config-switch [target] [--code-type <claude-code|codex>]  # Switch configurations
+npx @benbenwu/zcf uninstall [--mode <complete|custom|interactive>] [--items <items>] [--lang <en|zh-CN>]  # ZCF uninstallation
 
 # Config switch examples
-npx zcf config-switch --list                    # List available configurations
-npx zcf config-switch provider1 --code-type codex  # Switch Codex provider
-npx zcf config-switch config1 --code-type claude-code  # Switch Claude Code config
+npx @benbenwu/zcf config-switch --list                    # List available configurations
+npx @benbenwu/zcf config-switch provider1 --code-type codex  # Switch Codex provider
+npx @benbenwu/zcf config-switch config1 --code-type claude-code  # Switch Claude Code config
 
 # Uninstall examples
-npx zcf uninstall                                    # Interactive uninstall menu
-npx zcf uninstall --mode complete                    # Complete uninstallation
-npx zcf uninstall --mode custom --items ccr,backups # Custom uninstallation
+npx @benbenwu/zcf uninstall                                    # Interactive uninstall menu
+npx @benbenwu/zcf uninstall --mode complete                    # Complete uninstallation
+npx @benbenwu/zcf uninstall --mode custom --items ccr,backups # Custom uninstallation
 ```
 
 ## Running and Development

@@ -22,10 +22,10 @@ title: 卸载与清理
 
 ```bash
 # 打开交互式卸载菜单
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 
 # 或通过主菜单
-npx zcf
+npx @benbenwu/zcf
 # 然后选择相应的卸载选项
 ```
 
@@ -42,14 +42,14 @@ npx zcf
 
 ```bash
 # 交互式完整卸载
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # 然后选择 "完整卸载"
 
 # 非交互式完整卸载
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 
 # 指定语言
-npx zcf uninstall --mode complete --lang zh-CN
+npx @benbenwu/zcf uninstall --mode complete --lang zh-CN
 ```
 
 ### 自定义卸载
@@ -58,14 +58,14 @@ npx zcf uninstall --mode complete --lang zh-CN
 
 ```bash
 # 交互式自定义卸载
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # 然后选择 "自定义卸载"，再选择要卸载的组件
 
 # 非交互式自定义卸载（逗号分隔）
-npx zcf uninstall --mode custom --items "ccr,backups,cometix"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,backups,cometix"
 
 # 使用数组格式（在代码中）
-npx zcf uninstall --mode custom --items '["ccr","backups"]'
+npx @benbenwu/zcf uninstall --mode custom --items '["ccr","backups"]'
 ```
 
 ## 卸载模式
@@ -102,13 +102,13 @@ npx zcf uninstall --mode custom --items '["ccr","backups"]'
 
 ```bash
 # 仅卸载 CCR
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # 卸载多个组件
-npx zcf uninstall --mode custom --items "ccr,cometix,backups"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,cometix,backups"
 
 # 卸载所有备份（清理空间）
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ## 常用参数
@@ -125,15 +125,15 @@ npx zcf uninstall --mode custom --items backups
 
 ```bash
 # 完整卸载并重新初始化
-npx zcf uninstall --mode complete
-npx zcf init
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init
 ```
 
 ### 场景 2：清理备份文件
 
 ```bash
 # 仅清理备份以释放空间
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ### 场景 3：迁移到新设备
@@ -145,20 +145,20 @@ cp -r ~/.claude ~/claude-backup
 cp -r ~/.codex ~/codex-backup
 
 # 2. 在新设备上初始化
-npx zcf init
+npx @benbenwu/zcf init
 
 # 3. 在旧设备上清理
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 ```
 
 ### 场景 4：仅移除特定工具
 
 ```bash
 # 仅卸载 CCR（保留其他配置）
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # 仅卸载 CCometixLine
-npx zcf uninstall --mode custom --items cometix
+npx @benbenwu/zcf uninstall --mode custom --items cometix
 ```
 
 ## 备份机制
@@ -239,10 +239,10 @@ tar -czf zcf-backup.tar.gz ~/.ufomiao/zcf/
 
 ```bash
 # 清理备份文件（释放空间）
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 
 # 清理特定工具的配置
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 ```
 
 ### 3. 团队环境
@@ -259,8 +259,8 @@ npx zcf uninstall --mode custom --items ccr
 
 ```bash
 # 快速重置测试环境
-npx zcf uninstall --mode complete
-npx zcf init -s -p 302ai -k "test-key" -g zh-CN
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init -s -p 302ai -k "test-key" -g zh-CN
 ```
 
 ## 故障排除

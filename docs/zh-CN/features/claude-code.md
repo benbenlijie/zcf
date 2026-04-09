@@ -97,10 +97,10 @@ ZCF 支持三种 API 配置模式：
 
 ```bash
 # 使用提供商预设（推荐）
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 # 自定义 API 端点
-npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.example.com"
+npx @benbenwu/zcf i -s -t api_key -k "sk-xxx" -u "https://api.example.com"
 ```
 
 支持的提供商预设：
@@ -114,9 +114,9 @@ npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.example.com"
 通过 Claude Code Router 代理使用多个模型：
 
 ```bash
-npx zcf i -s -t ccr_proxy
+npx @benbenwu/zcf i -s -t ccr_proxy
 # 或先配置 CCR
-npx zcf ccr
+npx @benbenwu/zcf ccr
 ```
 
 > 💡 **CCR 优势**：
@@ -130,7 +130,7 @@ ZCF 支持配置多个模型：
 
 ```bash
 # 配置主模型和快速模型
-npx zcf i -s -p 302ai -k "sk-xxx" \
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx" \
   --api-model "claude-sonnet-4-5" \
   --api-fast-model "claude-haiku-4-5"
 ```
@@ -143,14 +143,14 @@ npx zcf i -s -p 302ai -k "sk-xxx" \
 ZCF 支持配置多个 API，方便在不同场景下切换：
 
 ```bash
-npx zcf i -s --api-configs '[
+npx @benbenwu/zcf i -s --api-configs '[
   {"provider":"302ai","key":"sk-xxx","default":true},
   {"provider":"glm","key":"sk-yyy"},
   {"name":"custom","type":"api_key","key":"sk-zzz","url":"https://custom.api.com"}
 ]'
 ```
 
-> 📖 **切换配置**：使用 `npx zcf config-switch` 在多个配置之间切换。
+> 📖 **切换配置**：使用 `npx @benbenwu/zcf config-switch` 在多个配置之间切换。
 
 ## 工作流系统
 
@@ -170,13 +170,13 @@ ZCF 提供丰富的工作流模板，帮助标准化开发流程。
 
 ```bash
 # 安装所有工作流（默认）
-npx zcf i -s --workflows all
+npx @benbenwu/zcf i -s --workflows all
 
 # 选择性安装
-npx zcf i -s --workflows commonTools,sixStepsWorkflow,featPlanUx
+npx @benbenwu/zcf i -s --workflows commonTools,sixStepsWorkflow,featPlanUx
 
 # 跳过工作流安装
-npx zcf i -s --workflows skip
+npx @benbenwu/zcf i -s --workflows skip
 ```
 
 > 📚 **工作流详解**：详细使用说明请参考 [工作流详解](../workflows/) 章节。
@@ -198,10 +198,10 @@ ZCF 支持多种 AI 输出风格，个性化您的 AI 助手体验。
 
 ```bash
 # 安装多个输出风格
-npx zcf i -s --output-styles engineer-professional,nekomata-engineer
+npx @benbenwu/zcf i -s --output-styles engineer-professional,nekomata-engineer
 
 # 设置默认输出风格
-npx zcf i -s --default-output-style engineer-professional
+npx @benbenwu/zcf i -s --default-output-style engineer-professional
 ```
 
 ### 项目级切换
@@ -213,7 +213,7 @@ npx zcf i -s --default-output-style engineer-professional
 /output-style nekomata-engineer      # 切换到猫娘工程师
 ```
 
-> ⚠️ **版本要求**：Claude Code 版本需要大于 1.0.81 才支持 output-style，可使用 `npx zcf check-updates` 进行更新。
+> ⚠️ **版本要求**：Claude Code 版本需要大于 1.0.81 才支持 output-style，可使用 `npx @benbenwu/zcf check-updates` 进行更新。
 
 ## MCP 服务集成
 
@@ -235,13 +235,13 @@ ZCF 内置常用 MCP 服务配置，支持一键安装和管理。
 
 ```bash
 # 安装所有 MCP 服务（推荐）
-npx zcf i -s --mcp-services all
+npx @benbenwu/zcf i -s --mcp-services all
 
 # 选择性安装
-npx zcf i -s --mcp-services context7,open-websearch,spec-workflow
+npx @benbenwu/zcf i -s --mcp-services context7,open-websearch,spec-workflow
 
 # 跳过 MCP 服务安装
-npx zcf i -s --mcp-services skip
+npx @benbenwu/zcf i -s --mcp-services skip
 ```
 
 ### 配置位置
@@ -254,7 +254,7 @@ npx zcf i -s --mcp-services skip
 如果需要重新配置 MCP 服务：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 选择 4. 配置 MCP
 ```
 
@@ -270,10 +270,10 @@ CCometixLine 是一个基于 Rust 的高性能状态栏工具：
 
 ```bash
 # 安装 CCometixLine（默认启用）
-npx zcf i -s --install-cometix-line true
+npx @benbenwu/zcf i -s --install-cometix-line true
 
 # 通过菜单安装
-npx zcf → 选择 L
+npx @benbenwu/zcf → 选择 L
 ```
 
 ### 环境变量与权限
@@ -281,7 +281,7 @@ npx zcf → 选择 L
 ZCF 可以导入推荐的环境变量和权限配置：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 选择 7. 导入推荐环境变量和权限配置
 ```
 
@@ -305,10 +305,10 @@ npx zcf
 
 ```bash
 # 更新工作流和模板，保留 API 和 MCP 配置
-npx zcf update
+npx @benbenwu/zcf update
 
 # 指定语言更新
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 ```
 
 > 💡 **最佳实践**：

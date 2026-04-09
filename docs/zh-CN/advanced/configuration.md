@@ -86,10 +86,10 @@ ZCF 的配置分布在以下目录：
 
 ```bash
 # 指定配置处理策略
-npx zcf init -s --config-action merge
+npx @benbenwu/zcf init -s --config-action merge
 
 # 仅更新文档
-npx zcf init -s --config-action docs-only
+npx @benbenwu/zcf init -s --config-action docs-only
 ```
 
 ### 合并策略详解
@@ -120,7 +120,7 @@ ZCF 采用四模型架构,提供细粒度的 AI 模型选择控制:
 
 ```bash
 # 配置全部四个模型
-npx zcf i -s \
+npx @benbenwu/zcf i -s \
   --api-key "sk-xxx" \
   --api-model "claude-sonnet-4-5" \
   --api-haiku-model "claude-haiku-4-5" \
@@ -201,7 +201,7 @@ npx zcf i -s \
 使用 `custom` 选项可以输入自定义语言指令：
 
 ```bash
-npx zcf init --ai-output-lang custom
+npx @benbenwu/zcf init --ai-output-lang custom
 # 输入：使用日语回复，保持专业和礼貌的语调
 ```
 
@@ -233,10 +233,10 @@ npx zcf init --ai-output-lang custom
 
 ```bash
 # 中文模板 + 英文输出（适合需要英文代码注释）
-npx zcf init --config-lang zh-CN --ai-output-lang en
+npx @benbenwu/zcf init --config-lang zh-CN --ai-output-lang en
 
 # 英文模板 + 中文输出（适合国际化团队）
-npx zcf init --config-lang en --ai-output-lang zh-CN
+npx @benbenwu/zcf init --config-lang en --ai-output-lang zh-CN
 ```
 
 ### 模板语言作用
@@ -283,7 +283,7 @@ git add ~/.claude/
 git commit -m "Before update"
 
 # 执行更新
-npx zcf update
+npx @benbenwu/zcf update
 
 # 查看差异
 git diff ~/.claude/
@@ -369,7 +369,7 @@ ls -la ~/.claude/workflows/
 
 ```bash
 # ZCF 会自动检测并迁移配置
-npx zcf init
+npx @benbenwu/zcf init
 
 # 或手动检查迁移
 cat ~/.ufomiao/zcf/config.toml
@@ -385,7 +385,7 @@ cat ~/.ufomiao/zcf/config.toml
 cp -r ~/.claude ~/.claude.backup
 
 # 2. 初始化 Codex
-npx zcf init -T codex
+npx @benbenwu/zcf init -T codex
 
 # 3. 手动迁移工作流和模板（如果需要）
 # 注意：Claude Code 和 Codex 的模板格式可能不同
@@ -399,14 +399,14 @@ npx zcf init -T codex
 
 ```bash
 # 1. 查看冲突详情
-npx zcf init
+npx @benbenwu/zcf init
 # 选择 merge 策略时查看冲突提示
 
 # 2. 手动合并配置
 # 编辑配置文件，手动合并冲突项
 
 # 3. 使用 backup 策略重新开始
-npx zcf init --config-action backup
+npx @benbenwu/zcf init --config-action backup
 ```
 
 ### 配置丢失
@@ -421,7 +421,7 @@ ls -lt ~/.claude/backup/ | head -5
 cp -r ~/.claude/backup/backup_最新时间戳/* ~/.claude/
 
 # 3. 重新初始化（如果备份不可用）
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ### 配置文件损坏
@@ -436,7 +436,7 @@ cat ~/.claude/settings.json | jq .
 cp ~/.claude/backup/backup_*/settings.json ~/.claude/
 
 # 3. 或重新初始化
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ## 相关资源

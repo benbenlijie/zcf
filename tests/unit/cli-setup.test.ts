@@ -163,9 +163,9 @@ describe('cli-setup', () => {
       // Should add examples section
       const examplesSection = result.find(s => s.title.includes('Examples'))
       expect(examplesSection).toBeDefined()
-      expect(examplesSection.body).toContain('npx zcf')
-      expect(examplesSection.body).toContain('npx zcf init')
-      expect(examplesSection.body).toContain('npx zcf u')
+      expect(examplesSection.body).toContain('npx @benbenwu/zcf')
+      expect(examplesSection.body).toContain('npx @benbenwu/zcf init')
+      expect(examplesSection.body).toContain('npx @benbenwu/zcf u')
     })
 
     it('should maintain existing sections', () => {

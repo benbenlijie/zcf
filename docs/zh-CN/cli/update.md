@@ -22,13 +22,13 @@ title: zcf update
 
 ```bash
 # 使用保存的偏好更新
-npx zcf update
+npx @benbenwu/zcf update
 
 # 或使用缩写
-npx zcf u
+npx @benbenwu/zcf u
 
 # 或通过主菜单
-npx zcf
+npx @benbenwu/zcf
 # 然后选择 2 (导入工作流)
 ```
 
@@ -43,19 +43,19 @@ npx zcf
 
 ```bash
 # 使用默认语言设置更新
-npx zcf u -s
+npx @benbenwu/zcf u -s
 
 # 指定模板语言
-npx zcf u -s -c zh-CN
+npx @benbenwu/zcf u -s -c zh-CN
 
 # 指定 AI 输出语言
-npx zcf u -s -a zh-CN
+npx @benbenwu/zcf u -s -a zh-CN
 
 # 同时指定模板和输出语言
-npx zcf u -s -g zh-CN
+npx @benbenwu/zcf u -s -g zh-CN
 
 # 指定代码工具类型
-npx zcf u -s -T codex
+npx @benbenwu/zcf u -s -T codex
 ```
 
 ## 常用参数
@@ -76,7 +76,7 @@ npx zcf u -s -T codex
 
 ```bash
 # 定期运行以获取最新工作流模板
-npx zcf u
+npx @benbenwu/zcf u
 
 # 每周更新一次（建议）
 # 可以添加到 cron 任务或 CI/CD 流程中
@@ -86,27 +86,27 @@ npx zcf u
 
 ```bash
 # 更新 Claude Code 工作流
-npx zcf u -T claude-code -c zh-CN
+npx @benbenwu/zcf u -T claude-code -c zh-CN
 
 # 更新 Codex 工作流
-npx zcf u -T codex -c zh-CN
+npx @benbenwu/zcf u -T codex -c zh-CN
 ```
 
 ### 场景 3：同步语言设置
 
 ```bash
 # 将所有语言设置切换为中文
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # 模板中文，AI 输出英文
-npx zcf u -c zh-CN -a en
+npx @benbenwu/zcf u -c zh-CN -a en
 ```
 
 ### 场景 4：自动化更新
 
 ```bash
 # 非交互式更新（适合脚本）
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## 执行流程
@@ -200,10 +200,10 @@ npx zcf u -s -g zh-CN -T claude-code
 
 ```bash
 # 每周更新一次
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # 或添加到 cron 任务
-0 0 * * 0 /usr/local/bin/npx zcf u -s -g zh-CN
+0 0 * * 0 /usr/local/bin/npx @benbenwu/zcf u -s -g zh-CN
 ```
 
 ### 2. 更新前检查
@@ -236,7 +236,7 @@ ls -la ~/.claude/backup/
 
 ```bash
 # 团队统一的更新命令
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## 故障排除
@@ -263,7 +263,7 @@ mkdir -p ~/.claude/backup ~/.codex/backup
 
 ```bash
 # 强制重新安装工作流
-npx zcf init --config-action new -w all
+npx @benbenwu/zcf init --config-action new -w all
 
 # 或手动检查工作流目录
 ls -la ~/.claude/workflows/
@@ -275,7 +275,7 @@ ls -la ~/.claude/workflows/
 
 1. **确认 Claude Code 已安装**：检查 `claude-code` 命令是否可用
 2. **手动检查版本**：使用 `claude-code --version`
-3. **使用 check-updates 命令**：运行 `npx zcf check-updates`
+3. **使用 check-updates 命令**：运行 `npx @benbenwu/zcf check-updates`
 
 ## 与 init 的区别
 

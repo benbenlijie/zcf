@@ -88,16 +88,16 @@ templates/codex/
 
 ```bash
 # すべての出力スタイルをインストール
-npx zcf init -o all
+npx @benbenwu/zcf init -o all
 
 # 特定のスタイルをインストール
-npx zcf init -o engineer-professional,nekomata-engineer
+npx @benbenwu/zcf init -o engineer-professional,nekomata-engineer
 
 # デフォルト出力スタイルを設定
-npx zcf init -o all -d engineer-professional
+npx @benbenwu/zcf init -o all -d engineer-professional
 
 # 出力スタイルのインストールをスキップ
-npx zcf init -o skip
+npx @benbenwu/zcf init -o skip
 ```
 
 ### 出力スタイルの切り替え
@@ -193,13 +193,13 @@ git commit -m "Add custom output style"
 
 ```bash
 # すべてのワークフローをインストール
-npx zcf init -w all
+npx @benbenwu/zcf init -w all
 
 # 特定のワークフローをインストール
-npx zcf init -w sixStepsWorkflow,gitWorkflow
+npx @benbenwu/zcf init -w sixStepsWorkflow,gitWorkflow
 
 # ワークフローのインストールをスキップ
-npx zcf init -w skip
+npx @benbenwu/zcf init -w skip
 ```
 
 ### カスタムワークフロー
@@ -221,7 +221,7 @@ npm link
 2. **初期化時に使用**:
 ```bash
 # カスタムテンプレートディレクトリを使用して初期化
-npx zcf init -w custom
+npx @benbenwu/zcf init -w custom
 ```
 
 3. **チームがカスタムテンプレートを公開**:
@@ -276,7 +276,7 @@ npm publish @your-org/zcf-templates
 3. **定期的な更新**:
 ```bash
 # テンプレートとプロンプトを更新
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 ```
 
 ## テンプレート言語サポート
@@ -301,13 +301,13 @@ ZCFは2つの言語のテンプレートをサポートしています：
 
 ```bash
 # 中国語テンプレートを使用して初期化
-npx zcf init -c zh-CN
+npx @benbenwu/zcf init -c zh-CN
 
 # 英語テンプレートを使用して初期化
-npx zcf init -c en
+npx @benbenwu/zcf init -c en
 
 # 更新時に言語を切り替え
-npx zcf update -c en
+npx @benbenwu/zcf update -c en
 ```
 
 ## テンプレート更新戦略
@@ -316,9 +316,9 @@ npx zcf update -c en
 
 | 方法 | コマンド | 説明 |
 |------|------|------|
-| **完全更新** | `npx zcf update` | すべてのテンプレートを更新 |
-| **ドキュメントのみ** | `npx zcf init --config-action docs-only` | プロンプトとドキュメントのみを更新 |
-| **マージ更新** | `npx zcf init --config-action merge` | 新しいテンプレートを既存の設定にマージ |
+| **完全更新** | `npx @benbenwu/zcf update` | すべてのテンプレートを更新 |
+| **ドキュメントのみ** | `npx @benbenwu/zcf init --config-action docs-only` | プロンプトとドキュメントのみを更新 |
+| **マージ更新** | `npx @benbenwu/zcf init --config-action merge` | 新しいテンプレートを既存の設定にマージ |
 
 ### カスタムコンテンツの保持
 
@@ -384,7 +384,7 @@ cp -r team-* ~/.claude/workflows/
 
 ```bash
 # テンプレートを再インストール
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 
 # テンプレートディレクトリを確認
 ls -la ~/.claude/workflows/
@@ -409,10 +409,10 @@ git checkout HEAD -- ~/.claude/workflows/custom/
 
 ```bash
 # 再初期化して言語を指定
-npx zcf init --config-action backup -c zh-CN
+npx @benbenwu/zcf init --config-action backup -c zh-CN
 
 # またはテンプレート言語のみを更新
-npx zcf update -c zh-CN
+npx @benbenwu/zcf update -c zh-CN
 ```
 
 ## 関連リソース

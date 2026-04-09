@@ -22,10 +22,10 @@ title: アンインストールとクリーンアップ
 
 ```bash
 # 対話式アンインストールメニューを開く
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 
 # またはメインメニューから
-npx zcf
+npx @benbenwu/zcf
 # 次に該当するアンインストールオプションを選択
 ```
 
@@ -42,14 +42,14 @@ npx zcf
 
 ```bash
 # 対話式完全アンインストール
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # 次に「完全アンインストール」を選択
 
 # 非対話式完全アンインストール
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 
 # 言語を指定
-npx zcf uninstall --mode complete --lang zh-CN
+npx @benbenwu/zcf uninstall --mode complete --lang zh-CN
 ```
 
 ### カスタムアンインストール
@@ -58,14 +58,14 @@ npx zcf uninstall --mode complete --lang zh-CN
 
 ```bash
 # 対話式カスタムアンインストール
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # 次に「カスタムアンインストール」を選択し、アンインストールするコンポーネントを選択
 
 # 非対話式カスタムアンインストール（カンマ区切り）
-npx zcf uninstall --mode custom --items "ccr,backups,cometix"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,backups,cometix"
 
 # 配列形式を使用（コード内）
-npx zcf uninstall --mode custom --items '["ccr","backups"]'
+npx @benbenwu/zcf uninstall --mode custom --items '["ccr","backups"]'
 ```
 
 ## アンインストールモード
@@ -102,13 +102,13 @@ npx zcf uninstall --mode custom --items '["ccr","backups"]'
 
 ```bash
 # CCR のみをアンインストール
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # 複数のコンポーネントをアンインストール
-npx zcf uninstall --mode custom --items "ccr,cometix,backups"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,cometix,backups"
 
 # すべてのバックアップをアンインストール（スペースを解放）
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ## よく使うパラメータ
@@ -125,15 +125,15 @@ npx zcf uninstall --mode custom --items backups
 
 ```bash
 # 完全アンインストールして再初期化
-npx zcf uninstall --mode complete
-npx zcf init
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init
 ```
 
 ### シナリオ 2：バックアップファイルをクリーンアップ
 
 ```bash
 # スペースを解放するためにバックアップのみをクリーンアップ
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ### シナリオ 3：新しいデバイスに移行
@@ -145,20 +145,20 @@ cp -r ~/.claude ~/claude-backup
 cp -r ~/.codex ~/codex-backup
 
 # 2. 新しいデバイスで初期化
-npx zcf init
+npx @benbenwu/zcf init
 
 # 3. 古いデバイスでクリーンアップ
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 ```
 
 ### シナリオ 4：特定のツールのみを削除
 
 ```bash
 # CCR のみをアンインストール（他の設定を保持）
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # CCometixLine のみをアンインストール
-npx zcf uninstall --mode custom --items cometix
+npx @benbenwu/zcf uninstall --mode custom --items cometix
 ```
 
 ## バックアップメカニズム
@@ -239,10 +239,10 @@ tar -czf zcf-backup.tar.gz ~/.ufomiao/zcf/
 
 ```bash
 # バックアップファイルをクリーンアップ（スペースを解放）
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 
 # 特定のツールの設定をクリーンアップ
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 ```
 
 ### 3. チーム環境
@@ -259,8 +259,8 @@ npx zcf uninstall --mode custom --items ccr
 
 ```bash
 # テスト環境をすばやくリセット
-npx zcf uninstall --mode complete
-npx zcf init -s -p 302ai -k "test-key" -g zh-CN
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init -s -p 302ai -k "test-key" -g zh-CN
 ```
 
 ## トラブルシューティング

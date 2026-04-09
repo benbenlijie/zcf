@@ -10,11 +10,11 @@ This document compiles practical tips and best practices for daily use of ZCF, h
 
 ### 1. Make Good Use of Interactive Menu
 
-**Tip**: Get used to starting with `npx zcf`. All functions have numbered prompts, avoiding the need to remember command details.
+**Tip**: Get used to starting with `npx @benbenwu/zcf`. All functions have numbered prompts, avoiding the need to remember command details.
 
 ```bash
 # Open interactive menu
-npx zcf
+npx @benbenwu/zcf
 
 # Menu options include:
 # 1 - Complete Initialization
@@ -43,13 +43,13 @@ npx zcf
 
 ```bash
 # Update once per week (recommended)
-npx zcf update
+npx @benbenwu/zcf update
 
 # Or use abbreviation
-npx zcf u
+npx @benbenwu/zcf u
 
 # Non-interactive update
-npx zcf u -s -g zh-CN
+npx @benbenwu/zcf u -s -g zh-CN
 ```
 
 **Best Practices**:
@@ -63,13 +63,13 @@ npx zcf u -s -g zh-CN
 
 ```bash
 # Set all languages to Chinese uniformly
-npx zcf init -g zh-CN
+npx @benbenwu/zcf init -g zh-CN
 
 # Templates Chinese, AI output English (suitable for scenarios requiring English code comments)
-npx zcf init -c zh-CN -a en
+npx @benbenwu/zcf init -c zh-CN -a en
 
 # Only switch language during update
-npx zcf update -c en
+npx @benbenwu/zcf update -c en
 ```
 
 **Usage Scenarios**:
@@ -139,7 +139,7 @@ PROVIDER=${ZCF_PROVIDER:-302ai}
 LANG=${ZCF_LANG:-zh-CN}
 
 # Non-interactive initialization
-npx zcf init -s \
+npx @benbenwu/zcf init -s \
   --provider "$PROVIDER" \
   --api-key "$API_KEY" \
   --all-lang "$LANG" \
@@ -159,13 +159,13 @@ echo "ZCF configuration deployment completed"
 echo "Configuring development environment..."
 
 # 1. Configure ZCF (using configuration file)
-npx zcf init -s --api-configs-file ./team-api-configs.json
+npx @benbenwu/zcf init -s --api-configs-file ./team-api-configs.json
 
 # 2. Update workflows
-npx zcf update -s -g zh-CN
+npx @benbenwu/zcf update -s -g zh-CN
 
 # 3. Check tool versions
-npx zcf check-updates
+npx @benbenwu/zcf check-updates
 
 echo "Development environment configuration completed!"
 ```
@@ -180,7 +180,7 @@ SERVERS=("server1" "server2" "server3")
 
 for server in "${SERVERS[@]}"; do
   echo "Deploying to $server..."
-  ssh "$server" "npx zcf init -s -p 302ai -k '${API_KEY}' -g zh-CN"
+  ssh "$server" "npx @benbenwu/zcf init -s -p 302ai -k '${API_KEY}' -g zh-CN"
 done
 ```
 
@@ -190,13 +190,13 @@ done
 
 ```bash
 # View usage statistics
-npx zcf ccu
+npx @benbenwu/zcf ccu
 
 # Output JSON format (for integration into monitoring systems)
-npx zcf ccu --json > usage.json
+npx @benbenwu/zcf ccu --json > usage.json
 
 # View detailed statistics
-npx zcf ccu --verbose
+npx @benbenwu/zcf ccu --verbose
 ```
 
 **Integration Example**:
@@ -206,7 +206,7 @@ npx zcf ccu --verbose
 # monitor-usage.sh - Usage monitoring script
 
 # Get usage
-USAGE=$(npx zcf ccu --json)
+USAGE=$(npx @benbenwu/zcf ccu --json)
 
 # Parse JSON (using jq)
 TOKENS=$(echo "$USAGE" | jq '.tokens.total')
@@ -226,7 +226,7 @@ fi
 
 ```bash
 # Traditional method (requires multiple parameters)
-npx zcf init -s \
+npx @benbenwu/zcf init -s \
   -t api_key \
   -k "sk-xxx" \
   -u "https://api.302.ai/v1" \
@@ -234,7 +234,7 @@ npx zcf init -s \
   -F "claude-haiku-4-5"
 
 # Use preset (only 2 parameters needed)
-npx zcf init -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf init -s -p 302ai -k "sk-xxx"
 ```
 
 **Supported Providers**: `302ai`, `glm`, `minimax`, `kimi`, `custom`
@@ -245,16 +245,16 @@ npx zcf init -s -p 302ai -k "sk-xxx"
 
 ```bash
 # List all configurations
-npx zcf config-switch --list
+npx @benbenwu/zcf config-switch --list
 
 # Switch to work configuration
-npx zcf config-switch work
+npx @benbenwu/zcf config-switch work
 
 # Switch to personal configuration
-npx zcf config-switch personal
+npx @benbenwu/zcf config-switch personal
 
 # Switch in Codex
-npx zcf config-switch work --code-type codex
+npx @benbenwu/zcf config-switch work --code-type codex
 ```
 
 **Naming Suggestions**:
@@ -287,7 +287,7 @@ npx zcf config-switch work --code-type codex
 
 ```bash
 # View available styles
-npx zcf init -s -o all
+npx @benbenwu/zcf init -s -o all
 
 # Switch style in conversation
 # Claude Code: /output-style engineer-professional
@@ -306,10 +306,10 @@ npx zcf init -s -o all
 
 ```bash
 # Only install necessary services
-npx zcf init -s -m context7,open-websearch
+npx @benbenwu/zcf init -s -m context7,open-websearch
 
 # View all available services
-npx zcf
+npx @benbenwu/zcf
 # Select 4 (Configure MCP), view list
 ```
 
@@ -326,7 +326,7 @@ npx zcf
 
 ```bash
 # Automatic backup (automatically executed during init and update)
-npx zcf init  # Automatic backup
+npx @benbenwu/zcf init  # Automatic backup
 
 # Manual backup of specific configuration
 cp -r ~/.claude ~/.claude.backup.$(date +%Y%m%d)
@@ -347,7 +347,7 @@ ls -lt ~/.claude/backup/ | head -5
 cp -r ~/.claude/backup/backup_2025-01-15_10-30-45/* ~/.claude/
 
 # 3. Or reinitialize (will create new backup)
-npx zcf init --config-action backup
+npx @benbenwu/zcf init --config-action backup
 ```
 
 ### 14. Version Control Integration
@@ -380,13 +380,13 @@ git commit -m "Add ZCF templates and workflows"
 
 ```bash
 # 1. Only install needed MCP services
-npx zcf init -s -m context7,open-websearch  # Only install necessary services
+npx @benbenwu/zcf init -s -m context7,open-websearch  # Only install necessary services
 
 # 2. Use local cache (if supported)
 # Some MCP services support local cache, can speed up response
 
 # 3. Regularly clean backups
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ## Team Collaboration Tips
@@ -408,7 +408,7 @@ cat > team-config.json << EOF
 EOF
 
 # Team members use same configuration
-npx zcf init -s --api-configs-file team-config.json -k "Personal API Key"
+npx @benbenwu/zcf init -s --api-configs-file team-config.json -k "Personal API Key"
 ```
 
 ### 17. Document Sharing
@@ -451,7 +451,7 @@ cat ~/.claude/settings.json | jq .mcpServers
 ls -la ~/.claude/workflows/
 
 # Check version
-npx zcf check-updates
+npx @benbenwu/zcf check-updates
 ```
 
 ### 20. Log Analysis
@@ -460,7 +460,7 @@ npx zcf check-updates
 
 ```bash
 # Enable verbose output
-npx zcf init --verbose 2>&1 | tee zcf.log
+npx @benbenwu/zcf init --verbose 2>&1 | tee zcf.log
 
 # View logs
 cat zcf.log | grep -i error

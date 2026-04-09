@@ -25,13 +25,13 @@ title: zcf init
 
 ```bash
 # 打开交互式初始化向导
-npx zcf init
+npx @benbenwu/zcf init
 
 # 或使用缩写
-npx zcf i
+npx @benbenwu/zcf i
 
 # 或通过主菜单
-npx zcf
+npx @benbenwu/zcf
 # 然后选择 1 (完整初始化)
 ```
 
@@ -51,10 +51,10 @@ npx zcf
 
 ```bash
 # 使用 API 提供商预设（最简单）
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 # 完整参数示例
-npx zcf i -s \
+npx @benbenwu/zcf i -s \
   --provider 302ai \
   --api-key "sk-xxx" \
   --code-type claude-code \
@@ -92,13 +92,13 @@ npx zcf i -s \
 
 ```bash
 # 初始化 Claude Code（默认）
-npx zcf i
+npx @benbenwu/zcf i
 
 # 初始化 Codex
-npx zcf i -T codex
+npx @benbenwu/zcf i -T codex
 
 # 使用缩写
-npx zcf i -T cx
+npx @benbenwu/zcf i -T cx
 ```
 
 ### API 配置参数
@@ -113,19 +113,19 @@ ZCF 支持 API 提供商预设，可以大大简化配置：
 
 ```bash
 # 使用 302.AI 提供商
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 # 使用 GLM 提供商
-npx zcf i -s -p glm -k "sk-xxx"
+npx @benbenwu/zcf i -s -p glm -k "sk-xxx"
 
 # 使用 MiniMax 提供商
-npx zcf i -s -p minimax -k "sk-xxx"
+npx @benbenwu/zcf i -s -p minimax -k "sk-xxx"
 
 # 使用 Kimi 提供商
-npx zcf i -s -p kimi -k "sk-xxx"
+npx @benbenwu/zcf i -s -p kimi -k "sk-xxx"
 
 # 使用自定义提供商（需要 URL）
-npx zcf i -s -p custom -k "sk-xxx" -u "https://api.example.com"
+npx @benbenwu/zcf i -s -p custom -k "sk-xxx" -u "https://api.example.com"
 ```
 
 #### 传统 API 配置参数
@@ -142,19 +142,19 @@ npx zcf i -s -p custom -k "sk-xxx" -u "https://api.example.com"
 
 ```bash
 # 使用 API Key
-npx zcf i -s -t api_key -k "sk-ant-xxx"
+npx @benbenwu/zcf i -s -t api_key -k "sk-ant-xxx"
 
 # 使用 Auth Token（官方登录）
-npx zcf i -s -t auth_token -k "your-auth-token"
+npx @benbenwu/zcf i -s -t auth_token -k "your-auth-token"
 
 # 使用 CCR 代理
-npx zcf i -s -t ccr_proxy
+npx @benbenwu/zcf i -s -t ccr_proxy
 
 # 跳过 API 配置
-npx zcf i -s -t skip
+npx @benbenwu/zcf i -s -t skip
 
 # 配置自定义模型
-npx zcf i -s -t api_key -k "sk-xxx" -M "claude-sonnet-4-5" -H "claude-haiku-4-5" -S "claude-sonnet-4-5" -O "claude-opus-4-5"
+npx @benbenwu/zcf i -s -t api_key -k "sk-xxx" -M "claude-sonnet-4-5" -H "claude-haiku-4-5" -S "claude-sonnet-4-5" -O "claude-opus-4-5"
 ```
 
 #### 多 API 配置
@@ -163,7 +163,7 @@ npx zcf i -s -t api_key -k "sk-xxx" -M "claude-sonnet-4-5" -H "claude-haiku-4-5"
 
 ```bash
 # 使用 JSON 字符串
-npx zcf i -s --api-configs '[
+npx @benbenwu/zcf i -s --api-configs '[
   {
     "provider": "302ai",
     "key": "sk-xxx",
@@ -186,7 +186,7 @@ npx zcf i -s --api-configs '[
 ]'
 
 # 使用 JSON 文件
-npx zcf i -s --api-configs-file ./api-configs.json
+npx @benbenwu/zcf i -s --api-configs-file ./api-configs.json
 ```
 
 ### MCP 服务配置
@@ -197,13 +197,13 @@ npx zcf i -s --api-configs-file ./api-configs.json
 
 ```bash
 # 安装所有 MCP 服务
-npx zcf i -s -m all
+npx @benbenwu/zcf i -s -m all
 
 # 安装特定服务（逗号分隔）
-npx zcf i -s -m context7,open-websearch,spec-workflow
+npx @benbenwu/zcf i -s -m context7,open-websearch,spec-workflow
 
 # 跳过 MCP 服务安装
-npx zcf i -s -m skip
+npx @benbenwu/zcf i -s -m skip
 ```
 
 ### 工作流配置
@@ -214,13 +214,13 @@ npx zcf i -s -m skip
 
 ```bash
 # 安装所有工作流
-npx zcf i -s -w all
+npx @benbenwu/zcf i -s -w all
 
 # 安装特定工作流
-npx zcf i -s -w sixStepsWorkflow,gitWorkflow
+npx @benbenwu/zcf i -s -w sixStepsWorkflow,gitWorkflow
 
 # 跳过工作流安装
-npx zcf i -s -w skip
+npx @benbenwu/zcf i -s -w skip
 ```
 
 > ⚠️ **注意**：Codex 目前仅支持 `sixStepsWorkflow` 和 `gitWorkflow`，其他工作流暂未在 Codex 中提供。
@@ -234,16 +234,16 @@ npx zcf i -s -w skip
 
 ```bash
 # 安装所有输出风格
-npx zcf i -s -o all
+npx @benbenwu/zcf i -s -o all
 
 # 安装特定风格
-npx zcf i -s -o engineer-professional,nekomata-engineer
+npx @benbenwu/zcf i -s -o engineer-professional,nekomata-engineer
 
 # 设置默认输出风格
-npx zcf i -s -o all -d engineer-professional
+npx @benbenwu/zcf i -s -o all -d engineer-professional
 
 # 跳过输出风格安装
-npx zcf i -s -o skip
+npx @benbenwu/zcf i -s -o skip
 ```
 
 ### 其他配置选项
@@ -256,18 +256,18 @@ npx zcf i -s -o skip
 
 ```bash
 # 非交互模式
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 # 配置处理方式
-npx zcf i -s --config-action backup  # 备份后覆盖（默认）
-npx zcf i -s --config-action merge   # 合并配置
-npx zcf i -s --config-action new     # 创建新配置
-npx zcf i -s --config-action docs-only  # 仅更新文档
-npx zcf i -s --config-action skip    # 跳过配置
+npx @benbenwu/zcf i -s --config-action backup  # 备份后覆盖（默认）
+npx @benbenwu/zcf i -s --config-action merge   # 合并配置
+npx @benbenwu/zcf i -s --config-action new     # 创建新配置
+npx @benbenwu/zcf i -s --config-action docs-only  # 仅更新文档
+npx @benbenwu/zcf i -s --config-action skip    # 跳过配置
 
 # 控制 CCometixLine 安装
-npx zcf i -s -x true   # 安装（默认）
-npx zcf i -s -x false  # 不安装
+npx @benbenwu/zcf i -s -x true   # 安装（默认）
+npx @benbenwu/zcf i -s -x false  # 不安装
 ```
 
 ## 完整示例
@@ -276,23 +276,23 @@ npx zcf i -s -x false  # 不安装
 
 ```bash
 # 交互式初始化（推荐首次使用）
-npx zcf init
+npx @benbenwu/zcf init
 
 # 或使用主菜单
-npx zcf
+npx @benbenwu/zcf
 # 选择 1 (完整初始化)
 ```
 
 ### 场景 2：使用 302.AI 提供商快速初始化
 
 ```bash
-npx zcf i -s -p 302ai -k "sk-xxx" -g zh-CN
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx" -g zh-CN
 ```
 
 ### 场景 3：Codex 完整初始化
 
 ```bash
-npx zcf i -s \
+npx @benbenwu/zcf i -s \
   -T codex \
   -p 302ai \
   -k "sk-xxx" \
@@ -327,19 +327,19 @@ cat > api-configs.json << EOF
 EOF
 
 # 使用配置文件初始化
-npx zcf i -s --api-configs-file ./api-configs.json -g zh-CN
+npx @benbenwu/zcf i -s --api-configs-file ./api-configs.json -g zh-CN
 ```
 
 ### 场景 5：仅更新文档和模板
 
 ```bash
-npx zcf i -s --config-action docs-only -g zh-CN
+npx @benbenwu/zcf i -s --config-action docs-only -g zh-CN
 ```
 
 ### 场景 6：使用 CCR 代理
 
 ```bash
-npx zcf i -s -t ccr_proxy -g zh-CN -m all -w all
+npx @benbenwu/zcf i -s -t ccr_proxy -g zh-CN -m all -w all
 ```
 
 ## 配置处理策略
@@ -413,7 +413,7 @@ cat ~/.codex/config.toml | grep -A 5 modelProvider
 
 ```bash
 # 重新导入工作流
-npx zcf update
+npx @benbenwu/zcf update
 
 # 检查工作流目录
 ls -la ~/.claude/workflows/

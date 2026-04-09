@@ -4,7 +4,7 @@ title: Commands Overview
 
 # Commands Overview
 
-ZCF CLI is implemented based on `cac`, and all commands can be called via `npx zcf <command>`. Common commands are as follows:
+ZCF CLI is implemented based on `cac`, and all commands can be called via `npx @benbenwu/zcf <command>`. Common commands are as follows:
 
 | Command | Description |
 | --- | --- |

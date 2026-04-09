@@ -59,7 +59,7 @@ Get 10% OFF GLM CODING PLAN：https://z.ai/subscribe?ic=8JVLJQFSKB
 
 ## Project Overview
 
-ZCF (Zero-Config Code Flow) is a CLI tool designed for professional developers, aiming to complete end-to-end environment initialization for Claude Code and Codex within minutes. Through `npx zcf`, you can complete configuration directory creation, API/proxy integration, MCP service integration, workflow import, output style and memory configuration, and common tool installation in one go.
+ZCF (Zero-Config Code Flow) is a CLI tool designed for professional developers, aiming to complete end-to-end environment initialization for Claude Code and Codex within minutes. Through `npx @benbenwu/zcf`, you can complete configuration directory creation, API/proxy integration, MCP service integration, workflow import, output style and memory configuration, and common tool installation in one go.
 
 ### Why Choose ZCF
 

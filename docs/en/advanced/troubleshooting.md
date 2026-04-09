@@ -21,7 +21,7 @@ This document compiles common problems and solutions encountered when using ZCF,
 
 ### 1. Initialization Failed or Stuck
 
-**Symptoms**: No response or error after running `npx zcf init`
+**Symptoms**: No response or error after running `npx @benbenwu/zcf init`
 
 **Possible Causes**:
 - Node.js version too low
@@ -48,7 +48,7 @@ mkdir -p ~/.claude ~/.codex ~/.ufomiao/zcf
 chmod 755 ~/.claude ~/.codex ~/.ufomiao/zcf
 
 # 3. Skip MCP installation (if network issues)
-npx zcf init -s -m skip
+npx @benbenwu/zcf init -s -m skip
 
 # 4. Check network connection
 ping npmjs.com
@@ -69,7 +69,7 @@ ls -la ~/.claude/backup/
 cp -r ~/.claude/backup/backup_latest_timestamp/* ~/.claude/
 
 # 3. Reinitialize
-npx zcf init --config-action backup
+npx @benbenwu/zcf init --config-action backup
 ```
 
 ### 3. Configuration Directory Creation Failed
@@ -106,14 +106,14 @@ cat ~/.claude/settings.json | jq .env
 cat ~/.codex/config.toml | grep -A 5 apiKey
 
 # 2. Reconfigure API
-npx zcf init
+npx @benbenwu/zcf init
 # Select 3 (Configure API or CCR)
 # Or use command line
-npx zcf init -s -t api_key -k "your-api-key"
+npx @benbenwu/zcf init -s -t api_key -k "your-api-key"
 
 # 3. For CCR mode, ensure Router is running
-npx zcf ccr status
-npx zcf ccr start
+npx @benbenwu/zcf ccr status
+npx @benbenwu/zcf ccr start
 ```
 
 ### 2. API Key Format Error
@@ -132,7 +132,7 @@ npx zcf ccr start
 # Or try to verify in provider console
 
 # Re-enter correct key
-npx zcf init -s -p 302ai -k "correct-key"
+npx @benbenwu/zcf init -s -p 302ai -k "correct-key"
 ```
 
 ### 3. API Endpoint Unreachable
@@ -158,7 +158,7 @@ export HTTPS_PROXY=http://127.0.0.1:7890
 # MiniMax: https://api.minimaxi.com/anthropic
 
 # 4. Use provider preset (recommended)
-npx zcf init -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf init -s -p 302ai -k "sk-xxx"
 ```
 
 ### 4. Multiple API Configuration Conflicts
@@ -169,10 +169,10 @@ npx zcf init -s -p 302ai -k "sk-xxx"
 
 ```bash
 # 1. List all configurations
-npx zcf config-switch --list
+npx @benbenwu/zcf config-switch --list
 
 # 2. Switch to correct configuration
-npx zcf config-switch provider-name
+npx @benbenwu/zcf config-switch provider-name
 
 # 3. Check default configuration in configuration file
 cat ~/.claude/settings.json | jq .apiKeys
@@ -193,7 +193,7 @@ ls -la ~/.claude/workflows/
 ls -la ~/.codex/skills/
 
 # 2. Reimport workflows
-npx zcf update -w all
+npx @benbenwu/zcf update -w all
 
 # 3. Check Codex configuration (Codex requires managed = true)
 cat ~/.codex/config.toml | grep managed
@@ -232,10 +232,10 @@ head -20 ~/.claude/workflows/zcf-workflow/workflow.md
 
 ```bash
 # Update workflow templates
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 
 # Or force update
-npx zcf init --config-action docs-only -w all
+npx @benbenwu/zcf init --config-action docs-only -w all
 ```
 
 ## MCP Service Issues
@@ -252,7 +252,7 @@ cat ~/.claude/settings.json | jq .mcpServers
 cat ~/.codex/config.toml | grep -A 10 mcp_server
 
 # 2. Reconfigure MCP
-npx zcf
+npx @benbenwu/zcf
 # Select 4 (Configure MCP)
 
 # 3. Check service dependencies
@@ -454,7 +454,7 @@ cat ~/.codex/config.toml | grep -A 10 modelProvider
 cat ~/.codex/auth.json
 
 # 5. Reconfigure
-npx zcf init -T codex -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf init -T codex -s -p 302ai -k "sk-xxx"
 ```
 
 ### 3. Codex Workflow Command Format
@@ -475,7 +475,7 @@ npx zcf init -T codex -s -p 302ai -k "sk-xxx"
 ls -la ~/.codex/skills/
 
 # Reimport workflows
-npx zcf update -T codex -g zh-CN
+npx @benbenwu/zcf update -T codex -g zh-CN
 ```
 
 ## CCR Related Issues
@@ -488,14 +488,14 @@ npx zcf update -T codex -g zh-CN
 
 ```bash
 # 1. Check CCR installation
-npx zcf ccr status
+npx @benbenwu/zcf ccr status
 
 # 2. Check port occupancy
 lsof -i :3456  # macOS/Linux
 netstat -ano | findstr :3456  # Windows
 
 # 3. Reinstall CCR
-npx zcf ccr install
+npx @benbenwu/zcf ccr install
 
 # 4. Check configuration file
 cat ~/.claude-code-router/config.json
@@ -527,10 +527,10 @@ netstat -ano | findstr :3456
 taskkill /PID 1208 /F
 
 # 3. Restart CCR
-npx zcf ccr restart
+npx @benbenwu/zcf ccr restart
 
 # 4. Check status
-npx zcf ccr status
+npx @benbenwu/zcf ccr status
 ```
 
 #### macOS/Linux Platform
@@ -543,10 +543,10 @@ lsof -t -i:3456 | xargs kill
 lsof -t -i:3456 | xargs -r kill
 
 # 2. Restart CCR
-npx zcf ccr restart
+npx @benbenwu/zcf ccr restart
 
 # 3. Check status
-npx zcf ccr status
+npx @benbenwu/zcf ccr status
 ```
 
 **Verification Steps**:
@@ -557,10 +557,10 @@ lsof -i :3456  # macOS/Linux (should have no output)
 netstat -ano | findstr :3456  # Windows (should have no output)
 
 # If port is released, restart
-npx zcf ccr start
+npx @benbenwu/zcf ccr start
 
 # Verify CCR running normally
-npx zcf ccr status
+npx @benbenwu/zcf ccr status
 
 # If status is normal, Claude Code should be able to connect normally
 ```
@@ -582,9 +582,9 @@ curl http://127.0.0.1:3456/health
 cat ~/.claude/settings.json | jq .env.ANTHROPIC_BASE_URL
 
 # 4. Reconfigure CCR proxy
-npx zcf ccr
+npx @benbenwu/zcf ccr
 # Or
-npx zcf init -s -t ccr_proxy
+npx @benbenwu/zcf init -s -t ccr_proxy
 ```
 
 ### 3. CCR Web UI Cannot Be Accessed
@@ -595,7 +595,7 @@ npx zcf init -s -t ccr_proxy
 
 ```bash
 # 1. Confirm CCR is running
-npx zcf ccr status
+npx @benbenwu/zcf ccr status
 
 # 2. Check port
 lsof -i :3456
@@ -625,7 +625,7 @@ cp -r ~/.claude/backup/backup_latest_timestamp/* ~/.claude/
 cp -r ~/.codex/backup/backup_latest_timestamp/* ~/.codex/
 
 # 3. Reinitialize (if backup unavailable)
-npx zcf init --config-action backup
+npx @benbenwu/zcf init --config-action backup
 ```
 
 ### 2. Backup Failed
@@ -657,13 +657,13 @@ cp -r ~/.claude ~/.claude.backup.$(date +%Y%m%d)
 
 ```bash
 # 1. View all configurations
-npx zcf config-switch --list
+npx @benbenwu/zcf config-switch --list
 
 # 2. Backup current configuration
 cp -r ~/.claude ~/.claude.conflict.backup
 
 # 3. Reinitialize using merge strategy
-npx zcf init --config-action merge
+npx @benbenwu/zcf init --config-action merge
 
 # 4. Manually merge configuration (if needed)
 # Edit configuration file, merge conflicting configuration items
@@ -696,7 +696,7 @@ cat "$env:USERPROFILE\.claude\settings.json"
 ```bash
 # ZCF automatically fixes Windows MCP configuration format
 # Running update command will automatically fix
-npx zcf update
+npx @benbenwu/zcf update
 
 # Or manually check configuration format
 cat "$env:USERPROFILE\.claude\settings.json" | jq .mcpServers
@@ -756,13 +756,13 @@ nvm install 20
 
 ```bash
 # Enable verbose output
-npx zcf init --verbose 2>&1 | tee zcf-debug.log
+npx @benbenwu/zcf init --verbose 2>&1 | tee zcf-debug.log
 
 # View error messages
 cat zcf-debug.log | grep -i error
 
 # Check version information
-npx zcf --version
+npx @benbenwu/zcf --version
 ```
 
 ### Recovery History
@@ -781,7 +781,7 @@ cp -r ~/.claude/backup/backup_YYYY-MM-DD_HH-mm-ss/* ~/.claude/
 - Read repository `CLAUDE.md` and `AGENTS.md` to understand system prompt requirements
 - Check [GitHub Issues](https://github.com/UfoMiao/zcf/issues) to search for similar problems
 - When submitting issues on GitHub Issues, include:
-  - `npx zcf --version` output
+  - `npx @benbenwu/zcf --version` output
   - Complete terminal logs
   - Operating system and Node.js version
   - Reproduction steps

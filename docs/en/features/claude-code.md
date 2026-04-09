@@ -97,10 +97,10 @@ Suitable for using third-party API providers:
 
 ```bash
 # Use provider preset (recommended)
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 # Custom API endpoint
-npx zcf i -s -t api_key -k "sk-xxx" -u "https://api.example.com"
+npx @benbenwu/zcf i -s -t api_key -k "sk-xxx" -u "https://api.example.com"
 ```
 
 Supported provider presets:
@@ -114,9 +114,9 @@ Supported provider presets:
 Use multiple models through Claude Code Router proxy:
 
 ```bash
-npx zcf i -s -t ccr_proxy
+npx @benbenwu/zcf i -s -t ccr_proxy
 # Or configure CCR first
-npx zcf ccr
+npx @benbenwu/zcf ccr
 ```
 
 > 💡 **CCR Advantages**:
@@ -130,7 +130,7 @@ ZCF supports configuring multiple models:
 
 ```bash
 # Configure primary and fast models
-npx zcf i -s -p 302ai -k "sk-xxx" \
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx" \
   --api-model "claude-sonnet-4-5" \
   --api-fast-model "claude-haiku-4-5"
 ```
@@ -143,14 +143,14 @@ npx zcf i -s -p 302ai -k "sk-xxx" \
 ZCF supports configuring multiple APIs for easy switching in different scenarios:
 
 ```bash
-npx zcf i -s --api-configs '[
+npx @benbenwu/zcf i -s --api-configs '[
   {"provider":"302ai","key":"sk-xxx","default":true},
   {"provider":"glm","key":"sk-yyy"},
   {"name":"custom","type":"api_key","key":"sk-zzz","url":"https://custom.api.com"}
 ]'
 ```
 
-> 📖 **Switch Configuration**: Use `npx zcf config-switch` to switch between multiple configurations.
+> 📖 **Switch Configuration**: Use `npx @benbenwu/zcf config-switch` to switch between multiple configurations.
 
 ## Workflow System
 
@@ -170,13 +170,13 @@ ZCF provides rich workflow templates to help standardize development processes.
 
 ```bash
 # Install all workflows (default)
-npx zcf i -s --workflows all
+npx @benbenwu/zcf i -s --workflows all
 
 # Selective installation
-npx zcf i -s --workflows commonTools,sixStepsWorkflow,featPlanUx
+npx @benbenwu/zcf i -s --workflows commonTools,sixStepsWorkflow,featPlanUx
 
 # Skip workflow installation
-npx zcf i -s --workflows skip
+npx @benbenwu/zcf i -s --workflows skip
 ```
 
 > 📚 **Workflow Details**: For detailed usage instructions, please refer to the [Workflow Details](../workflows/) chapter.
@@ -198,10 +198,10 @@ ZCF supports multiple AI output styles to personalize your AI assistant experien
 
 ```bash
 # Install multiple output styles
-npx zcf i -s --output-styles engineer-professional,nekomata-engineer
+npx @benbenwu/zcf i -s --output-styles engineer-professional,nekomata-engineer
 
 # Set default output style
-npx zcf i -s --default-output-style engineer-professional
+npx @benbenwu/zcf i -s --default-output-style engineer-professional
 ```
 
 ### Project-Level Switching
@@ -213,7 +213,7 @@ In Claude Code, you can switch project-level output styles via commands:
 /output-style nekomata-engineer      # Switch to nekomata engineer
 ```
 
-> ⚠️ **Version Requirement**: Claude Code version needs to be greater than 1.0.81 to support output-style. Use `npx zcf check-updates` to update.
+> ⚠️ **Version Requirement**: Claude Code version needs to be greater than 1.0.81 to support output-style. Use `npx @benbenwu/zcf check-updates` to update.
 
 ## MCP Service Integration
 
@@ -235,13 +235,13 @@ ZCF has built-in common MCP service configurations, supporting one-click install
 
 ```bash
 # Install all MCP services (recommended)
-npx zcf i -s --mcp-services all
+npx @benbenwu/zcf i -s --mcp-services all
 
 # Selective installation
-npx zcf i -s --mcp-services context7,open-websearch,spec-workflow
+npx @benbenwu/zcf i -s --mcp-services context7,open-websearch,spec-workflow
 
 # Skip MCP service installation
-npx zcf i -s --mcp-services skip
+npx @benbenwu/zcf i -s --mcp-services skip
 ```
 
 ### Configuration Location
@@ -254,7 +254,7 @@ npx zcf i -s --mcp-services skip
 If you need to reconfigure MCP services:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Select 4. Configure MCP
 ```
 
@@ -270,10 +270,10 @@ CCometixLine is a high-performance Rust-based status bar tool:
 
 ```bash
 # Install CCometixLine (enabled by default)
-npx zcf i -s --install-cometix-line true
+npx @benbenwu/zcf i -s --install-cometix-line true
 
 # Install via menu
-npx zcf → Select L
+npx @benbenwu/zcf → Select L
 ```
 
 ### Environment Variables and Permissions
@@ -281,7 +281,7 @@ npx zcf → Select L
 ZCF can import recommended environment variables and permission configurations:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Select 7. Import recommended environment variables and permission configurations
 ```
 
@@ -305,10 +305,10 @@ Use `zcf update` to update workflows and templates while preserving existing con
 
 ```bash
 # Update workflows and templates, preserve API and MCP configuration
-npx zcf update
+npx @benbenwu/zcf update
 
 # Specify language update
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 ```
 
 > 💡 **Best Practices**:

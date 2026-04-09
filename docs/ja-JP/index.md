@@ -57,7 +57,7 @@ GLM CODING PLAN を 10% オフで入手：https://z.ai/subscribe?ic=8JVLJQFSKB
 
 ## プロジェクト概要
 
-ZCF（Zero-Config Code Flow）は、専門開発者向けの CLI ツールで、Claude Code と Codex のエンドツーエンド環境初期化を数分で完了することを目指しています。`npx zcf` を通じて、設定ディレクトリの作成、API/プロキシ統合、MCP サービス統合、ワークフローインポート、出力スタイルとメモリ設定、および一般的なツールのインストールを一括で完了できます。
+ZCF（Zero-Config Code Flow）は、専門開発者向けの CLI ツールで、Claude Code と Codex のエンドツーエンド環境初期化を数分で完了することを目指しています。`npx @benbenwu/zcf` を通じて、設定ディレクトリの作成、API/プロキシ統合、MCP サービス統合、ワークフローインポート、出力スタイルとメモリ設定、および一般的なツールのインストールを一括で完了できます。
 
 ### ZCF を選ぶ理由
 

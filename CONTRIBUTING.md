@@ -228,7 +228,7 @@ Brief description of changes
 
 When reporting bugs, please include:
 
-1. **ZCF Version**: Run `npx zcf --version`
+1. **ZCF Version**: Run `npx @benbenwu/zcf --version`
 2. **Environment**: OS, Node.js version, pnpm version
 3. **Steps to Reproduce**: Minimal reproduction steps
 4. **Expected Behavior**: What should happen

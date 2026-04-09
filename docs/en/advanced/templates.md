@@ -88,16 +88,16 @@ In addition to pre-configured styles, built-in styles are also supported:
 
 ```bash
 # Install all output styles
-npx zcf init -o all
+npx @benbenwu/zcf init -o all
 
 # Install specific styles
-npx zcf init -o engineer-professional,nekomata-engineer
+npx @benbenwu/zcf init -o engineer-professional,nekomata-engineer
 
 # Set default output style
-npx zcf init -o all -d engineer-professional
+npx @benbenwu/zcf init -o all -d engineer-professional
 
 # Skip output style installation
-npx zcf init -o skip
+npx @benbenwu/zcf init -o skip
 ```
 
 ### Switch Output Style
@@ -193,13 +193,13 @@ Workflow templates define structured development processes. Each workflow includ
 
 ```bash
 # Install all workflows
-npx zcf init -w all
+npx @benbenwu/zcf init -w all
 
 # Install specific workflows
-npx zcf init -w sixStepsWorkflow,gitWorkflow
+npx @benbenwu/zcf init -w sixStepsWorkflow,gitWorkflow
 
 # Skip workflow installation
-npx zcf init -w skip
+npx @benbenwu/zcf init -w skip
 ```
 
 ### Custom Workflows
@@ -221,7 +221,7 @@ npm link
 2. **Use During Initialization**:
 ```bash
 # Initialize using custom template directory
-npx zcf init -w custom
+npx @benbenwu/zcf init -w custom
 ```
 
 3. **Team Publishing Custom Templates**:
@@ -276,7 +276,7 @@ Project Root/
 3. **Regular Updates**:
 ```bash
 # Update templates and prompts
-npx zcf update -g zh-CN
+npx @benbenwu/zcf update -g zh-CN
 ```
 
 ## Template Language Support
@@ -301,13 +301,13 @@ ZCF supports templates in two languages:
 
 ```bash
 # Initialize using Chinese templates
-npx zcf init -c zh-CN
+npx @benbenwu/zcf init -c zh-CN
 
 # Initialize using English templates
-npx zcf init -c en
+npx @benbenwu/zcf init -c en
 
 # Switch language during update
-npx zcf update -c en
+npx @benbenwu/zcf update -c en
 ```
 
 ## Template Update Strategy
@@ -316,9 +316,9 @@ npx zcf update -c en
 
 | Method | Command | Description |
 |------|------|------|
-| **Complete Update** | `npx zcf update` | Update all templates |
-| **Documents Only** | `npx zcf init --config-action docs-only` | Only update prompts and documents |
-| **Merge Update** | `npx zcf init --config-action merge` | Merge new templates into existing configuration |
+| **Complete Update** | `npx @benbenwu/zcf update` | Update all templates |
+| **Documents Only** | `npx @benbenwu/zcf init --config-action docs-only` | Only update prompts and documents |
+| **Merge Update** | `npx @benbenwu/zcf init --config-action merge` | Merge new templates into existing configuration |
 
 ### Preserve Custom Content
 
@@ -384,7 +384,7 @@ If templates are not correctly installed:
 
 ```bash
 # Reinstall templates
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 
 # Check template directories
 ls -la ~/.claude/workflows/
@@ -409,10 +409,10 @@ If template language doesn't match configuration:
 
 ```bash
 # Reinitialize and specify language
-npx zcf init --config-action backup -c zh-CN
+npx @benbenwu/zcf init --config-action backup -c zh-CN
 
 # Or only update template language
-npx zcf update -c zh-CN
+npx @benbenwu/zcf update -c zh-CN
 ```
 
 ## Related Resources

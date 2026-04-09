@@ -22,10 +22,10 @@ The `zcf uninstall` command supports:
 
 ```bash
 # Open interactive uninstall menu
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 
 # Or through main menu
-npx zcf
+npx @benbenwu/zcf
 # Then select corresponding uninstall option
 ```
 
@@ -42,14 +42,14 @@ Completely remove all ZCF-related configurations and tools:
 
 ```bash
 # Interactive complete uninstall
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # Then select "Complete Uninstall"
 
 # Non-interactive complete uninstall
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 
 # Specify language
-npx zcf uninstall --mode complete --lang zh-CN
+npx @benbenwu/zcf uninstall --mode complete --lang zh-CN
 ```
 
 ### Custom Uninstall
@@ -58,14 +58,14 @@ Selectively uninstall specific components:
 
 ```bash
 # Interactive custom uninstall
-npx zcf uninstall
+npx @benbenwu/zcf uninstall
 # Then select "Custom Uninstall", then select components to uninstall
 
 # Non-interactive custom uninstall (comma-separated)
-npx zcf uninstall --mode custom --items "ccr,backups,cometix"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,backups,cometix"
 
 # Use array format (in code)
-npx zcf uninstall --mode custom --items '["ccr","backups"]'
+npx @benbenwu/zcf uninstall --mode custom --items '["ccr","backups"]'
 ```
 
 ## Uninstall Modes
@@ -102,13 +102,13 @@ You can selectively uninstall the following components:
 
 ```bash
 # Only uninstall CCR
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # Uninstall multiple components
-npx zcf uninstall --mode custom --items "ccr,cometix,backups"
+npx @benbenwu/zcf uninstall --mode custom --items "ccr,cometix,backups"
 
 # Uninstall all backups (free space)
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ## Common Parameters
@@ -125,15 +125,15 @@ npx zcf uninstall --mode custom --items backups
 
 ```bash
 # Complete uninstall and reinitialize
-npx zcf uninstall --mode complete
-npx zcf init
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init
 ```
 
 ### Scenario 2: Clean Backup Files
 
 ```bash
 # Only clean backups to free space
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 ```
 
 ### Scenario 3: Migrate to New Device
@@ -145,20 +145,20 @@ cp -r ~/.claude ~/claude-backup
 cp -r ~/.codex ~/codex-backup
 
 # 2. Initialize on new device
-npx zcf init
+npx @benbenwu/zcf init
 
 # 3. Clean on old device
-npx zcf uninstall --mode complete
+npx @benbenwu/zcf uninstall --mode complete
 ```
 
 ### Scenario 4: Only Remove Specific Tool
 
 ```bash
 # Only uninstall CCR (preserve other configurations)
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 
 # Only uninstall CCometixLine
-npx zcf uninstall --mode custom --items cometix
+npx @benbenwu/zcf uninstall --mode custom --items cometix
 ```
 
 ## Backup Mechanism
@@ -239,10 +239,10 @@ If you only need to clean part of the configuration:
 
 ```bash
 # Clean backup files (free space)
-npx zcf uninstall --mode custom --items backups
+npx @benbenwu/zcf uninstall --mode custom --items backups
 
 # Clean specific tool configuration
-npx zcf uninstall --mode custom --items ccr
+npx @benbenwu/zcf uninstall --mode custom --items ccr
 ```
 
 ### 3. Team Environment
@@ -259,8 +259,8 @@ In test or development environments:
 
 ```bash
 # Quick reset test environment
-npx zcf uninstall --mode complete
-npx zcf init -s -p 302ai -k "test-key" -g zh-CN
+npx @benbenwu/zcf uninstall --mode complete
+npx @benbenwu/zcf init -s -p 302ai -k "test-key" -g zh-CN
 ```
 
 ## Troubleshooting

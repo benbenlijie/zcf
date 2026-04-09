@@ -4,7 +4,7 @@ title: 命令概览
 
 # 命令概览
 
-ZCF CLI 基于 `cac` 实现，所有命令均可通过 `npx zcf <command>` 调用。常用命令如下：
+ZCF CLI 基于 `cac` 实现，所有命令均可通过 `npx @benbenwu/zcf <command>` 调用。常用命令如下：
 
 | 命令 | 说明 |
 | --- | --- |

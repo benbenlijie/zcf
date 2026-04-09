@@ -4,7 +4,7 @@ title: 主菜单
 
 # 主菜单
 
-执行 `npx zcf` 会进入交互式菜单系统。菜单是 ZCF 的核心交互界面，提供可视化的操作选项，无需记忆复杂的命令参数。
+执行 `npx @benbenwu/zcf` 会进入交互式菜单系统。菜单是 ZCF 的核心交互界面，提供可视化的操作选项，无需记忆复杂的命令参数。
 
 ## 菜单特点
 
@@ -53,7 +53,7 @@ Codex 模式下的菜单会调整为 Codex 对应的操作：
 菜单支持快速输入，无需按确认键：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 输入 1 然后回车，直接进入完整初始化
 # 输入 R 然后回车，直接进入 CCR 管理
 ```
@@ -63,7 +63,7 @@ npx zcf
 如果输入无效字符，CLI 会提示重新输入：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 输入 X（无效选项）
 # CLI 提示：无效选项，请重新输入
 ```
@@ -81,7 +81,7 @@ npx zcf
 在主菜单中输入 `0` 可以切换 CLI 语言：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 输入 0
 # 选择语言：zh-CN 或 en
 # 语言切换后菜单会重新显示
@@ -92,7 +92,7 @@ npx zcf
 使用 `S` 可以在 Claude Code 和 Codex 之间切换：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 当前模式：Claude Code
 # 输入 S
 # 切换到：Codex 模式
@@ -103,7 +103,7 @@ npx zcf
 
 ### 完整初始化（选项 1）
 
-等同于执行 `npx zcf init`，会引导您完成：
+等同于执行 `npx @benbenwu/zcf init`，会引导您完成：
 
 - 选择代码工具类型
 - 配置 API（官方登录/API Key/CCR 代理）
@@ -114,7 +114,7 @@ npx zcf
 
 ### 导入/更新工作流（选项 2）
 
-等同于执行 `npx zcf update`，会：
+等同于执行 `npx @benbenwu/zcf update`，会：
 
 - 更新工作流模板
 - 更新提示词内容
@@ -237,7 +237,7 @@ npx zcf
 首次使用 ZCF 时，建议从菜单开始：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 选择 1 (完整初始化)
 # 按照提示完成配置
 ```
@@ -248,10 +248,10 @@ npx zcf
 
 ```bash
 # 快速更新工作流
-npx zcf update
+npx @benbenwu/zcf update
 
 # 或通过菜单
-npx zcf
+npx @benbenwu/zcf
 # 选择 2
 ```
 
@@ -260,7 +260,7 @@ npx zcf
 不熟悉命令时，使用菜单探索功能：
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # 浏览所有可用选项
 # 尝试不同的功能
 ```
@@ -287,7 +287,7 @@ node --version  # 需要 >= 18
 # 确保终端支持 ANSI 颜色代码
 
 # 3. 直接使用命令
-npx zcf init
+npx @benbenwu/zcf init
 ```
 
 ### 菜单选项无响应
@@ -299,10 +299,10 @@ npx zcf init
 ls -la ~/.ufomiao/zcf/
 
 # 2. 查看详细错误
-npx zcf --verbose
+npx @benbenwu/zcf --verbose
 
 # 3. 重新初始化配置
-npx zcf init --config-action new
+npx @benbenwu/zcf init --config-action new
 ```
 
 ### 工具切换失败
@@ -314,8 +314,8 @@ npx zcf init --config-action new
 cat ~/.ufomiao/zcf/config.toml | grep codeToolType
 
 # 2. 手动切换
-npx zcf init -T codex  # 切换到 Codex
-npx zcf init -T claude-code  # 切换到 Claude Code
+npx @benbenwu/zcf init -T codex  # 切换到 Codex
+npx @benbenwu/zcf init -T claude-code  # 切换到 Claude Code
 ```
 
 ## 相关资源

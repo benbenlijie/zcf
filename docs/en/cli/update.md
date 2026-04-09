@@ -22,13 +22,13 @@ The `zcf update` command performs the following operations:
 
 ```bash
 # Update using saved preferences
-npx zcf update
+npx @benbenwu/zcf update
 
 # Or use abbreviation
-npx zcf u
+npx @benbenwu/zcf u
 
 # Or through main menu
-npx zcf
+npx @benbenwu/zcf
 # Then select 2 (Import/Update Workflows)
 ```
 
@@ -43,19 +43,19 @@ In interactive mode, ZCF will:
 
 ```bash
 # Update using default language settings
-npx zcf u -s
+npx @benbenwu/zcf u -s
 
 # Specify template language
-npx zcf u -s -c zh-CN
+npx @benbenwu/zcf u -s -c zh-CN
 
 # Specify AI output language
-npx zcf u -s -a zh-CN
+npx @benbenwu/zcf u -s -a zh-CN
 
 # Specify both template and output language
-npx zcf u -s -g zh-CN
+npx @benbenwu/zcf u -s -g zh-CN
 
 # Specify code tool type
-npx zcf u -s -T codex
+npx @benbenwu/zcf u -s -T codex
 ```
 
 ## Common Parameters
@@ -76,7 +76,7 @@ npx zcf u -s -T codex
 
 ```bash
 # Regularly run to get latest workflow templates
-npx zcf u
+npx @benbenwu/zcf u
 
 # Update once per week (recommended)
 # Can be added to cron tasks or CI/CD processes
@@ -86,27 +86,27 @@ npx zcf u
 
 ```bash
 # Update Claude Code workflows
-npx zcf u -T claude-code -c zh-CN
+npx @benbenwu/zcf u -T claude-code -c zh-CN
 
 # Update Codex workflows
-npx zcf u -T codex -c zh-CN
+npx @benbenwu/zcf u -T codex -c zh-CN
 ```
 
 ### Scenario 3: Sync Language Settings
 
 ```bash
 # Switch all language settings to Chinese
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # Template Chinese, AI output English
-npx zcf u -c zh-CN -a en
+npx @benbenwu/zcf u -c zh-CN -a en
 ```
 
 ### Scenario 4: Automated Updates
 
 ```bash
 # Non-interactive update (suitable for scripts)
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## Execution Flow
@@ -200,10 +200,10 @@ It's recommended to regularly run `zcf update` to get latest workflows and impro
 
 ```bash
 # Update once per week
-npx zcf u -g zh-CN
+npx @benbenwu/zcf u -g zh-CN
 
 # Or add to cron task
-0 0 * * 0 /usr/local/bin/npx zcf u -s -g zh-CN
+0 0 * * 0 /usr/local/bin/npx @benbenwu/zcf u -s -g zh-CN
 ```
 
 ### 2. Check Before Update
@@ -236,7 +236,7 @@ In team environments:
 
 ```bash
 # Team unified update command
-npx zcf u -s -g zh-CN -T claude-code
+npx @benbenwu/zcf u -s -g zh-CN -T claude-code
 ```
 
 ## Troubleshooting
@@ -263,7 +263,7 @@ If workflows are not updated:
 
 ```bash
 # Force reinstall workflows
-npx zcf init --config-action new -w all
+npx @benbenwu/zcf init --config-action new -w all
 
 # Or manually check workflow directory
 ls -la ~/.claude/workflows/
@@ -275,7 +275,7 @@ If version check doesn't prompt:
 
 1. **Confirm Claude Code is Installed**: Check if `claude-code` command is available
 2. **Manually Check Version**: Use `claude-code --version`
-3. **Use check-updates Command**: Run `npx zcf check-updates`
+3. **Use check-updates Command**: Run `npx @benbenwu/zcf check-updates`
 
 ## Differences from init
 

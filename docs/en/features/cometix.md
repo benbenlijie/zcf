@@ -27,10 +27,10 @@ ZCF automatically installs CCometixLine during initialization:
 
 ```bash
 # Complete initialization (includes CCometixLine installation by default)
-npx zcf init
+npx @benbenwu/zcf init
 
 # Or select initialization in interactive menu
-npx zcf
+npx @benbenwu/zcf
 ```
 
 > 💡 **Tip**: `zcf init` enables `--install-cometix-line true` by default. If you don't need installation, explicitly pass `false`.
@@ -40,7 +40,7 @@ npx zcf
 Enter `L` in the main menu to enter CCometixLine management interface:
 
 ```bash
-npx zcf
+npx @benbenwu/zcf
 # Then enter L
 ```
 
@@ -163,7 +163,7 @@ The installation process automatically detects the platform and selects the appr
 
 ```bash
 # Check through ZCF menu
-npx zcf → Select L → View version information
+npx @benbenwu/zcf → Select L → View version information
 
 # Or run directly
 ccline --version
@@ -175,10 +175,10 @@ ZCF automatically checks CCometixLine version during initialization or updates:
 
 ```bash
 # Use check-updates command to check and update
-npx zcf check-updates
+npx @benbenwu/zcf check-updates
 
 # Or select in menu
-npx zcf → Select + Check Updates
+npx @benbenwu/zcf → Select + Check Updates
 ```
 
 ### Manual Update
@@ -188,7 +188,7 @@ npx zcf → Select + Check Updates
 npm update -g @cometix/ccline
 
 # Or through ZCF menu
-npx zcf → Select L → Upgrade
+npx @benbenwu/zcf → Select L → Upgrade
 ```
 
 ## Troubleshooting
