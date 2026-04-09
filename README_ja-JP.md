@@ -166,10 +166,10 @@ Telegramグループに参加して、サポートやディスカッション、
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/zcf
-[npm-downloads-src]: https://img.shields.io/npm/dm/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/zcf
+[npm-version-src]: https://img.shields.io/npm/v/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/@benbenwu/zcf
+[npm-downloads-src]: https://img.shields.io/npm/dm/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/@benbenwu/zcf
 [license-src]: https://img.shields.io/github/license/ufomiao/zcf.svg?style=flat&colorA=080f12&colorB=1fa669
 [license-href]: https://github.com/ufomiao/zcf/blob/main/LICENSE
 [claude-code-src]: https://img.shields.io/badge/Claude-Code-1fa669?style=flat&colorA=080f12&colorB=1fa669

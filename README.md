@@ -56,23 +56,23 @@ Get 10% OFF GLM CODING PLAN：https://z.ai/subscribe?ic=8JVLJQFSKB
 
 ## 🚀 Quick Start
 
-- Recommended: `npx zcf` opens the interactive menu — pick what you need.
+- Recommended: `npx @benbenwu/zcf` opens the interactive menu — pick what you need.
 - Common commands:
 
 ```bash
-npx zcf i        # Full initialization: install + workflows + API/CCR + MCP
-npx zcf u        # Update workflows only
-npx zcf --lang zh-CN  # Switch interface language (example)
-npx zcf i -s -T codex # Non-interactive Codex setup
+npx @benbenwu/zcf i        # Full initialization: install + workflows + API/CCR + MCP
+npx @benbenwu/zcf u        # Update workflows only
+npx @benbenwu/zcf --lang zh-CN  # Switch interface language (example)
+npx @benbenwu/zcf i -s -T codex # Non-interactive Codex setup
 ```
 
 - Non-interactive example (provider preset):
 
 ```bash
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 ```
 
-- For local development validation, use the repo entrypoints instead of bare `npx zcf`:
+- For local development validation, use the repo entrypoints instead of bare `npx @benbenwu/zcf`:
 
 ```bash
 pnpm dev -- i -s -T codex
@@ -80,7 +80,7 @@ pnpm start -- i -s -T codex
 node bin/zcf.mjs i -s -T codex
 ```
 
-Bare `npx zcf` resolves the published npm package, so it will not automatically use your local repository changes.
+Bare `npx @benbenwu/zcf` resolves the published npm package, so it will not automatically use your local repository changes.
 
 More usage, options, and workflows: see documentation.
 
@@ -177,10 +177,10 @@ If this project helps you, please give me a ⭐️ Star!
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/zcf
-[npm-downloads-src]: https://img.shields.io/npm/dm/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/zcf
+[npm-version-src]: https://img.shields.io/npm/v/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/@benbenwu/zcf
+[npm-downloads-src]: https://img.shields.io/npm/dm/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/@benbenwu/zcf
 [license-src]: https://img.shields.io/github/license/ufomiao/zcf.svg?style=flat&colorA=080f12&colorB=1fa669
 [license-href]: https://github.com/ufomiao/zcf/blob/main/LICENSE
 [claude-code-src]: https://img.shields.io/badge/Claude-Code-1fa669?style=flat&colorA=080f12&colorB=1fa669

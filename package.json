@@ -1,21 +1,24 @@
 {
-  "name": "zcf",
+  "name": "@benbenwu/zcf",
   "type": "module",
-  "version": "3.6.4",
+  "version": "3.6.5",
   "packageManager": "pnpm@10.17.1",
   "description": "Zero-Config Code Flow - One-click configuration tool for Code Cli",
   "author": {
-    "name": "Miao Da",
-    "email": "ufo025174@gmail.com",
-    "url": "https://github.com/WitMiao"
+    "name": "Wu Yubin",
+    "email": "benbenwyb@gmail.com",
+    "url": "https://github.com/benbenlijie"
   },
   "license": "MIT",
-  "homepage": "https://github.com/UfoMiao/zcf",
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/benbenlijie/zcf",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UfoMiao/zcf.git"
+    "url": "git+https://github.com/benbenlijie/zcf.git"
   },
-  "bugs": "https://github.com/UfoMiao/zcf/issues",
+  "bugs": "https://github.com/benbenlijie/zcf/issues",
   "keywords": [
     "claude",
     "claude-code",

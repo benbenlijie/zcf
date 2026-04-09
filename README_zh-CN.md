@@ -57,29 +57,29 @@ GLM CODING PLAN 是专为AI编码打造的订阅套餐，每月最低仅需20元
 
 ## 🚀 快速开始
 
-- 推荐：`npx zcf` 打开交互式菜单，按需选择。
+- 推荐：`npx @benbenwu/zcf` 打开交互式菜单，按需选择。
 - 常用命令：
 
 ```bash
-npx zcf i        # 完整初始化：安装 + 工作流 + API/CCR + MCP
-npx zcf u        # 仅更新工作流
-npx zcf --lang zh-CN  # 切换界面语言示例
-npx zcf i -s -T codex # 非交互完成 Codex 安装
+npx @benbenwu/zcf i        # 完整初始化：安装 + 工作流 + API/CCR + MCP
+npx @benbenwu/zcf u        # 仅更新工作流
+npx @benbenwu/zcf --lang zh-CN  # 切换界面语言示例
+npx @benbenwu/zcf i -s -T codex # 非交互完成 Codex 安装
 ```
 
 - 无交互示例（预设提供商）：
 
 ```bash
-npx zcf i -s -p 302ai -k "sk-xxx"
+npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 ```
 
-- 本地开发验证请使用仓库内命令，而不是裸 `npx zcf`。
+- 本地开发验证请使用仓库内命令，而不是裸 `npx @benbenwu/zcf`。
 
 ### 本地仓库如何使用
 
 如果你正在这个仓库里改代码，最重要的一点是：
 
-- `npx zcf` 调用的是 npm 上已发布版本，不会自动使用你当前仓库里的本地修改。
+- `npx @benbenwu/zcf` 调用的是 npm 上已发布版本，不会自动使用你当前仓库里的本地修改。
 - 想直接运行你本地刚改过的源码，请优先使用 `pnpm dev -- ...`。
 
 #### 1. 首次准备
@@ -315,10 +315,10 @@ pnpm dev -- update --help
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/zcf
-[npm-downloads-src]: https://img.shields.io/npm/dm/zcf?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/zcf
+[npm-version-src]: https://img.shields.io/npm/v/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/@benbenwu/zcf
+[npm-downloads-src]: https://img.shields.io/npm/dm/%40benbenwu%2Fzcf?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/@benbenwu/zcf
 [license-src]: https://img.shields.io/github/license/ufomiao/zcf.svg?style=flat&colorA=080f12&colorB=1fa669
 [license-href]: https://github.com/ufomiao/zcf/blob/main/LICENSE
 [claude-code-src]: https://img.shields.io/badge/Claude-Code-1fa669?style=flat&colorA=080f12&colorB=1fa669

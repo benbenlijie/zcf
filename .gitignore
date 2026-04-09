@@ -30,6 +30,7 @@ junit.xml
 
 # Vitest
 .vitest-result.json
+.codex
 
 # Test temporary output files
 *-output.txt
