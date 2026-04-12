@@ -1,14 +1,48 @@
 import type { CodexFullInitOptions, CodexMcpService } from './codex'
+import { homedir } from 'node:os'
 import ansis from 'ansis'
 import inquirer from 'inquirer'
+import { join } from 'pathe'
 import { getMcpServices, MCP_SERVICE_CONFIGS } from '../../config/mcp-services'
 import { ensureI18nInitialized, i18n } from '../../i18n'
 import { selectMcpServices } from '../mcp-selector'
 import { getSystemRoot, isWindows } from '../platform'
 import { updateZcfConfig } from '../zcf-config'
 import { backupCodexComplete, getBackupMessage, readCodexConfig } from './codex'
+import { resolveCodexMcpCommandOverrides } from './codex-mcp-prerequisites'
 import { applyCodexPlatformCommand } from './codex-platform'
 import { batchUpdateCodexMcpServices } from './codex-toml-updater'
+
+function buildSerenaArgs(): string[] {
+  return ['start-mcp-server', '--context=codex', '--project-from-cwd', '--enable-web-dashboard', 'false']
+}
+
+function applyCodexSpecificMcpOverrides(
+  id: string,
+  command: string,
+  args: string[],
+  env: Record<string, string>,
+): { command: string, args: string[], env: Record<string, string>, startupTimeoutSec: number } {
+  const nextCommand = command
+  let nextArgs = args
+  let startupTimeoutSec = 30
+
+  if (id === 'serena') {
+    nextArgs = buildSerenaArgs()
+  }
+
+  if (id === 'spec-workflow') {
+    env.SPEC_WORKFLOW_HOME = join(homedir(), '.codex', 'memories', 'spec-workflow')
+    startupTimeoutSec = 90
+  }
+
+  return {
+    command: nextCommand,
+    args: nextArgs,
+    env,
+    startupTimeoutSec,
+  }
+}
 
 export async function configureCodexMcp(options?: CodexFullInitOptions): Promise<void> {
   ensureI18nInitialized()
@@ -40,6 +74,7 @@ export async function configureCodexMcp(options?: CodexFullInitOptions): Promise
       : MCP_SERVICE_CONFIGS
           .filter(service => !service.requiresApiKey)
           .map(service => service.id)
+    const commandOverrides = await resolveCodexMcpCommandOverrides(defaultServiceIds)
 
     const existingServices = existingConfig?.mcpServices || []
     const selection: CodexMcpService[] = []
@@ -49,36 +84,29 @@ export async function configureCodexMcp(options?: CodexFullInitOptions): Promise
       if (!configInfo)
         continue
 
-      let command = configInfo.config.command || id
+      let command = commandOverrides[id.toLowerCase()] || configInfo.config.command || id
       let args = (configInfo.config.args || []).map(arg => String(arg))
-
-      // Special handling: serena context should be "codex" for Codex
-      if (id === 'serena') {
-        const idx = args.indexOf('--context')
-        if (idx >= 0 && idx + 1 < args.length)
-          args[idx + 1] = 'codex'
-        else
-          args.push('--context', 'codex')
-      }
+      const env = { ...(configInfo.config.env || {}) }
+      const serviceConfigOverride = applyCodexSpecificMcpOverrides(id, command, args, env)
+      command = serviceConfigOverride.command
+      args = serviceConfigOverride.args
 
       const serviceConfig: CodexMcpService = { id: id.toLowerCase(), command, args }
       applyCodexPlatformCommand(serviceConfig)
       command = serviceConfig.command
       args = serviceConfig.args || []
-
-      const env = { ...(configInfo.config.env || {}) }
       if (isWindows()) {
         const systemRoot = getSystemRoot()
         if (systemRoot)
-          env.SYSTEMROOT = systemRoot
+          serviceConfigOverride.env.SYSTEMROOT = systemRoot
       }
 
       selection.push({
         id: id.toLowerCase(),
         command,
         args,
-        env: Object.keys(env).length > 0 ? env : undefined,
-        startup_timeout_sec: 30,
+        env: Object.keys(serviceConfigOverride.env).length > 0 ? serviceConfigOverride.env : undefined,
+        startup_timeout_sec: serviceConfigOverride.startupTimeoutSec,
       })
     }
 
@@ -116,6 +144,7 @@ export async function configureCodexMcp(options?: CodexFullInitOptions): Promise
     return
 
   const servicesMeta = await getMcpServices()
+  const commandOverrides = await resolveCodexMcpCommandOverrides(selectedIds)
   const selection: CodexMcpService[] = []
   const existingServices = existingConfig?.mcpServices || []
 
@@ -151,31 +180,22 @@ export async function configureCodexMcp(options?: CodexFullInitOptions): Promise
       continue
 
     const serviceMeta = servicesMeta.find(service => service.id === id)
-    let command = configInfo.config.command || id
+    let command = commandOverrides[id.toLowerCase()] || configInfo.config.command || id
     let args = (configInfo.config.args || []).map(arg => String(arg))
-
-    // Special handling: serena context should be "codex" for Codex
-    if (id === 'serena') {
-      const idx = args.indexOf('--context')
-      if (idx >= 0 && idx + 1 < args.length) {
-        args[idx + 1] = 'codex'
-      }
-      else {
-        args.push('--context', 'codex')
-      }
-    }
+    const env = { ...(configInfo.config.env || {}) }
+    const serviceConfigOverride = applyCodexSpecificMcpOverrides(id, command, args, env)
+    command = serviceConfigOverride.command
+    args = serviceConfigOverride.args
 
     const serviceConfig: CodexMcpService = { id: id.toLowerCase(), command, args }
     applyCodexPlatformCommand(serviceConfig)
     command = serviceConfig.command
     args = serviceConfig.args || []
 
-    const env = { ...(configInfo.config.env || {}) }
-
     if (isWindows()) {
       const systemRoot = getSystemRoot()
       if (systemRoot)
-        env.SYSTEMROOT = systemRoot
+        serviceConfigOverride.env.SYSTEMROOT = systemRoot
     }
 
     if (configInfo.requiresApiKey && configInfo.apiKeyEnvVar) {
@@ -190,15 +210,15 @@ export async function configureCodexMcp(options?: CodexFullInitOptions): Promise
       if (!apiKey)
         continue
 
-      env[configInfo.apiKeyEnvVar] = apiKey
+      serviceConfigOverride.env[configInfo.apiKeyEnvVar] = apiKey
     }
 
     selection.push({
       id: id.toLowerCase(),
       command: serviceConfig.command,
       args: serviceConfig.args,
-      env: Object.keys(env).length > 0 ? env : undefined,
-      startup_timeout_sec: 30,
+      env: Object.keys(serviceConfigOverride.env).length > 0 ? serviceConfigOverride.env : undefined,
+      startup_timeout_sec: serviceConfigOverride.startupTimeoutSec,
     })
   }
 

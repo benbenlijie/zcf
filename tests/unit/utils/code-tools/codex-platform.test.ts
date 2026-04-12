@@ -23,8 +23,8 @@ vi.mock('../../../../src/config/mcp-services', () => ({
       id: 'serena',
       requiresApiKey: false,
       config: {
-        command: 'uvx',
-        args: ['--from', 'git+https://github.com/oraios/serena', 'serena', 'start-mcp-server'],
+        command: 'serena',
+        args: ['start-mcp-server', '--context', 'ide-assistant'],
         env: {},
       },
     },
@@ -53,12 +53,23 @@ vi.mock('../../../../src/utils/zcf-config', () => ({
 vi.mock('../../../../src/utils/platform', () => ({
   isWindows: vi.fn(() => true),
   getMcpCommand: vi.fn((cmd: string) => {
-    if (cmd === 'uvx')
-      return ['cmd', '/c', 'uvx']
-    return ['cmd', '/c', 'npx']
+    if (cmd === 'npx')
+      return ['cmd', '/c', 'npx']
+    if (cmd === 'serena')
+      return ['serena']
+    return [cmd]
   }),
   getSystemRoot: vi.fn(() => 'C:/Windows'),
   normalizeTomlPath: vi.fn((str: string) => str.replace(/\\+/g, '/').replace(/\/+/g, '/')),
+}))
+
+vi.mock('../../../../src/utils/code-tools/codex-mcp-prerequisites', () => ({
+  resolveCodexMcpCommandOverrides: vi.fn(async (serviceIds: string[]) => {
+    if (serviceIds.includes('serena')) {
+      return { serena: '/home/test/.local/bin/serena' }
+    }
+    return {}
+  }),
 }))
 
 vi.mock('../../../../src/utils/fs-operations', () => ({
@@ -91,18 +102,16 @@ describe('applyCodexPlatformCommand integration', () => {
     await configureCodexMcp()
 
     expect(mockUpdateZcfConfig).toHaveBeenCalledWith({ codeToolType: 'codex' })
-    // New implementation uses batchUpdateCodexMcpServices which calls writeFile
     expect(writeFile).toHaveBeenCalled()
     const writeFileMock = vi.mocked(writeFile)
     const configCalls = writeFileMock.mock.calls.filter(call => call[0].includes('config.toml'))
     expect(configCalls.length).toBeGreaterThan(0)
-    // Verify the content contains the rewritten command
     const lastConfigContent = configCalls[configCalls.length - 1][1] as string
     expect(lastConfigContent).toContain('[mcp_servers.service]')
     expect(lastConfigContent).toContain('command = "cmd"')
   })
 
-  it('should rewrite uvx commands using platform-specific MCP command on Windows', async () => {
+  it('should preserve direct serena executable path on Windows', async () => {
     mockSelectMcpServices.mockResolvedValue(['serena'])
     mockGetMcpServices.mockResolvedValue([
       { id: 'serena', name: 'Serena', description: 'Serena MCP service' },
@@ -118,14 +127,12 @@ describe('applyCodexPlatformCommand integration', () => {
     await configureCodexMcp()
 
     expect(mockUpdateZcfConfig).toHaveBeenCalledWith({ codeToolType: 'codex' })
-    // New implementation uses batchUpdateCodexMcpServices which calls writeFile
     expect(writeFile).toHaveBeenCalled()
     const writeFileMock = vi.mocked(writeFile)
     const configCalls = writeFileMock.mock.calls.filter(call => call[0].includes('config.toml'))
     expect(configCalls.length).toBeGreaterThan(0)
-    // Verify the content contains the rewritten command
     const lastConfigContent = configCalls[configCalls.length - 1][1] as string
     expect(lastConfigContent).toContain('[mcp_servers.serena]')
-    expect(lastConfigContent).toContain('command = "cmd"')
+    expect(lastConfigContent).toContain('command = "/home/test/.local/bin/serena"')
   })
 })

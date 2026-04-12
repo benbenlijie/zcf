@@ -284,7 +284,7 @@ pnpm release
 ```bash
 # 1. 检查 MCP 配置
 cat ~/.claude/settings.json | jq .mcpServers
-cat ~/.codex/config.toml | grep -A 10 mcp_server
+cat ~/.codex/config.toml | grep -A 20 mcp_servers
 
 # 2. 重新配置 MCP
 npx @benbenwu/zcf
@@ -395,13 +395,19 @@ cat ~/.claude/settings.json | jq .mcpServers.context7
 
 **Codex**：
 
-编辑 `~/.codex/config.toml`，在对应的 MCP 服务配置下添加 `startup_timeout_sec`：
+编辑 `~/.codex/config.toml`，在对应的 MCP 服务配置下添加 `startup_timeout_sec`。如果是 `spec-workflow`，还应同时配置独立工作目录：
 
 ```toml
-[mcp_server.context7]
+[mcp_servers.context7]
 command = "npx"
 args = ["-y", "@context7/mcp-server"]
 startup_timeout_sec = 60
+
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
 ```
 
 #### 方法 2：更换网络节点
@@ -430,7 +436,7 @@ export HTTPS_PROXY=http://127.0.0.1:7890
 cat ~/.claude/settings.json | jq .env.MCP_TIMEOUT
 
 # 验证 Codex 配置
-cat ~/.codex/config.toml | grep -A 5 "mcp_server.context7"
+cat ~/.codex/config.toml | grep -A 10 "mcp_servers"
 
 # 重启应用后测试 MCP 服务
 ```
@@ -439,8 +445,37 @@ cat ~/.codex/config.toml | grep -A 5 "mcp_server.context7"
 
 - `MCP_TIMEOUT` 单位为毫秒（60000 = 60 秒）
 - `startup_timeout_sec` 单位为秒（60 = 60 秒）
+- `spec-workflow` 在 Codex 下建议使用绝对路径形式的 `SPEC_WORKFLOW_HOME`，避免默认目录不可写、`~` 不展开或上下文丢失
 - 如果超时时间设置过长，可能影响启动速度
 - 建议根据实际网络环境调整超时时间（30-120 秒）
+
+### 6. Serena MCP 启动失败
+
+**症状**：提示 `MCP client for serena failed to start`、`No such file or directory`，或配置里仍然使用旧的 `uvx --from git+...` 启动方式
+
+**原因**：Codex 环境没有可直接执行的 `serena`，或沿用了旧版启动命令
+
+**解决方案**：
+
+```bash
+# 1. 安装 uv（如未安装）
+curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+
+# 2. 安装 Serena CLI
+~/.local/bin/uv tool install -p 3.13 serena-agent@latest --prerelease=allow
+
+# 3. 初始化 Serena
+~/.local/bin/serena init
+```
+
+将 Codex 配置改为：
+
+```toml
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
+startup_timeout_sec = 30
+```
 
 ## Codex 相关问题
 

@@ -82,8 +82,8 @@ export const MCP_SERVICE_CONFIGS: McpServiceConfig[] = [
     requiresApiKey: false,
     config: {
       type: 'stdio',
-      command: 'uvx',
-      args: ['--from', 'git+https://github.com/oraios/serena', 'serena', 'start-mcp-server', '--context', 'ide-assistant', '--enable-web-dashboard', 'false'],
+      command: 'serena',
+      args: ['start-mcp-server', '--context', 'ide-assistant', '--enable-web-dashboard', 'false'],
       env: {},
     },
   },

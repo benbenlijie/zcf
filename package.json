@@ -1,7 +1,7 @@
 {
   "name": "@benbenwu/zcf",
   "type": "module",
-  "version": "3.6.5",
+  "version": "3.6.6",
   "packageManager": "pnpm@10.17.1",
   "description": "Zero-Config Code Flow - One-click configuration tool for Code Cli",
   "author": {
@@ -111,7 +111,7 @@
   },
   "lint-staged": {
     "*": [
-      "pnpm lint"
+      "pnpm exec eslint --no-warn-ignored"
     ]
   }
 }

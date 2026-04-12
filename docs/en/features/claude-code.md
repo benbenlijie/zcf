@@ -229,7 +229,7 @@ ZCF has built-in common MCP service configurations, supporting one-click install
 | `mcp-deepwiki` | stdio | DeepWiki documentation retrieval | ❌ |
 | `Playwright` | stdio | Playwright browser operations | ❌ |
 | `exa` | stdio | Exa web search | ✅ Requires `EXA_API_KEY` |
-| `serena` | uvx | Serena IDE assistant | ❌ |
+| `serena` | serena CLI | Serena IDE assistant | ❌ |
 
 ### MCP Service Configuration
 

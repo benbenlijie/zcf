@@ -76,6 +76,12 @@ vi.mock('../../../../src/utils/platform', () => ({
   normalizeTomlPath: vi.fn((str: string) => str),
 }))
 
+// Mock Codex MCP prerequisites
+vi.mock('../../../../src/utils/code-tools/codex-mcp-prerequisites', () => ({
+  ensureSerenaForCodex: vi.fn(),
+  resolveCodexMcpCommandOverrides: vi.fn(async () => ({})),
+}))
+
 // Mock prompt helpers
 vi.mock('../../../../src/utils/prompt-helpers', () => ({
   addNumbersToChoices: vi.fn(choices => choices),

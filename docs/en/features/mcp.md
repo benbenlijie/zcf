@@ -28,7 +28,7 @@ ZCF has built-in the following MCP service configurations:
 | `mcp-deepwiki` | stdio | DeepWiki documentation retrieval | ❌ | [mcp-deepwiki](https://github.com/regenrek/deepwiki-mcp) |
 | `Playwright` | stdio | Playwright browser automation operations | ❌ | [mcp-playwright](https://github.com/modelcontextprotocol/server-playwright) |
 | `exa` | stdio | Exa AI web search | ✅ Requires `EXA_API_KEY` | [mcp-exa](https://github.com/modelcontextprotocol/server-exa) |
-| `serena` | uvx | Serena IDE assistant, semantic code search | ❌ | [Serena](https://github.com/modelcontextprotocol/server-serena) |
+| `serena` | serena CLI | Serena IDE assistant, semantic code search | ❌ | [Serena](https://github.com/oraios/serena) |
 
 ## Service Details
 
@@ -137,6 +137,11 @@ Serena provides IDE-like semantic code search and editing capabilities:
 - ✏️ Smart code editing suggestions
 - 📊 Code context understanding
 
+**Codex-specific handling**:
+- ZCF first checks whether `serena` is already available, and installs `uv` plus `serena-agent` if it is missing
+- ZCF runs `serena init` on first setup
+- When writing Codex config, ZCF uses the resolved absolute executable path and pins the arguments to `--context=codex --project-from-cwd`
+
 ## Installation and Configuration
 
 ### Interactive Installation
@@ -208,13 +213,23 @@ Configuration file: `~/.claude/settings.json`
 Configuration file: `~/.codex/config.toml`
 
 ```toml
-[mcp_server.context7]
+[mcp_servers.context7]
 command = "npx"
 args = ["-y", "@context-labs/context7"]
 
-[mcp_server.open-websearch]
+[mcp_servers.open-websearch]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-open-websearch"]
+
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
+
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
 ```
 
 ## Cross-Platform Support
@@ -337,5 +352,3 @@ Learn more about MCP related content:
 - 🔧 [Configuration Management](../advanced/configuration.md) - Deep dive into MCP configuration management
 - 🎯 [Claude Code Configuration](claude-code.md) - Learn about MCP integration in Claude Code
 - 🚀 [Codex Support](codex.md) - Learn about MCP integration in Codex
-
-

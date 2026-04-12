@@ -178,7 +178,26 @@ npx @benbenwu/zcf → Select S (Switch to Codex) → Select 4 (Configure MCP)
 
 ### Configuration File Location
 
-MCP service configuration is saved in the `[mcp_server]` entries of `~/.codex/config.toml`.
+MCP service configuration is saved in the `[mcp_servers]` entries of `~/.codex/config.toml`.
+
+For Codex, ZCF also applies two extra compatibility safeguards to avoid common first-run startup failures:
+
+- **Spec Workflow**: automatically writes an absolute `SPEC_WORKFLOW_HOME` path and raises `startup_timeout_sec` to `90`
+- **Serena**: detects or installs `uv` and `serena-agent`, runs `serena init` when needed, then writes the resolved absolute `serena` executable path into the Codex config
+
+A typical generated config looks like this:
+
+```toml
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
+
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
+```
 
 ## Workflow System
 
@@ -334,4 +353,3 @@ Learn more about Codex related features:
 - 📚 [Workflow Details](../workflows/) - Learn about workflows available in Codex
 - 🔧 [Configuration Management](../advanced/configuration.md) - Deep dive into Codex configuration management
 - 🎯 [MCP Service Integration](mcp.md) - Detailed information about MCP service usage in Codex
-

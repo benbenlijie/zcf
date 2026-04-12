@@ -284,7 +284,7 @@ pnpm release
 ```bash
 # 1. Check MCP configuration
 cat ~/.claude/settings.json | jq .mcpServers
-cat ~/.codex/config.toml | grep -A 10 mcp_server
+cat ~/.codex/config.toml | grep -A 20 mcp_servers
 
 # 2. Reconfigure MCP
 npx @benbenwu/zcf
@@ -395,13 +395,19 @@ Complete example:
 
 **Codex**:
 
-Edit `~/.codex/config.toml`, add `startup_timeout_sec` under corresponding MCP service configuration:
+Edit `~/.codex/config.toml` and add `startup_timeout_sec` under the relevant MCP service. For `spec-workflow`, also configure a dedicated working directory:
 
 ```toml
-[mcp_server.context7]
+[mcp_servers.context7]
 command = "npx"
 args = ["-y", "@context7/mcp-server"]
 startup_timeout_sec = 60
+
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
 ```
 
 #### Method 2: Change Network Node
@@ -430,7 +436,7 @@ After configuration, need to restart Claude Code or Codex application:
 cat ~/.claude/settings.json | jq .env.MCP_TIMEOUT
 
 # Verify Codex configuration
-cat ~/.codex/config.toml | grep -A 5 "mcp_server.context7"
+cat ~/.codex/config.toml | grep -A 10 "mcp_servers"
 
 # Test MCP service after restarting application
 ```
@@ -439,8 +445,37 @@ cat ~/.codex/config.toml | grep -A 5 "mcp_server.context7"
 
 - `MCP_TIMEOUT` unit is milliseconds (60000 = 60 seconds)
 - `startup_timeout_sec` unit is seconds (60 = 60 seconds)
+- For `spec-workflow` on Codex, use an absolute `SPEC_WORKFLOW_HOME` path to avoid unwritable default directories, missing `~` expansion, or lost state
 - If timeout is set too long, may affect startup speed
 - Recommended to adjust timeout based on actual network environment (30-120 seconds)
+
+### 6. Serena MCP Failed to Start
+
+**Symptoms**: You see `MCP client for serena failed to start`, `No such file or directory`, or the config still uses the legacy `uvx --from git+...` launcher
+
+**Cause**: The Codex environment cannot execute `serena` directly, or the old launcher syntax is still being used
+
+**Solutions**:
+
+```bash
+# 1. Install uv if needed
+curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+
+# 2. Install the Serena CLI
+~/.local/bin/uv tool install -p 3.13 serena-agent@latest --prerelease=allow
+
+# 3. Initialize Serena
+~/.local/bin/serena init
+```
+
+Update Codex config to:
+
+```toml
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
+startup_timeout_sec = 30
+```
 
 ## Codex Related Issues
 
@@ -828,4 +863,3 @@ cp -r ~/.claude/backup/backup_YYYY-MM-DD_HH-mm-ss/* ~/.claude/
 - **Documentation**: View complete documentation for more information
 
 > 💡 **Tip**: When encountering problems, first check common problems in this document. If the problem persists, please collect relevant information and report it in GitHub Issues.
-

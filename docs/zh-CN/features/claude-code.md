@@ -229,7 +229,7 @@ ZCF 内置常用 MCP 服务配置，支持一键安装和管理。
 | `mcp-deepwiki` | stdio | DeepWiki 文档检索 | ❌ |
 | `Playwright` | stdio | Playwright 浏览器操作 | ❌ |
 | `exa` | stdio | Exa 网络搜索 | ✅ 需要 `EXA_API_KEY` |
-| `serena` | uvx | Serena IDE 助手 | ❌ |
+| `serena` | serena CLI | Serena IDE 助手 | ❌ |
 
 ### MCP 服务配置
 

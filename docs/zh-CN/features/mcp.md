@@ -28,7 +28,7 @@ ZCF 内置以下 MCP 服务配置：
 | `mcp-deepwiki` | stdio | DeepWiki 文档检索 | ❌ | [mcp-deepwiki](https://github.com/regenrek/deepwiki-mcp) |
 | `Playwright` | stdio | Playwright 浏览器自动化操作 | ❌ | [mcp-playwright](https://github.com/modelcontextprotocol/server-playwright) |
 | `exa` | stdio | Exa AI 网络搜索 | ✅ 需要 `EXA_API_KEY` | [mcp-exa](https://github.com/modelcontextprotocol/server-exa) |
-| `serena` | uvx | Serena IDE 助手，语义代码检索 | ❌ | [Serena](https://github.com/modelcontextprotocol/server-serena) |
+| `serena` | serena CLI | Serena IDE 助手，语义代码检索 | ❌ | [Serena](https://github.com/oraios/serena) |
 
 ## 服务详细介绍
 
@@ -137,6 +137,11 @@ Serena 提供类似 IDE 的语义代码检索与编辑能力：
 - ✏️ 智能代码编辑建议
 - 📊 代码上下文理解
 
+**Codex 特殊处理**：
+- ZCF 会优先检测 `serena` 是否已可用，不可用时自动安装 `uv` 与 `serena-agent`
+- 首次安装后会自动执行 `serena init`
+- 写入 Codex 配置时会使用解析后的绝对路径，并固定为 `--context=codex --project-from-cwd`
+
 ## 安装与配置
 
 ### 交互式安装
@@ -208,13 +213,23 @@ MCP 服务配置保存在不同的配置文件中：
 配置文件：`~/.codex/config.toml`
 
 ```toml
-[mcp_server.context7]
+[mcp_servers.context7]
 command = "npx"
 args = ["-y", "@context-labs/context7"]
 
-[mcp_server.open-websearch]
+[mcp_servers.open-websearch]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-open-websearch"]
+
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
+
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
 ```
 
 ## 跨平台支持

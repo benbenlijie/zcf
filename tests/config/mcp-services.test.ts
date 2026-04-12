@@ -62,6 +62,19 @@ describe('mcp services configuration', () => {
         },
       })
     })
+
+    it('should have serena service with official CLI configuration', () => {
+      const serenaConfig = MCP_SERVICE_CONFIGS.find(config => config.id === 'serena')
+
+      expect(serenaConfig).toBeDefined()
+      expect(serenaConfig!.requiresApiKey).toBe(false)
+      expect(serenaConfig!.config).toEqual({
+        type: 'stdio',
+        command: 'serena',
+        args: ['start-mcp-server', '--context', 'ide-assistant', '--enable-web-dashboard', 'false'],
+        env: {},
+      })
+    })
   })
 
   describe('getMcpServices', () => {

@@ -65,9 +65,11 @@ Spec Workflow MCP configuration will be added to Claude Code or Codex MCP servic
 **Codex:**
 ```toml
 # ~/.codex/config.toml
-[mcp_server."spec-workflow"]
+[mcp_servers."spec-workflow"]
 command = "npx"
 args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
 ```
 
 ## Core Features
@@ -335,4 +337,3 @@ May not be suitable for:
 - ⚠️ **Personal Projects**: Personal projects may not need such detailed requirements documents
 
 > 💡 **Tip**: Spec Workflow is an important part of ZCF workflow ecosystem. It's recommended to introduce it early in the project to gain maximum benefits. Combined with other ZCF workflows and tools, you can build a complete development process.
-

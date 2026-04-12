@@ -178,7 +178,26 @@ npx @benbenwu/zcf → 选择 S（切换到 Codex）→ 选择 4（配置 MCP）
 
 ### 配置文件位置
 
-MCP 服务配置保存在 `~/.codex/config.toml` 的 `[mcp_server]` 条目中。
+MCP 服务配置保存在 `~/.codex/config.toml` 的 `[mcp_servers]` 条目中。
+
+对于 Codex，ZCF 还会应用两项额外兼容处理，避免首次配置后出现常见启动失败：
+
+- **Spec Workflow**：自动写入绝对路径形式的 `SPEC_WORKFLOW_HOME`，并将 `startup_timeout_sec` 提升到 `90`
+- **Serena**：优先检测并安装 `uv` 与 `serena-agent`，必要时执行 `serena init`，然后把解析后的 `serena` 可执行文件绝对路径写入 Codex 配置
+
+典型配置片段如下：
+
+```toml
+[mcp_servers."spec-workflow"]
+command = "npx"
+args = ["-y", "@pimzino/spec-workflow-mcp@latest"]
+env = { SPEC_WORKFLOW_HOME = "/home/you/.codex/memories/spec-workflow" }
+startup_timeout_sec = 90
+
+[mcp_servers.serena]
+command = "/home/you/.local/bin/serena"
+args = ["start-mcp-server", "--context=codex", "--project-from-cwd", "--enable-web-dashboard", "false"]
+```
 
 ## 工作流系统
 

@@ -11,12 +11,14 @@ vi.mock('../../../../src/i18n', () => ({
 
 vi.mock('../../../../src/config/mcp-services', () => ({
   getMcpServices: vi.fn().mockResolvedValue([
-    { id: 'serena', name: 'Serena', requiresApiKey: false, config: { command: 'serena', args: ['--context', 'default'] } },
+    { id: 'serena', name: 'Serena', requiresApiKey: false, config: { command: 'serena', args: ['start-mcp-server', '--context', 'ide-assistant'] } },
+    { id: 'spec-workflow', name: 'Spec Workflow', requiresApiKey: false, config: { command: 'npx', args: ['-y', '@pimzino/spec-workflow-mcp@latest'] } },
     { id: 'context7', name: 'Context7', requiresApiKey: false, config: { command: 'context7', args: [] } },
     { id: 'exa', name: 'Exa', requiresApiKey: true, apiKeyEnvVar: 'EXA_API_KEY', apiKeyPrompt: 'Enter Exa API key', config: { command: 'exa', args: [] } },
   ]),
   MCP_SERVICE_CONFIGS: [
-    { id: 'serena', requiresApiKey: false, config: { command: 'serena', args: ['--context', 'default'] } },
+    { id: 'serena', requiresApiKey: false, config: { command: 'serena', args: ['start-mcp-server', '--context', 'ide-assistant'] } },
+    { id: 'spec-workflow', requiresApiKey: false, config: { command: 'npx', args: ['-y', '@pimzino/spec-workflow-mcp@latest'] } },
     { id: 'context7', requiresApiKey: false, config: { command: 'context7', args: [] } },
     { id: 'exa', requiresApiKey: true, apiKeyEnvVar: 'EXA_API_KEY', config: { command: 'exa', args: [] } },
   ],
@@ -50,6 +52,14 @@ vi.mock('../../../../src/utils/code-tools/codex-platform', () => ({
   applyCodexPlatformCommand: vi.fn(),
 }))
 
+vi.mock('../../../../src/utils/code-tools/codex-mcp-prerequisites', () => ({
+  resolveCodexMcpCommandOverrides: vi.fn(),
+}))
+
+vi.mock('node:os', () => ({
+  homedir: () => '/home/test',
+}))
+
 vi.mock('inquirer', () => ({
   default: {
     prompt: vi.fn(),
@@ -61,8 +71,10 @@ describe('codex-configure', () => {
     vi.clearAllMocks()
     // Restore mock implementations that might have been changed
     const { isWindows, getSystemRoot } = vi.mocked(await import('../../../../src/utils/platform'))
+    const { resolveCodexMcpCommandOverrides } = vi.mocked(await import('../../../../src/utils/code-tools/codex-mcp-prerequisites'))
     isWindows.mockReturnValue(false)
     getSystemRoot.mockReturnValue(null)
+    resolveCodexMcpCommandOverrides.mockResolvedValue({})
   })
 
   describe('configureCodexMcp - skipPrompt mode', () => {
@@ -106,9 +118,11 @@ describe('codex-configure', () => {
       const { configureCodexMcp } = await import('../../../../src/utils/code-tools/codex-configure')
       const { readCodexConfig, backupCodexComplete } = vi.mocked(await import('../../../../src/utils/code-tools/codex'))
       const { batchUpdateCodexMcpServices } = vi.mocked(await import('../../../../src/utils/code-tools/codex-toml-updater'))
+      const { resolveCodexMcpCommandOverrides } = vi.mocked(await import('../../../../src/utils/code-tools/codex-mcp-prerequisites'))
 
       readCodexConfig.mockReturnValue(null)
       backupCodexComplete.mockReturnValue('/backup/path')
+      resolveCodexMcpCommandOverrides.mockResolvedValue({ serena: '/home/test/.local/bin/serena' })
 
       const options: CodexFullInitOptions = {
         skipPrompt: true,
@@ -118,6 +132,34 @@ describe('codex-configure', () => {
       await configureCodexMcp(options)
 
       expect(batchUpdateCodexMcpServices).toHaveBeenCalled()
+      const callArgs = batchUpdateCodexMcpServices.mock.calls[0][0] as CodexMcpService[]
+      const serenaService = callArgs.find((s: CodexMcpService) => s.id === 'serena')
+      expect(serenaService).toBeDefined()
+      expect(serenaService?.command).toBe('/home/test/.local/bin/serena')
+      expect(serenaService?.args).toEqual(['start-mcp-server', '--context=codex', '--project-from-cwd', '--enable-web-dashboard', 'false'])
+    })
+
+    it('should inject Codex-specific spec-workflow env and timeout in skipPrompt mode', async () => {
+      const { configureCodexMcp } = await import('../../../../src/utils/code-tools/codex-configure')
+      const { readCodexConfig, backupCodexComplete } = vi.mocked(await import('../../../../src/utils/code-tools/codex'))
+      const { batchUpdateCodexMcpServices } = vi.mocked(await import('../../../../src/utils/code-tools/codex-toml-updater'))
+
+      readCodexConfig.mockReturnValue(null)
+      backupCodexComplete.mockReturnValue('/backup/path')
+
+      const options: CodexFullInitOptions = {
+        skipPrompt: true,
+        mcpServices: ['spec-workflow'],
+      }
+
+      await configureCodexMcp(options)
+
+      expect(batchUpdateCodexMcpServices).toHaveBeenCalled()
+      const callArgs = batchUpdateCodexMcpServices.mock.calls[0][0] as CodexMcpService[]
+      const specWorkflowService = callArgs.find((s: CodexMcpService) => s.id === 'spec-workflow')
+      expect(specWorkflowService).toBeDefined()
+      expect(specWorkflowService?.env?.SPEC_WORKFLOW_HOME).toBe('/home/test/.codex/memories/spec-workflow')
+      expect(specWorkflowService?.startup_timeout_sec).toBe(90)
     })
 
     it('should handle Windows environment with SYSTEMROOT', async () => {
@@ -312,10 +354,12 @@ describe('codex-configure', () => {
       const { selectMcpServices } = vi.mocked(await import('../../../../src/utils/mcp-selector'))
       const { backupCodexComplete, readCodexConfig } = vi.mocked(await import('../../../../src/utils/code-tools/codex'))
       const { batchUpdateCodexMcpServices } = vi.mocked(await import('../../../../src/utils/code-tools/codex-toml-updater'))
+      const { resolveCodexMcpCommandOverrides } = vi.mocked(await import('../../../../src/utils/code-tools/codex-mcp-prerequisites'))
 
       backupCodexComplete.mockReturnValue('/backup/path')
       readCodexConfig.mockReturnValue(null)
       selectMcpServices.mockResolvedValue(['serena'])
+      resolveCodexMcpCommandOverrides.mockResolvedValue({ serena: '/home/test/.local/bin/serena' })
 
       await configureCodexMcp()
 
@@ -337,8 +381,28 @@ describe('codex-configure', () => {
       expect(batchUpdateCodexMcpServices).toHaveBeenCalled()
       const callArgs = batchUpdateCodexMcpServices.mock.calls[0][0] as CodexMcpService[]
       const serenaService = callArgs.find((s: CodexMcpService) => s.id === 'serena')
-      // The --context value should be modified to 'codex'
       expect(serenaService).toBeDefined()
+      expect(serenaService?.args).toEqual(['start-mcp-server', '--context=codex', '--project-from-cwd', '--enable-web-dashboard', 'false'])
+    })
+
+    it('should inject Codex-specific spec-workflow env and timeout in interactive mode', async () => {
+      const { configureCodexMcp } = await import('../../../../src/utils/code-tools/codex-configure')
+      const { selectMcpServices } = vi.mocked(await import('../../../../src/utils/mcp-selector'))
+      const { backupCodexComplete, readCodexConfig } = vi.mocked(await import('../../../../src/utils/code-tools/codex'))
+      const { batchUpdateCodexMcpServices } = vi.mocked(await import('../../../../src/utils/code-tools/codex-toml-updater'))
+
+      backupCodexComplete.mockReturnValue('/backup/path')
+      readCodexConfig.mockReturnValue(null)
+      selectMcpServices.mockResolvedValue(['spec-workflow'])
+
+      await configureCodexMcp()
+
+      expect(batchUpdateCodexMcpServices).toHaveBeenCalled()
+      const callArgs = batchUpdateCodexMcpServices.mock.calls[0][0] as CodexMcpService[]
+      const specWorkflowService = callArgs.find((s: CodexMcpService) => s.id === 'spec-workflow')
+      expect(specWorkflowService).toBeDefined()
+      expect(specWorkflowService?.env?.SPEC_WORKFLOW_HOME).toBe('/home/test/.codex/memories/spec-workflow')
+      expect(specWorkflowService?.startup_timeout_sec).toBe(90)
     })
 
     it('should handle API key service with prompt in interactive mode', async () => {

@@ -12,6 +12,26 @@
 - 补充旧版 `@changesets/cli` 仍走传统 OTP、无法正确使用 npm passkey / WebAuthn 网页认证时的发布排障说明
 - 在中英日 README、贡献指南与故障排查文档中加入版本检查、升级和恢复发布步骤
 
+## 3.6.6
+
+### Patch Changes
+
+- ## Fixes
+  - fix Codex MCP generation for Serena by using the official `serena` CLI flow instead of the legacy `uvx --from git+...` launcher
+  - auto-detect or install `uv` and `serena-agent`, initialize Serena when needed, and write the resolved absolute executable path into Codex config
+  - inject Codex-specific `spec-workflow` settings, including `SPEC_WORKFLOW_HOME` and `startup_timeout_sec = 90`, to avoid common startup failures
+
+  ## 修复
+  - 修复 Codex 下 Serena 的 MCP 配置生成逻辑，改用官方 `serena` CLI 流程，不再沿用旧的 `uvx --from git+...` 启动方式
+  - 自动检测或安装 `uv` 与 `serena-agent`，必要时初始化 Serena，并将解析后的绝对可执行路径写入 Codex 配置
+  - 为 Codex 下的 `spec-workflow` 注入 `SPEC_WORKFLOW_HOME` 与 `startup_timeout_sec = 90`，避免常见启动失败
+
+  ## Documentation
+  - document the repository release flow and clarify the difference between the recommended `changeset publish` path and manual `pnpm publish --access public`
+
+  ## 文档
+  - 补充仓库发布流程说明，并明确推荐的 `changeset publish` 流程与手动 `pnpm publish --access public` 的区别
+
 ## 3.6.4
 
 ### Patch Changes
