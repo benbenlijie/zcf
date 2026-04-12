@@ -18,6 +18,67 @@ pnpm test
 
 Node.js 22+ を推奨。IDE の ESLint/TS 設定を有効にしてください。
 
+## リリースと npm 公開
+
+`npx @benbenwu/zcf` で利用者に変更を届けるには、新しい npm バージョンを公開する必要があります。同じバージョン番号は再公開できないため、先にバージョンを上げてください。
+
+### 推奨フロー
+
+このリポジトリでは `changeset` を使う前提です。
+
+```bash
+# 1. changeset を作成し、semver の上げ方を選ぶ
+pnpm changeset
+
+# 2. バージョンを反映
+pnpm changeset version
+
+# 3. 公開前の検証
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. 必要なら npm にログイン
+npm login
+
+# 5. npm に公開
+pnpm release
+```
+
+### 補足
+
+- `pnpm release` は `pnpm build && changeset publish` を実行します
+- `package.json` には `publishConfig.access = "public"` があるため、通常は public パッケージとして公開されます
+- npm アカウントが passkey / WebAuthn を使っているのに、`changeset publish` が従来の `one-time password` を要求する場合は、まずプロジェクトで使われている `@changesets/cli` が `2.30.0` 以上か確認してください
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- 古い Changesets はレガシー OTP フローしか扱えず、npm の web auth を正しく利用できません。このケースでは Changesets を更新し、web auth で再ログインしてからやり直してください
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- 詳しい切り分けは [トラブルシューティング - 公開時の問題](../advanced/troubleshooting.md#公開時の問題) を参照してください
+- 手動で行う場合のフォールバックは次です
+
+```bash
+pnpm publish --access public
+```
+
+### 公開後の確認
+
+```bash
+npm view @benbenwu/zcf version
+npx @benbenwu/zcf --version
+```
+
 ## コーディング規約
 
 - TypeScript ESM、2 スペース、シングルクォート  

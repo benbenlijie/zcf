@@ -82,6 +82,53 @@ node bin/zcf.mjs i -s -T codex
 
 Bare `npx @benbenwu/zcf` resolves the published npm package, so it will not automatically use your local repository changes.
 
+## 📦 Release to npm
+
+If you want `npx @benbenwu/zcf` to pick up your local changes, you must publish a new npm version. Republishing the same version is not allowed.
+
+Recommended release flow for this repository:
+
+```bash
+# 1. Create a changeset and choose version bump type
+pnpm changeset
+
+# 2. Apply the version bump
+pnpm changeset version
+
+# 3. Run validation
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. Login to npm if needed
+npm login
+
+# 5. Publish using the repo release script
+pnpm release
+```
+
+Notes:
+
+- `package.json` already sets `"publishConfig": { "access": "public" }`, so `pnpm release` / `changeset publish` will publish as a public package.
+- If your npm account uses passkeys / WebAuthn and `changeset publish` still asks for a `one-time password`, first verify the project is using `@changesets/cli@2.30.0` or newer:
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- Older Changesets releases handled OTP in-process and could not use npm's newer web-based authentication flow. If you hit that issue, upgrade Changesets and log in again with web auth:
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- This repository already declares `@changesets/cli@^2.30.0`, which is the first series that delegates OTP / web auth handling back to the package manager.
+- `pnpm publish --access public` can still be used as a manual fallback after you run `pnpm changeset version` and `pnpm build`, but it is not the primary workflow in this repo.
+
 More usage, options, and workflows: see documentation.
 
 ## 📖 Full Documentation

@@ -72,6 +72,53 @@ npx @benbenwu/zcf i -s -p 302ai -k "sk-xxx"
 
 より詳しい使い方・オプション・ワークフローはドキュメントを参照してください。
 
+## 📦 npm への公開
+
+`npx @benbenwu/zcf` で現在のローカル変更を反映させたい場合は、新しい npm バージョンを公開する必要があります。同じバージョン番号の再公開はできません。
+
+このリポジトリで推奨する公開フロー:
+
+```bash
+# 1. changeset を作成し、バージョン更新種別を選ぶ
+pnpm changeset
+
+# 2. バージョン変更を適用する
+pnpm changeset version
+
+# 3. 公開前の検証を実行する
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. 必要なら npm にログインする
+npm login
+
+# 5. リポジトリの公開スクリプトで公開する
+pnpm release
+```
+
+注意:
+
+- `package.json` では `"publishConfig": { "access": "public" }` が設定されているため、`pnpm release` / `changeset publish` は public パッケージとして公開されます。
+- npm アカウントが passkey / WebAuthn を使っているのに、`changeset publish` がまだ `one-time password` を要求する場合は、まずこのプロジェクトで使われている `@changesets/cli` が `2.30.0` 以上か確認してください。
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- 古い Changesets は OTP を自前で処理しており、npm の新しい web-based auth フローを利用できません。この問題に当たった場合は Changesets を更新し、web auth で再ログインしてください。
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- このリポジトリはすでに `@changesets/cli@^2.30.0` を宣言しており、OTP / web auth の処理をパッケージマネージャー側へ委譲する系列を使っています。
+- `pnpm changeset version` と `pnpm build` 実行後であれば、`pnpm publish --access public` を一時的な代替手段として使うこともできますが、このリポジトリの主フローは `pnpm release` です。
+
 ## 📖 完全ドキュメント
 
 - https://zcf.ufomiao.com/ja-JP/

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Documentation
+
+- document the npm publishing failure mode where older `@changesets/cli` versions still request legacy OTP instead of using npm web auth with passkeys / WebAuthn
+- add version-check and recovery steps in README, contributing guides, and troubleshooting docs across English, Simplified Chinese, and Japanese
+
+### 文档
+
+- 补充旧版 `@changesets/cli` 仍走传统 OTP、无法正确使用 npm passkey / WebAuthn 网页认证时的发布排障说明
+- 在中英日 README、贡献指南与故障排查文档中加入版本检查、升级和恢复发布步骤
+
 ## 3.6.4
 
 ### Patch Changes

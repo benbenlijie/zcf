@@ -11,6 +11,7 @@ title: 故障排除
 - [初始化问题](#初始化问题)
 - [API 配置问题](#api-配置问题)
 - [工作流问题](#工作流问题)
+- [发布问题](#发布问题)
 - [MCP 服务问题](#mcp-服务问题)
 - [Codex 相关问题](#codex-相关问题)
 - [CCR 相关问题](#ccr-相关问题)
@@ -237,6 +238,40 @@ npx @benbenwu/zcf update -g zh-CN
 # 或强制更新
 npx @benbenwu/zcf init --config-action docs-only -w all
 ```
+
+## 发布问题
+
+### 1. `changeset publish` 一直提示 `one-time password`，但 npm 网页登录是正常的
+
+**症状**：`npm whoami` 正常，`npm login --auth-type=web` 也成功，但执行 `pnpm release` / `changeset publish` 时仍然提示输入传统 OTP。
+
+**可能原因**：
+
+- npm 账号开启了 `auth-and-writes`，发布操作本来就需要二次认证。
+- 较旧版本的 `@changesets/cli` 只支持旧式 OTP 流程，没有把认证交给包管理器原生的 web auth 处理。
+
+**解决方案**：
+
+```bash
+# 1. 检查项目实际使用的 Changesets 版本
+pnpm exec changeset --version
+pnpm list @changesets/cli
+
+# 2. 如果低于 2.30.0，升级 Changesets
+pnpm add -D @changesets/cli@latest
+
+# 3. 如有需要，重新使用 npm 网页认证登录
+npm login --auth-type=web
+
+# 4. 再次执行仓库发布脚本
+pnpm release
+```
+
+**说明**：
+
+- `@changesets/cli@2.30.0` 是开始把 OTP 提示委托回包管理器处理的版本线，因此才能正确走 npm 原生的 passkey / WebAuthn 网页认证。
+- 当前仓库的 `release` 脚本是 `pnpm build && changeset publish`，所以如果你已经确认 npm CLI 的网页认证没问题，但发布时仍然卡在 OTP，优先检查 `@changesets/cli` 版本。
+- 如果你已经执行过 `pnpm changeset version` 与 `pnpm build`，临时也可以尝试 `pnpm publish --access public` 作为兜底方案，但主流程仍然建议使用 `pnpm release`。
 
 ## MCP 服务问题
 

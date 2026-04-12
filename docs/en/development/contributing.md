@@ -11,6 +11,7 @@ Welcome contributors to the ZCF project! This document will guide you on how to 
 - [Before Starting](#before-starting)
 - [Development Environment Setup](#development-environment-setup)
 - [Contribution Process](#contribution-process)
+- [Release and npm Publishing](#release-and-npm-publishing)
 - [Code Standards](#code-standards)
 - [Commit Standards](#commit-standards)
 - [Pull Request Guidelines](#pull-request-guidelines)
@@ -86,6 +87,70 @@ pnpm dev
 # Or directly run compiled version
 pnpm build
 pnpm start
+```
+
+## Release and npm Publishing
+
+If you want users to get your local fixes through `npx @benbenwu/zcf`, you must publish a new npm version. npm does not allow republishing the same version, so you need to bump the version first.
+
+### Recommended release flow
+
+This repository already uses `changeset`, so the recommended flow is:
+
+```bash
+# 1. Create a changeset and choose the semver bump type
+pnpm changeset
+
+# 2. Apply the version bump
+pnpm changeset version
+
+# 3. Run validation before publishing
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. Login to npm if needed
+npm login
+
+# 5. Publish to npm
+pnpm release
+```
+
+### Notes
+
+- `pnpm release` runs `pnpm build && changeset publish`
+- `package.json` already contains `"publishConfig": { "access": "public" }`, so normal publishing will be public by default
+- If your npm account uses passkeys / WebAuthn but `changeset publish` still asks for a traditional `one-time password`, first verify that the project is using `@changesets/cli@2.30.0` or newer:
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- Older Changesets releases only supported the legacy OTP flow and could not use npm's web-based authentication correctly. If you hit that case, upgrade Changesets and retry with web auth:
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- For detailed troubleshooting, see [Troubleshooting - Publishing Issues](../advanced/troubleshooting.md#publishing-issues)
+- As a manual fallback, you can also run the following after bumping the version and building:
+
+```bash
+pnpm publish --access public
+```
+
+### Post-publish verification
+
+```bash
+# Check the published version
+npm view @benbenwu/zcf version
+
+# Confirm npx resolves the new release
+npx @benbenwu/zcf --version
 ```
 
 ## Contribution Process
@@ -458,5 +523,3 @@ git rebase -i upstream/main
 - **Documentation**: Check project documentation for more information
 
 Thank you for your contributions! 🎉
-
-

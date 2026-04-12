@@ -222,6 +222,53 @@ pnpm dev -- update --help
 
 更多用法、参数与工作流说明请查看文档。
 
+## 📦 发布到 npm
+
+如果你希望 `npx @benbenwu/zcf` 获取到你当前仓库里的改动，就必须发布一个新的 npm 版本；同一版本号不能重复发布。
+
+推荐使用本仓库的发布流程：
+
+```bash
+# 1. 创建 changeset，并选择版本升级类型
+pnpm changeset
+
+# 2. 应用版本变更
+pnpm changeset version
+
+# 3. 执行发布前校验
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. 如有需要，登录 npm
+npm login
+
+# 5. 使用仓库脚本发布
+pnpm release
+```
+
+注意：
+
+- `package.json` 已设置 `"publishConfig": { "access": "public" }`，因此 `pnpm release` / `changeset publish` 默认会以 public 包发布。
+- 如果你的 npm 账号使用的是 passkey / WebAuthn，而 `changeset publish` 仍然提示输入 `one-time password`，先检查当前项目实际使用的 `@changesets/cli` 版本是否为 `2.30.0` 或更高：
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- 较旧版本的 Changesets 会在自身进程里处理 OTP，只支持旧式 OTP 流程，无法走 npm 新的网页认证链路；遇到这种情况，请升级 Changesets，并重新使用 web auth 登录：
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- 当前仓库已经声明 `@changesets/cli@^2.30.0`，这是开始把 OTP / web auth 交还给包管理器原生处理的版本线。
+- 如果你已经执行过 `pnpm changeset version` 与 `pnpm build`，也可以把 `pnpm publish --access public` 作为手动兜底方案，但它不是本仓库的主流程。
+
 ## 📖 完整文档
 
 - https://zcf.ufomiao.com/zh-CN/

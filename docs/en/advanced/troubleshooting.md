@@ -11,6 +11,7 @@ This document compiles common problems and solutions encountered when using ZCF,
 - [Initialization Issues](#initialization-issues)
 - [API Configuration Issues](#api-configuration-issues)
 - [Workflow Issues](#workflow-issues)
+- [Publishing Issues](#publishing-issues)
 - [MCP Service Issues](#mcp-service-issues)
 - [Codex Related Issues](#codex-related-issues)
 - [CCR Related Issues](#ccr-related-issues)
@@ -237,6 +238,40 @@ npx @benbenwu/zcf update -g zh-CN
 # Or force update
 npx @benbenwu/zcf init --config-action docs-only -w all
 ```
+
+## Publishing Issues
+
+### 1. `changeset publish` asks for `one-time password` even though npm web auth works
+
+**Symptoms**: `npm whoami` works, `npm login --auth-type=web` succeeds, but `pnpm release` / `changeset publish` still prompts for a traditional OTP code.
+
+**Likely Cause**:
+
+- The npm account is protected with `auth-and-writes`, so publishing requires a second factor.
+- Older `@changesets/cli` releases only supported the legacy OTP flow and did not delegate authentication to the package manager's native web auth support.
+
+**Solutions**:
+
+```bash
+# 1. Check the actual Changesets version used by the project
+pnpm exec changeset --version
+pnpm list @changesets/cli
+
+# 2. Upgrade Changesets if it is older than 2.30.0
+pnpm add -D @changesets/cli@latest
+
+# 3. Re-authenticate with npm web auth if needed
+npm login --auth-type=web
+
+# 4. Retry the repository release script
+pnpm release
+```
+
+**Notes**:
+
+- `@changesets/cli@2.30.0` is the first series that delegates OTP prompting back to the package manager, which allows passkeys / WebAuthn to work through npm's native web-based flow.
+- In this repository, the `release` script is `pnpm build && changeset publish`, so if publishing fails with an OTP prompt while web auth already works elsewhere, `@changesets/cli` is the first thing to verify.
+- If you need a temporary fallback after `pnpm changeset version` and `pnpm build`, you can try `pnpm publish --access public`, but keep `pnpm release` as the primary workflow.
 
 ## MCP Service Issues
 

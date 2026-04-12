@@ -11,6 +11,7 @@ title: 贡献指南
 - [开始之前](#开始之前)
 - [开发环境设置](#开发环境设置)
 - [贡献流程](#贡献流程)
+- [发布与 npm](#发布与-npm)
 - [代码规范](#代码规范)
 - [提交规范](#提交规范)
 - [Pull Request 指南](#pull-request-指南)
@@ -86,6 +87,70 @@ pnpm dev
 # 或直接运行编译后的版本
 pnpm build
 pnpm start
+```
+
+## 发布与 npm
+
+如果您希望用户后续通过 `npx @benbenwu/zcf` 直接拿到本地修复后的版本，就必须发布一个新的 npm 版本。npm 不允许重复发布同一个版本号，因此发布前必须先升级版本。
+
+### 推荐发布流程
+
+当前仓库已经集成 `changeset`，推荐按下面的顺序执行：
+
+```bash
+# 1. 生成 changeset，选择 semver 升级类型
+pnpm changeset
+
+# 2. 写入版本号变更
+pnpm changeset version
+
+# 3. 发布前校验
+pnpm lint
+pnpm typecheck
+pnpm test:run
+pnpm build
+
+# 4. 登录 npm（如尚未登录）
+npm login
+
+# 5. 发布到 npm
+pnpm release
+```
+
+### 说明
+
+- `pnpm release` 实际执行的是 `pnpm build && changeset publish`
+- 当前 `package.json` 已包含 `"publishConfig": { "access": "public" }`，因此正常发布时会以 public 包方式发布
+- 如果您的 npm 账号使用 passkey / WebAuthn，而 `changeset publish` 仍然提示输入传统 `one-time password`，优先检查项目实际使用的 `@changesets/cli` 是否为 `2.30.0` 或更高：
+
+```bash
+pnpm exec changeset --version
+pnpm list @changesets/cli
+```
+
+- 较旧版本的 Changesets 只支持旧式 OTP 流程，无法正确使用 npm 的网页认证；遇到此问题时，请升级 Changesets 并重新执行：
+
+```bash
+pnpm add -D @changesets/cli@latest
+npm login --auth-type=web
+pnpm release
+```
+
+- 更详细的排障说明请参考[故障排除 - 发布问题](../advanced/troubleshooting.md#发布问题)
+- 如果只是手动兜底，也可以在完成版本升级和构建后执行：
+
+```bash
+pnpm publish --access public
+```
+
+### 发布后验证
+
+```bash
+# 查看刚发布的版本
+npm view @benbenwu/zcf version
+
+# 验证 npx 拉取到的新版本
+npx @benbenwu/zcf --version
 ```
 
 ## 贡献流程
