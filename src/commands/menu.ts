@@ -4,7 +4,7 @@ import inquirer from 'inquirer'
 import { CODE_TOOL_BANNERS, DEFAULT_CODE_TOOL_TYPE, isCodeToolType } from '../constants'
 import { i18n } from '../i18n'
 import { displayBannerWithInfo } from '../utils/banner'
-import { configureCodexApi, configureCodexMcp, runCodexFullInit, runCodexUninstall, runCodexUpdate, runCodexWorkflowImportWithLanguageSelection } from '../utils/code-tools/codex'
+import { configureCodexApi, configureCodexMcp, manageCodexGraphify, manageCodexGstack, runCodexFullInit, runCodexUninstall, runCodexUpdate, runCodexWorkflowImportWithLanguageSelection } from '../utils/code-tools/codex'
 import { resolveCodeType } from '../utils/code-type-resolver'
 import { handleExitPromptError, handleGeneralError } from '../utils/error-handler'
 import {
@@ -269,6 +269,12 @@ async function showCodexMenu(): Promise<MenuResult> {
   console.log(
     `  ${ansis.cyan('6.')} ${i18n.t('menu:menuOptions.codexConfigureAiMemory')} ${ansis.gray(`- ${i18n.t('menu:menuDescriptions.codexConfigureAiMemory')}`)}`,
   )
+  console.log(
+    `  ${ansis.cyan('7.')} ${i18n.t('menu:menuOptions.codexManageGstack')} ${ansis.gray(`- ${i18n.t('menu:menuDescriptions.codexManageGstack')}`)}`,
+  )
+  console.log(
+    `  ${ansis.cyan('8.')} ${i18n.t('menu:menuOptions.codexManageGraphify')} ${ansis.gray(`- ${i18n.t('menu:menuDescriptions.codexManageGraphify')}`)}`,
+  )
   console.log('')
   printZcfSection({
     uninstallOption: i18n.t('menu:menuOptions.codexUninstall'),
@@ -282,7 +288,7 @@ async function showCodexMenu(): Promise<MenuResult> {
     name: 'choice',
     message: i18n.t('common:enterChoice'),
     validate: (value) => {
-      const valid = ['1', '2', '3', '4', '5', '6', '0', '-', '+', 's', 'S', 'q', 'Q']
+      const valid = ['1', '2', '3', '4', '5', '6', '7', '8', '0', '-', '+', 's', 'S', 'q', 'Q']
       return valid.includes(value) || i18n.t('common:invalidChoice')
     },
   })
@@ -312,6 +318,12 @@ async function showCodexMenu(): Promise<MenuResult> {
       break
     case '6':
       await configureCodexAiMemoryFeature()
+      break
+    case '7':
+      await manageCodexGstack()
+      break
+    case '8':
+      await manageCodexGraphify()
       break
     case '0': {
       const currentLang = i18n.language as SupportedLang

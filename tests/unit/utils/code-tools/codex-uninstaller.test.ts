@@ -12,6 +12,16 @@ vi.mock('../../../../src/utils/trash', () => ({
   moveToTrash: vi.fn(),
 }))
 
+const graphifyInstallerMock = vi.hoisted(() => ({
+  uninstallGraphifyForCodex: vi.fn(),
+}))
+vi.mock('../../../../src/utils/code-tools/graphify-installer', () => graphifyInstallerMock)
+
+const gstackInstallerMock = vi.hoisted(() => ({
+  uninstallGstackForCodex: vi.fn(),
+}))
+vi.mock('../../../../src/utils/code-tools/gstack-installer', () => gstackInstallerMock)
+
 vi.mock('../../../../src/utils/json-config', () => ({
   readJsonConfig: vi.fn(),
   writeJsonConfig: vi.fn(),
@@ -35,6 +45,8 @@ const { moveToTrash } = await import('../../../../src/utils/trash')
 const { readJsonConfig, writeJsonConfig } = await import('../../../../src/utils/json-config')
 const { i18n } = await import('../../../../src/i18n')
 const { uninstallCodeTool } = await import('../../../../src/utils/installer')
+const { uninstallGraphifyForCodex } = await import('../../../../src/utils/code-tools/graphify-installer')
+const { uninstallGstackForCodex } = await import('../../../../src/utils/code-tools/gstack-installer')
 
 // Get mock functions
 const mockPathExists = vi.mocked(pathExists)
@@ -42,6 +54,8 @@ const mockMoveToTrash = vi.mocked(moveToTrash)
 const _mockReadJsonConfig = vi.mocked(readJsonConfig)
 const _mockWriteJsonConfig = vi.mocked(writeJsonConfig)
 const mockUninstallCodeTool = vi.mocked(uninstallCodeTool)
+const mockUninstallGraphifyForCodex = vi.mocked(uninstallGraphifyForCodex)
+const mockUninstallGstackForCodex = vi.mocked(uninstallGstackForCodex)
 
 // Suppress unused variable warnings - these are intentionally unused in tests
 void _mockReadJsonConfig
@@ -64,6 +78,8 @@ describe('codexUninstaller', () => {
     mockMoveToTrash.mockResolvedValue([{ success: true, path: 'test' }])
     mockPathExists.mockResolvedValue(true as any)
     mockUninstallCodeTool.mockResolvedValue(true)
+    mockUninstallGraphifyForCodex.mockResolvedValue({ removed: false, warning: 'mocked_codex:graphifyNotInstalled' })
+    mockUninstallGstackForCodex.mockResolvedValue({ removed: false, warning: 'mocked_codex:gstackNotInstalled' })
 
     // Import the actual class after mocks are setup
     const { CodexUninstaller: ActualCodexUninstaller } = await import('../../../../src/utils/code-tools/codex-uninstaller')
@@ -206,6 +222,7 @@ describe('codexUninstaller', () => {
 
       // Should remove entire .codex directory
       expect(mockMoveToTrash).toHaveBeenCalledWith(CODEX_DIR)
+      expect(mockUninstallGraphifyForCodex).toHaveBeenCalled()
       // Should uninstall npm package
       expect(mockUninstallCodeTool).toHaveBeenCalledWith('codex')
 
@@ -224,6 +241,18 @@ describe('codexUninstaller', () => {
       expect(result.success).toBe(true)
       expect(result.warnings).toContain('Failed to move ~/.codex/ to trash: Permission denied')
       expect(result.removed).toContain('@openai/codex')
+    })
+  })
+
+  describe('removeGraphify', () => {
+    it('should uninstall graphify through graphify installer', async () => {
+      mockUninstallGraphifyForCodex.mockResolvedValue({ removed: true })
+
+      const result = await uninstaller.removeGraphify()
+
+      expect(mockUninstallGraphifyForCodex).toHaveBeenCalled()
+      expect(result.success).toBe(true)
+      expect(result.removed).toContain('skills/graphify/')
     })
   })
 

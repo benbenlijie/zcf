@@ -24,6 +24,8 @@ import { parseToml } from '../toml-edit'
 import { readDefaultTomlConfig, readZcfConfig, updateTomlConfig, updateZcfConfig } from '../zcf-config'
 import { detectConfigManagementMode } from './codex-config-detector'
 import { configureCodexMcp } from './codex-configure'
+import { checkGraphifyUpdate, getGraphifyScope, getGraphifyStatus, getManagedGraphifyFlag, installOrUpdateGraphifyForCodex, uninstallGraphifyForCodex } from './graphify-installer'
+import { checkGstackUpdate, detectGstackManagedByRepo, getGstackStatus, installOrUpdateGstackForCodex, uninstallGstackForCodex } from './gstack-installer'
 
 // Cache to avoid repeated backups in skip-prompt mode
 let cachedSkipPromptBackup: string | null = null
@@ -178,6 +180,8 @@ function getUninstallOptions(): Array<{ name: string, value: CodexUninstallItem 
     { name: i18n.t('codex:uninstallItemAuth'), value: 'auth' },
     { name: i18n.t('codex:uninstallItemApiConfig'), value: 'api-config' },
     { name: i18n.t('codex:uninstallItemMcpConfig'), value: 'mcp-config' },
+    { name: i18n.t('codex:uninstallItemGraphify'), value: 'graphify' },
+    { name: i18n.t('codex:uninstallItemGstack'), value: 'gstack' },
     { name: i18n.t('codex:uninstallItemSystemPrompt'), value: 'system-prompt' },
     { name: i18n.t('codex:uninstallItemWorkflow'), value: 'workflow' },
     { name: i18n.t('codex:uninstallItemCliPackage'), value: 'cli-package' },
@@ -1972,6 +1976,9 @@ export interface CodexFullInitOptions extends CodexWorkflowLanguageOptions {
     baseUrl?: string
     model?: string // Model parameter for Codex
   }
+  installGstack?: boolean
+  installGraphify?: boolean
+  graphifyScope?: 'global' | 'project'
 }
 
 export async function runCodexFullInit(
@@ -1983,8 +1990,68 @@ export async function runCodexFullInit(
   const aiOutputLang = await runCodexWorkflowImportWithLanguageSelection(options)
   await configureCodexApi(options)
   await configureCodexMcp(options)
+  await maybeInstallGraphify(options)
+  await maybeInstallGstack(options)
 
   return aiOutputLang
+}
+
+async function maybeInstallGraphify(options?: CodexFullInitOptions): Promise<void> {
+  if (options?.installGraphify) {
+    const scope = options.graphifyScope || 'global'
+    await installOrUpdateGraphifyForCodex(true, undefined, scope)
+    return
+  }
+
+  if (options?.skipPrompt) {
+    return
+  }
+
+  const shouldInstall = await promptBoolean({
+    message: i18n.t('codex:installGraphifyPrompt'),
+    defaultValue: false,
+  })
+
+  if (!shouldInstall) {
+    console.log(ansis.yellow(i18n.t('codex:graphifySkipped')))
+    return
+  }
+
+  const { scope } = await inquirer.prompt<{ scope: 'global' | 'project' }>({
+    type: 'list',
+    name: 'scope',
+    message: i18n.t('codex:graphifyScopePrompt'),
+    choices: addNumbersToChoices([
+      { name: i18n.t('codex:graphifyScope.global'), value: 'global' },
+      { name: i18n.t('codex:graphifyScope.project'), value: 'project' },
+    ]),
+    default: getGraphifyScope(),
+  })
+
+  await installOrUpdateGraphifyForCodex(true, undefined, scope)
+}
+
+async function maybeInstallGstack(options?: CodexFullInitOptions): Promise<void> {
+  if (options?.installGstack) {
+    await installOrUpdateGstackForCodex(true)
+    return
+  }
+
+  if (options?.skipPrompt) {
+    return
+  }
+
+  const shouldInstall = await promptBoolean({
+    message: i18n.t('codex:installGstackPrompt'),
+    defaultValue: false,
+  })
+
+  if (!shouldInstall) {
+    console.log(ansis.yellow(i18n.t('codex:gstackSkipped')))
+    return
+  }
+
+  await installOrUpdateGstackForCodex(true)
 }
 
 function ensureCodexAgentsLanguageDirective(aiOutputLang: AiOutputLanguage | string): void {
@@ -2030,6 +2097,80 @@ function resolveCodexLanguageLabel(aiOutputLang: AiOutputLanguage | string): str
 
 function normalizeLanguageLabel(label: string): string {
   return label.trim().toLowerCase()
+}
+
+function isManagedGstack(): boolean {
+  return readDefaultTomlConfig()?.codex?.gstackManaged === true
+}
+
+function isManagedGraphify(): boolean {
+  return getManagedGraphifyFlag()
+}
+
+async function handleManagedGraphifyUpdate(skipPrompt: boolean): Promise<void> {
+  const scope = getGraphifyScope()
+  const status = await getGraphifyStatus(scope)
+  if (!status.installed || !isManagedGraphify()) {
+    return
+  }
+
+  const updateStatus = await checkGraphifyUpdate(scope)
+  if (!updateStatus.latestVersion) {
+    console.log(ansis.yellow(i18n.t('codex:graphifyCannotCheckVersion')))
+    return
+  }
+
+  if (!updateStatus.needsUpdate) {
+    console.log(ansis.green(i18n.t('codex:graphifyUpToDate', { version: updateStatus.version || '' })))
+    return
+  }
+
+  if (!skipPrompt) {
+    const confirm = await promptBoolean({
+      message: i18n.t('codex:graphifyConfirmUpdate'),
+      defaultValue: true,
+    })
+
+    if (!confirm) {
+      console.log(ansis.yellow(i18n.t('codex:graphifyUpdateSkipped')))
+      return
+    }
+  }
+
+  await installOrUpdateGraphifyForCodex(true, undefined, scope)
+}
+
+async function handleManagedGstackUpdate(skipPrompt: boolean): Promise<void> {
+  const status = await getGstackStatus()
+  const managed = isManagedGstack() || detectGstackManagedByRepo()
+  if (!status.installed || !managed) {
+    return
+  }
+
+  const updateStatus = await checkGstackUpdate()
+  if (!updateStatus.latestVersion) {
+    console.log(ansis.yellow(i18n.t('codex:gstackCannotCheckVersion')))
+    return
+  }
+
+  if (!updateStatus.needsUpdate) {
+    console.log(ansis.green(i18n.t('codex:gstackUpToDate', { version: updateStatus.version || '' })))
+    return
+  }
+
+  if (!skipPrompt) {
+    const confirm = await promptBoolean({
+      message: i18n.t('codex:gstackConfirmUpdate'),
+      defaultValue: true,
+    })
+
+    if (!confirm) {
+      console.log(ansis.yellow(i18n.t('codex:gstackUpdateSkipped')))
+      return
+    }
+  }
+
+  await installOrUpdateGstackForCodex(true)
 }
 
 export async function runCodexUpdate(force = false, skipPrompt = false): Promise<boolean> {
@@ -2084,6 +2225,8 @@ export async function runCodexUpdate(force = false, skipPrompt = false): Promise
     try {
       await executeCodexInstallation(true)
       updateSpinner.succeed(i18n.t('codex:updateSuccess'))
+      await handleManagedGraphifyUpdate(skipPrompt)
+      await handleManagedGstackUpdate(skipPrompt)
       return true
     }
     catch (error) {
@@ -2144,6 +2287,24 @@ export async function runCodexUninstall(): Promise<void> {
 
       const result = await uninstaller.completeUninstall()
       displayUninstallResults([result])
+      if (isManagedGstack() || isManagedGraphify()) {
+        const currentCodexConfig = readDefaultTomlConfig()?.codex
+        updateTomlConfig(ZCF_CONFIG_FILE, {
+          codex: {
+            enabled: currentCodexConfig?.enabled ?? false,
+            systemPromptStyle: currentCodexConfig?.systemPromptStyle ?? 'engineer-professional',
+            installMethod: currentCodexConfig?.installMethod,
+            envKeyMigrated: currentCodexConfig?.envKeyMigrated,
+            graphifyInstalled: false,
+            graphifyManaged: false,
+            graphifyVersion: undefined,
+            graphifyScope: currentCodexConfig?.graphifyScope ?? 'global',
+            gstackInstalled: false,
+            gstackManaged: false,
+            gstackVersion: undefined,
+          },
+        })
+      }
     }
     else if (mode === 'custom') {
       // Step 2b: Custom uninstall
@@ -2169,6 +2330,143 @@ export async function runCodexUninstall(): Promise<void> {
     console.error(ansis.red(`Error during uninstall: ${error.message}`))
     throw error
   }
+}
+
+export async function manageCodexGstack(): Promise<void> {
+  ensureI18nInitialized()
+  const status = await getGstackStatus()
+  const updateStatus = status.installed ? await checkGstackUpdate() : null
+
+  console.log(ansis.cyan(i18n.t('codex:gstackStatusTitle')))
+  console.log(ansis.gray(`  ${i18n.t('codex:gstackStatusInstalled')}: ${status.installed ? 'yes' : 'no'}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:gstackStatusManaged')}: ${status.managed ? 'yes' : 'no'}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:gstackStatusPath')}: ${status.path}`))
+  if (status.version) {
+    console.log(ansis.gray(`  ${i18n.t('codex:currentVersion', { version: status.version })}`))
+  }
+  if (updateStatus?.latestVersion) {
+    console.log(ansis.gray(`  ${i18n.t('codex:latestVersion', { version: updateStatus.latestVersion })}`))
+  }
+
+  const { action } = await inquirer.prompt<{ action: 'install' | 'update' | 'uninstall' | 'back' }>({
+    type: 'list',
+    name: 'action',
+    message: i18n.t('codex:gstackSelectAction'),
+    choices: addNumbersToChoices([
+      { name: i18n.t('codex:gstackActionInstall'), value: 'install' },
+      { name: i18n.t('codex:gstackActionUpdate'), value: 'update' },
+      { name: i18n.t('codex:gstackActionUninstall'), value: 'uninstall' },
+      { name: i18n.t('common:back'), value: 'back' },
+    ]),
+  })
+
+  if (action === 'back') {
+    return
+  }
+
+  if (action === 'uninstall') {
+    const confirm = await promptBoolean({
+      message: i18n.t('codex:gstackUninstallPrompt'),
+      defaultValue: false,
+    })
+
+    if (!confirm) {
+      console.log(ansis.yellow(i18n.t('codex:uninstallCancelled')))
+      return
+    }
+
+    const result = await uninstallGstackForCodex()
+    if (result.warning) {
+      console.log(ansis.yellow(result.warning))
+    }
+    if (result.removed) {
+      console.log(ansis.green(i18n.t('codex:gstackUninstallSuccess')))
+    }
+    return
+  }
+
+  await installOrUpdateGstackForCodex(true)
+}
+
+export async function manageCodexGraphify(): Promise<void> {
+  ensureI18nInitialized()
+  const scope = getGraphifyScope()
+  const status = await getGraphifyStatus(scope)
+  const updateStatus = status.installed ? await checkGraphifyUpdate(scope) : null
+
+  console.log(ansis.cyan(i18n.t('codex:graphifyStatusTitle')))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusInstalled')}: ${status.installed ? 'yes' : 'no'}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusManaged')}: ${status.managed ? 'yes' : 'no'}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyCurrentScope', { scope: i18n.t(`codex:graphifyScope.${status.scope}`) })}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusPath')}: ${status.path}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusAgents')}: ${status.agentsPath}`))
+  console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusHooks')}: ${status.hooksPath}`))
+  if (status.pythonCommand) {
+    console.log(ansis.gray(`  ${i18n.t('codex:graphifyStatusPython')}: ${status.pythonCommand}`))
+  }
+  if (status.version) {
+    console.log(ansis.gray(`  ${i18n.t('codex:currentVersion', { version: status.version })}`))
+  }
+  if (updateStatus?.latestVersion) {
+    console.log(ansis.gray(`  ${i18n.t('codex:latestVersion', { version: updateStatus.latestVersion })}`))
+  }
+
+  const { action } = await inquirer.prompt<{ action: 'install' | 'update' | 'switch-scope' | 'uninstall' | 'back' }>({
+    type: 'list',
+    name: 'action',
+    message: i18n.t('codex:graphifySelectAction'),
+    choices: addNumbersToChoices([
+      { name: i18n.t('codex:graphifyActionInstall'), value: 'install' },
+      { name: i18n.t('codex:graphifyActionUpdate'), value: 'update' },
+      { name: i18n.t('codex:graphifyActionSwitchScope'), value: 'switch-scope' },
+      { name: i18n.t('codex:graphifyActionUninstall'), value: 'uninstall' },
+      { name: i18n.t('common:back'), value: 'back' },
+    ]),
+  })
+
+  if (action === 'back') {
+    return
+  }
+
+  if (action === 'uninstall') {
+    const confirm = await promptBoolean({
+      message: i18n.t('codex:graphifyUninstallPrompt'),
+      defaultValue: false,
+    })
+
+    if (!confirm) {
+      console.log(ansis.yellow(i18n.t('codex:uninstallCancelled')))
+      return
+    }
+
+    const result = await uninstallGraphifyForCodex(scope)
+    if (result.warning) {
+      console.log(ansis.yellow(result.warning))
+    }
+    if (result.removed) {
+      console.log(ansis.green(i18n.t('codex:graphifyUninstallSuccess')))
+    }
+    return
+  }
+
+  if (action === 'switch-scope') {
+    const { nextScope } = await inquirer.prompt<{ nextScope: 'global' | 'project' }>({
+      type: 'list',
+      name: 'nextScope',
+      message: i18n.t('codex:graphifyScopePrompt'),
+      choices: addNumbersToChoices([
+        { name: i18n.t('codex:graphifyScope.global'), value: 'global' },
+        { name: i18n.t('codex:graphifyScope.project'), value: 'project' },
+      ]),
+      default: scope === 'global' ? 'project' : 'global',
+    })
+
+    await installOrUpdateGraphifyForCodex(true, undefined, nextScope)
+    console.log(ansis.green(i18n.t('codex:graphifyScopeSwitchSuccess', { scope: i18n.t(`codex:graphifyScope.${nextScope}`) })))
+    return
+  }
+
+  await installOrUpdateGraphifyForCodex(true, undefined, scope)
 }
 
 /**

@@ -222,6 +222,7 @@ describe('validateSkipPromptOptions', () => {
     expect(options.mcpServices).toEqual(['service-a', 'service-c'])
     expect(options.workflows).toEqual(['workflow-a', 'workflow-b'])
     expect(options.installCometixLine).toBe(true)
+    expect(options.installGstack).toBe(false)
   })
 
   it('should parse installCometixLine string boolean', () => {
@@ -230,6 +231,14 @@ describe('validateSkipPromptOptions', () => {
     validateSkipPromptOptions(options)
 
     expect(options.installCometixLine).toBe(false)
+  })
+
+  it('should parse installGstack string boolean', () => {
+    options.installGstack = 'true'
+
+    validateSkipPromptOptions(options)
+
+    expect(options.installGstack).toBe(true)
   })
 
   it('should set apiType from provider preset when not provided', async () => {

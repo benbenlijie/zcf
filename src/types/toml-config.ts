@@ -26,6 +26,13 @@ export interface CodexConfig {
   systemPromptStyle: string
   installMethod?: 'npm' | 'homebrew' | 'native'
   envKeyMigrated?: boolean // Whether env_key to temp_env_key migration has been completed
+  gstackInstalled?: boolean
+  gstackManaged?: boolean
+  gstackVersion?: string
+  graphifyInstalled?: boolean
+  graphifyManaged?: boolean
+  graphifyVersion?: string
+  graphifyScope?: 'global' | 'project'
 }
 
 /**

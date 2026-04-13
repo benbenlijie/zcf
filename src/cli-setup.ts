@@ -36,6 +36,8 @@ export interface CliOptions {
   defaultOutputStyle?: string // default: engineer-professional
   allLang?: string // New: unified language parameter
   installCometixLine?: string | boolean // New: CCometixLine installation control, default: true
+  installGstack?: string | boolean
+  installGraphify?: string | boolean
 }
 
 //  Interface for language-related options extraction
@@ -259,6 +261,9 @@ export async function setupCommands(cli: CAC): Promise<void> {
     .option('--all-lang, -g <lang>', 'Set all language parameters to this value')
     .option('--code-type, -T <codeType>', 'Select code tool type (claude-code, codex, cc, cx)')
     .option('--install-cometix-line, -x <value>', `Install CCometixLine statusline tool (true/false), ${i18n.t('cli:help.defaults.prefix')} true`)
+    .option('--install-graphify <value>', 'Install graphify for Codex (true/false), default: false')
+    .option('--graphify-scope <scope>', 'Graphify scope for Codex (global/project), default: global')
+    .option('--install-gstack <value>', 'Install gstack for Codex (true/false), default: false')
     .option('--api-configs <configs>', 'API configurations as JSON string for multiple profiles')
     .option('--api-configs-file <file>', 'Path to JSON file containing API configurations')
     .action(await withLanguageResolution(async (options) => {

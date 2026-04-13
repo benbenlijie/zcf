@@ -102,6 +102,25 @@ vi.mock('../../../../src/utils/zcf-config', () => ({
   updateTomlConfig: vi.fn(),
   readDefaultTomlConfig: vi.fn(),
 }))
+vi.mock('../../../../src/utils/code-tools/gstack-installer', () => ({
+  getGstackStatus: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    path: '/home/test/.codex/skills/gstack',
+  }),
+  checkGstackUpdate: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    latestVersion: null,
+    needsUpdate: false,
+    path: '/home/test/.codex/skills/gstack',
+  }),
+  installOrUpdateGstackForCodex: vi.fn().mockResolvedValue(undefined),
+  uninstallGstackForCodex: vi.fn().mockResolvedValue({ removed: true }),
+  detectGstackManagedByRepo: vi.fn(() => false),
+}))
 vi.mock('../../../../src/utils/mcp-selector', () => ({
   selectMcpServices: vi.fn(),
 }))
@@ -427,6 +446,80 @@ describe('codex code tool utilities', () => {
 
     // Test that the function executes without throwing errors
     await expect(codexModule.runCodexUpdate()).resolves.not.toThrow()
+  })
+
+  it('runCodexUpdate should update managed gstack when a newer version exists', async () => {
+    mockTinyexec.x.mockReset()
+    mockTinyexec.x
+      .mockResolvedValueOnce({
+        exitCode: 0,
+        stdout: '/usr/local/lib\n└── @openai/codex@1.0.0',
+        stderr: '',
+      })
+      .mockResolvedValueOnce({
+        exitCode: 0,
+        stdout: JSON.stringify({ 'dist-tags': { latest: '2.0.0' } }),
+        stderr: '',
+      })
+      .mockResolvedValueOnce({
+        exitCode: 1,
+        stdout: '',
+        stderr: 'not installed via brew',
+      })
+      .mockResolvedValueOnce({
+        exitCode: 0,
+        stdout: '@openai/codex@1.0.0',
+        stderr: '',
+      })
+      .mockResolvedValueOnce({
+        exitCode: 0,
+        stdout: '',
+        stderr: '',
+      })
+
+    const zcfConfig = await import('../../../../src/utils/zcf-config')
+    vi.mocked(zcfConfig.readDefaultTomlConfig).mockReturnValue({
+      version: '1.0.0',
+      lastUpdated: new Date().toISOString(),
+      general: {
+        preferredLang: 'zh-CN',
+        templateLang: 'zh-CN',
+        aiOutputLang: 'zh-CN',
+        currentTool: 'codex',
+      },
+      claudeCode: {
+        enabled: false,
+        outputStyles: ['engineer-professional'],
+        defaultOutputStyle: 'engineer-professional',
+        installType: 'global',
+      },
+      codex: {
+        enabled: true,
+        systemPromptStyle: 'engineer-professional',
+        gstackManaged: true,
+      },
+    } as any)
+
+    const gstackInstaller = await import('../../../../src/utils/code-tools/gstack-installer')
+    vi.mocked(gstackInstaller.getGstackStatus).mockResolvedValue({
+      installed: true,
+      managed: true,
+      version: 'abc1234',
+      path: '/home/test/.codex/skills/gstack',
+    })
+    vi.mocked(gstackInstaller.checkGstackUpdate).mockResolvedValue({
+      installed: true,
+      managed: true,
+      version: 'abc1234',
+      latestVersion: 'def5678',
+      needsUpdate: true,
+      path: '/home/test/.codex/skills/gstack',
+    })
+
+    const codexModule = await import('../../../../src/utils/code-tools/codex')
+
+    await expect(codexModule.runCodexUpdate(false, true)).resolves.toBe(true)
+    expect(gstackInstaller.installOrUpdateGstackForCodex).toHaveBeenCalledWith(true)
   })
 
   it('runCodexUninstall should remove codex directory after confirmation', async () => {

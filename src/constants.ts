@@ -14,7 +14,10 @@ export const CODEX_DIR = join(homedir(), '.codex')
 export const CODEX_CONFIG_FILE = join(CODEX_DIR, 'config.toml')
 export const CODEX_AUTH_FILE = join(CODEX_DIR, 'auth.json')
 export const CODEX_AGENTS_FILE = join(CODEX_DIR, 'AGENTS.md')
+export const CODEX_HOOKS_FILE = join(CODEX_DIR, 'hooks.json')
 export const CODEX_SKILLS_DIR = join(CODEX_DIR, 'skills')
+export const CODEX_GSTACK_DIR = join(CODEX_SKILLS_DIR, 'gstack')
+export const CODEX_GRAPHIFY_DIR = join(CODEX_SKILLS_DIR, 'graphify')
 export const CODEX_PROMPTS_DIR = join(CODEX_DIR, 'prompts')
 export const CODEX_ZCF_SKILL_NAMES = [
   'zcf-six-step',

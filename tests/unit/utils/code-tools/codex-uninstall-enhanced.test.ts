@@ -30,7 +30,28 @@ vi.mock('../../../../src/utils/code-tools/codex-uninstaller', () => ({
   CodexUninstaller: vi.fn().mockImplementation(() => ({
     completeUninstall: vi.fn(),
     customUninstall: vi.fn(),
+    removeGstack: vi.fn(),
   })),
+}))
+
+vi.mock('../../../../src/utils/code-tools/gstack-installer', () => ({
+  uninstallGstackForCodex: vi.fn().mockResolvedValue({ removed: true }),
+  getGstackStatus: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    path: '/home/test/.codex/skills/gstack',
+  }),
+  checkGstackUpdate: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    latestVersion: null,
+    needsUpdate: false,
+    path: '/home/test/.codex/skills/gstack',
+  }),
+  installOrUpdateGstackForCodex: vi.fn().mockResolvedValue(undefined),
+  detectGstackManagedByRepo: vi.fn(() => false),
 }))
 
 vi.mock('../../../../src/utils/prompt-helpers', () => ({
@@ -44,8 +65,18 @@ const mockReadZcfConfig = vi.hoisted(() => vi.fn(() => ({
   codeToolType: 'codex',
   lastUpdated: new Date().toISOString(),
 } as any)))
+const mockReadDefaultTomlConfig = vi.hoisted(() => vi.fn(() => ({
+  codex: {
+    enabled: true,
+    systemPromptStyle: 'engineer-professional',
+    gstackManaged: false,
+  },
+})))
+const mockUpdateTomlConfig = vi.hoisted(() => vi.fn())
 vi.mock('../../../../src/utils/zcf-config', () => ({
   readZcfConfig: mockReadZcfConfig,
+  readDefaultTomlConfig: mockReadDefaultTomlConfig,
+  updateTomlConfig: mockUpdateTomlConfig,
 }))
 
 vi.mock('../../../../src/utils/toggle-prompt', () => ({
@@ -74,6 +105,7 @@ describe('runCodexUninstall - Enhanced Version', () => {
   let mockUninstaller: {
     completeUninstall: ReturnType<typeof vi.fn>
     customUninstall: ReturnType<typeof vi.fn>
+    removeGstack: ReturnType<typeof vi.fn>
   }
 
   beforeEach(() => {
@@ -82,6 +114,7 @@ describe('runCodexUninstall - Enhanced Version', () => {
     mockUninstaller = {
       completeUninstall: vi.fn(),
       customUninstall: vi.fn(),
+      removeGstack: vi.fn(),
     }
 
     mockCodexUninstaller.mockImplementation(() => mockUninstaller as any)
@@ -244,6 +277,7 @@ describe('runCodexUninstall - Enhanced Version', () => {
           { name: 'mocked_codex:uninstallItemAuth', value: 'auth' },
           { name: 'mocked_codex:uninstallItemApiConfig', value: 'api-config' },
           { name: 'mocked_codex:uninstallItemMcpConfig', value: 'mcp-config' },
+          { name: 'mocked_codex:uninstallItemGstack', value: 'gstack' },
           { name: 'mocked_codex:uninstallItemSystemPrompt', value: 'system-prompt' },
           { name: 'mocked_codex:uninstallItemWorkflow', value: 'workflow' },
           { name: 'mocked_codex:uninstallItemCliPackage', value: 'cli-package' },

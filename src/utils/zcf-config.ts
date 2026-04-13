@@ -238,6 +238,27 @@ function writeTomlConfig(configPath: string, config: ZcfTomlConfig): void {
         ['codex.enabled', config.codex.enabled],
         ['codex.systemPromptStyle', config.codex.systemPromptStyle],
       )
+      if (config.codex.gstackInstalled !== undefined) {
+        edits.push(['codex.gstackInstalled', config.codex.gstackInstalled])
+      }
+      if (config.codex.gstackManaged !== undefined) {
+        edits.push(['codex.gstackManaged', config.codex.gstackManaged])
+      }
+      if (config.codex.gstackVersion !== undefined) {
+        edits.push(['codex.gstackVersion', config.codex.gstackVersion])
+      }
+      if (config.codex.graphifyInstalled !== undefined) {
+        edits.push(['codex.graphifyInstalled', config.codex.graphifyInstalled])
+      }
+      if (config.codex.graphifyManaged !== undefined) {
+        edits.push(['codex.graphifyManaged', config.codex.graphifyManaged])
+      }
+      if (config.codex.graphifyVersion !== undefined) {
+        edits.push(['codex.graphifyVersion', config.codex.graphifyVersion])
+      }
+      if (config.codex.graphifyScope !== undefined) {
+        edits.push(['codex.graphifyScope', config.codex.graphifyScope])
+      }
 
       try {
         // Apply incremental edits preserving user customizations
@@ -297,6 +318,11 @@ function createDefaultTomlConfig(preferredLang: SupportedLang = 'en', claudeCode
     codex: {
       enabled: false,
       systemPromptStyle: 'engineer-professional',
+      gstackInstalled: false,
+      gstackManaged: false,
+      graphifyInstalled: false,
+      graphifyManaged: false,
+      graphifyScope: 'global',
     },
   }
 }
@@ -332,6 +358,13 @@ function migrateFromJsonConfig(jsonConfig: any): ZcfTomlConfig {
     codex: {
       enabled: jsonConfig.codeToolType === 'codex',
       systemPromptStyle: jsonConfig.systemPromptStyle || defaultConfig.codex.systemPromptStyle,
+      gstackInstalled: jsonConfig.gstackInstalled || defaultConfig.codex.gstackInstalled,
+      gstackManaged: jsonConfig.gstackManaged || defaultConfig.codex.gstackManaged,
+      gstackVersion: jsonConfig.gstackVersion || defaultConfig.codex.gstackVersion,
+      graphifyInstalled: jsonConfig.graphifyInstalled || defaultConfig.codex.graphifyInstalled,
+      graphifyManaged: jsonConfig.graphifyManaged || defaultConfig.codex.graphifyManaged,
+      graphifyVersion: jsonConfig.graphifyVersion || defaultConfig.codex.graphifyVersion,
+      graphifyScope: jsonConfig.graphifyScope || defaultConfig.codex.graphifyScope,
     },
   }
 
@@ -512,6 +545,27 @@ export function writeZcfConfig(config: ZcfConfig): void {
 
     if (nextSystemPromptStyle) {
       tomlConfig.codex.systemPromptStyle = nextSystemPromptStyle
+    }
+    if ((sanitizedConfig as any).gstackInstalled !== undefined) {
+      tomlConfig.codex.gstackInstalled = (sanitizedConfig as any).gstackInstalled
+    }
+    if ((sanitizedConfig as any).gstackManaged !== undefined) {
+      tomlConfig.codex.gstackManaged = (sanitizedConfig as any).gstackManaged
+    }
+    if ((sanitizedConfig as any).gstackVersion !== undefined) {
+      tomlConfig.codex.gstackVersion = (sanitizedConfig as any).gstackVersion
+    }
+    if ((sanitizedConfig as any).graphifyInstalled !== undefined) {
+      tomlConfig.codex.graphifyInstalled = (sanitizedConfig as any).graphifyInstalled
+    }
+    if ((sanitizedConfig as any).graphifyManaged !== undefined) {
+      tomlConfig.codex.graphifyManaged = (sanitizedConfig as any).graphifyManaged
+    }
+    if ((sanitizedConfig as any).graphifyVersion !== undefined) {
+      tomlConfig.codex.graphifyVersion = (sanitizedConfig as any).graphifyVersion
+    }
+    if ((sanitizedConfig as any).graphifyScope !== undefined) {
+      tomlConfig.codex.graphifyScope = (sanitizedConfig as any).graphifyScope
     }
 
     if (existingTomlConfig?.claudeCode) {

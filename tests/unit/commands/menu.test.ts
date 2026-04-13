@@ -50,6 +50,7 @@ vi.mock('../../../src/utils/code-tools/codex', () => ({
   runCodexWorkflowImport: vi.fn(),
   configureCodexApi: vi.fn(),
   configureCodexMcp: vi.fn(),
+  manageCodexGstack: vi.fn(),
   runCodexUpdate: vi.fn(),
   runCodexUninstall: vi.fn(),
   checkCodexCliUpdate: vi.fn().mockResolvedValue(false),
@@ -349,6 +350,26 @@ describe('menu command', () => {
 
       // Test should not throw error
       await expect(showMainMenu()).resolves.not.toThrow()
+    })
+
+    it('should handle codex gstack management option', async () => {
+      const { showMainMenu } = await import('../../../src/commands/menu')
+      const { readZcfConfig } = await import('../../../src/utils/zcf-config')
+      const { manageCodexGstack } = await import('../../../src/utils/code-tools/codex')
+
+      vi.mocked(readZcfConfig).mockReturnValue({
+        preferredLang: 'en',
+        codeToolType: 'codex',
+        version: '1.0.0',
+        lastUpdated: '2024-01-01',
+      } as any)
+      vi.mocked(inquirer.prompt)
+        .mockResolvedValueOnce({ choice: '7' })
+      queuePromptBooleans(false)
+
+      await showMainMenu()
+
+      expect(manageCodexGstack).toHaveBeenCalled()
     })
 
     it('should handle errors gracefully', async () => {

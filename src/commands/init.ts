@@ -75,6 +75,9 @@ export interface InitOptions {
   defaultOutputStyle?: string
   allLang?: string // New: unified language parameter
   installCometixLine?: string | boolean // New: CCometixLine installation control
+  installGstack?: string | boolean
+  installGraphify?: string | boolean
+  graphifyScope?: 'global' | 'project' | string
   // Multi-configuration parameters
   apiConfigs?: string // JSON string for multiple API configurations
   apiConfigsFile?: string // Path to JSON file with API configurations
@@ -146,6 +149,24 @@ export async function validateSkipPromptOptions(options: InitOptions): Promise<v
   }
   if (options.installCometixLine === undefined) {
     options.installCometixLine = true
+  }
+  if (typeof options.installGstack === 'string') {
+    options.installGstack = options.installGstack.toLowerCase() === 'true'
+  }
+  if (options.installGstack === undefined) {
+    options.installGstack = false
+  }
+  if (typeof options.installGraphify === 'string') {
+    options.installGraphify = options.installGraphify.toLowerCase() === 'true'
+  }
+  if (options.installGraphify === undefined) {
+    options.installGraphify = false
+  }
+  if (options.graphifyScope === undefined) {
+    options.graphifyScope = 'global'
+  }
+  if (options.graphifyScope !== 'global' && options.graphifyScope !== 'project') {
+    throw new Error(i18n.t('errors:invalidValue', { value: options.graphifyScope, field: 'graphifyScope' }))
   }
 
   // Validate configAction
@@ -472,6 +493,9 @@ export async function init(options: InitOptions = {}): Promise<void> {
         apiMode,
         customApiConfig,
         workflows: selectedWorkflows,
+        installGraphify: options.installGraphify === true,
+        graphifyScope: options.graphifyScope as 'global' | 'project',
+        installGstack: options.installGstack === true,
       })
       updateZcfConfig({
         version,

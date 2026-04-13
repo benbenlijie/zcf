@@ -4,6 +4,8 @@ import { join } from 'pathe'
 import { CODEX_AGENTS_FILE, CODEX_AUTH_FILE, CODEX_CONFIG_FILE, CODEX_DIR, CODEX_LEGACY_WORKFLOW_PROMPT_FILES, CODEX_PROMPTS_DIR, CODEX_SKILLS_DIR, CODEX_ZCF_SKILL_NAMES } from '../../constants'
 import { i18n } from '../../i18n'
 import { moveToTrash } from '../trash'
+import { uninstallGraphifyForCodex } from './graphify-installer'
+import { uninstallGstackForCodex } from './gstack-installer'
 
 export type CodexUninstallItem
   = 'config'
@@ -13,6 +15,8 @@ export type CodexUninstallItem
     | 'cli-package'
     | 'api-config'
     | 'mcp-config'
+    | 'graphify'
+    | 'gstack'
     | 'backups'
 
 export interface CodexUninstallResult {
@@ -300,6 +304,58 @@ export class CodexUninstaller {
     return result
   }
 
+  async removeGstack(): Promise<CodexUninstallResult> {
+    const result: CodexUninstallResult = {
+      success: false,
+      removed: [],
+      removedConfigs: [],
+      errors: [],
+      warnings: [],
+    }
+
+    try {
+      const removal = await uninstallGstackForCodex()
+      if (removal.removed) {
+        result.removed.push('skills/gstack/')
+      }
+      if (removal.warning) {
+        result.warnings.push(removal.warning)
+      }
+      result.success = true
+    }
+    catch (error: any) {
+      result.errors.push(`Failed to remove gstack: ${error.message}`)
+    }
+
+    return result
+  }
+
+  async removeGraphify(): Promise<CodexUninstallResult> {
+    const result: CodexUninstallResult = {
+      success: false,
+      removed: [],
+      removedConfigs: [],
+      errors: [],
+      warnings: [],
+    }
+
+    try {
+      const removal = await uninstallGraphifyForCodex()
+      if (removal.removed) {
+        result.removed.push('skills/graphify/')
+      }
+      if (removal.warning) {
+        result.warnings.push(removal.warning)
+      }
+      result.success = true
+    }
+    catch (error: any) {
+      result.errors.push(`Failed to remove graphify: ${error.message}`)
+    }
+
+    return result
+  }
+
   /**
    * Remove backup directory (~/.codex/backup/)
    */
@@ -418,6 +474,12 @@ export class CodexUninstaller {
         result.removed.push('~/.codex/')
       }
 
+      const graphifyUninstallResult = await this.removeGraphify()
+      result.removed.push(...graphifyUninstallResult.removed)
+      result.removedConfigs.push(...graphifyUninstallResult.removedConfigs)
+      result.errors.push(...graphifyUninstallResult.errors)
+      result.warnings.push(...graphifyUninstallResult.warnings)
+
       // Use existing uninstallCliPackage method to avoid code duplication
       const cliUninstallResult = await this.uninstallCliPackage()
 
@@ -428,7 +490,7 @@ export class CodexUninstaller {
       result.warnings.push(...cliUninstallResult.warnings)
 
       // Overall success is true only if both operations succeeded
-      result.success = result.success && cliUninstallResult.success
+      result.success = result.success && graphifyUninstallResult.success && cliUninstallResult.success
     }
     catch (error: any) {
       result.errors.push(`Complete uninstall failed: ${error.message}`)
@@ -506,6 +568,10 @@ export class CodexUninstaller {
         return await this.removeApiConfig()
       case 'mcp-config':
         return await this.removeMcpConfig()
+      case 'graphify':
+        return await this.removeGraphify()
+      case 'gstack':
+        return await this.removeGstack()
       case 'backups':
         return await this.removeBackups()
       default:
