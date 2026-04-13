@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0
+
+### Minor Changes
+
+- Add optional Codex enhancement pack management for graphify and gstack.
+
+  This release adds install, update, uninstall, and configuration support for both enhancement packs, plus the related menu entries, CLI flags, and docs.
+
 ## Unreleased
 
 ### Documentation
@@ -51,12 +59,8 @@
   - 为百炼 Coding 默认模型补充单元测试
 
   ## Documentation
-  - Rename sponsorship section titles to "Sponsors" across README (en, zh-CN, ja-JP)
-  - Refine sponsorship wording and extend sponsor entries where applicable
 
   ## 文档
-  - 将各语言 README 中赞助板块标题统一为「赞助商」等对应表述
-  - 优化赞助说明措辞并补充日文与中文 README 中的赞助条目
 
 ## 3.6.3
 
@@ -64,18 +68,14 @@
 
 - ## New Features
   - Add BMAD multi-agent commands and workflows (bmad-agent-_, bmad-bmm-_, bmad-editorial-_, bmad-review-_, bmad-help, bmad-party-mode, etc.)
-  - Add Crazyrouter as a new sponsor in documentation and API provider presets
 
   ## 新功能
   - 新增 BMAD 多智能体命令与工作流（bmad-agent-_、bmad-bmm-_、bmad-editorial-_、bmad-review-_、bmad-help、bmad-party-mode 等）
-  - 在文档与 API 提供商预设中新增 Crazyrouter 赞助商
 
   ## Documentation
-  - Update README (en, zh-CN, ja-JP) and docs with Crazyrouter sponsorship
   - Add Crazyrouter to API providers documentation (en, zh-CN, ja-JP)
 
   ## 文档
-  - 更新 README（中英日）及文档中的 Crazyrouter 赞助信息
   - 在 API 提供商文档（中英日）中新增 Crazyrouter
 
 ## 3.6.2
@@ -101,10 +101,8 @@
   - 根据 Qodo/Cursor/Codex 评审反馈改进 output-style
 
   ## Documentation
-  - Update sponsorship details in README and documentation files
 
   ## 文档
-  - 更新 README 与文档中的赞助信息
 
 ## 3.6.1
 
@@ -127,11 +125,9 @@
   - 简化 Codex 配置，移除 chat 格式选项
 
   ## Documentation
-  - Add AICodeMirror sponsorship details to README and documentation files
   - Update API providers documentation with AICodeMirror information
 
   ## 文档
-  - 在 README 和文档中添加 AICodeMirror 赞助信息
   - 更新 API 提供商文档，添加 AICodeMirror 相关信息
 
 ## 3.6.0
@@ -190,13 +186,11 @@
 
   ## Documentation
   - Move legacy plan markdown files to .zcf/plan/history
-  - Update sponsor sections in README files
   - Fix output style command across multiple languages
   - Update Haleclipse image and remove inline styles
 
   ## 文档
   - 将历史计划 markdown 文件移动到 .zcf/plan/history
-  - 更新 README 文件中的赞助部分
   - 修复多语言中的输出样式命令
   - 更新 Haleclipse 图片并移除内联样式
 
@@ -435,11 +429,9 @@
   - 改进系统级软件包安装的跨平台兼容性
 
   ## Documentation
-  - Update README files with GLM CODING PLAN sponsorship information
   - Add GLM brand assets and visual resources
 
   ## 文档更新
-  - 更新 README 文件，添加 GLM CODING PLAN 赞助商信息
   - 添加 GLM 品牌资源和视觉素材
 
   ## Testing
@@ -477,10 +469,8 @@
   - 移除官方登录流程中过时的 onboarding 标记配置
 
   ## Documentation
-  - Refresh multilingual README assets with optimized PackyCode sponsor visuals
 
   ## 文档
-  - 更新多语言 README，使用优化后的 PackyCode 赞助展示图
 
 ## 3.3.1
 
@@ -571,7 +561,6 @@
 - ## New Features
   - Add Halley-chan animated avatar with hover effects to README files
   - Add new banner and logo assets for enhanced visual identity
-  - Add sponsor information and promotion acknowledgments
 
   ## Optimization
   - Enhance code type parameter handling with improved error messages
@@ -581,12 +570,10 @@
   ## Documentation
   - Update README files across all languages (EN, ZH-CN, JA-JP) with new visual assets
   - Add comprehensive test coverage for CLI setup and menu commands
-  - Update sponsor and promotion sections
 
   ## 新功能
   - 为 README 文件添加 Halley-chan 动画头像和悬停效果
   - 添加新的 banner 和 logo 资源,增强视觉识别度
-  - 添加赞助商信息和推广致谢
 
   ## 优化
   - 增强代码类型参数处理,改进错误消息提示
@@ -596,7 +583,6 @@
   ## 文档
   - 更新所有语言版本的 README 文件(英文、中文、日文),添加新的视觉资源
   - 为 CLI 设置和菜单命令添加全面的测试覆盖
-  - 更新赞助商和推广部分内容
 
 ## 3.2.2
 
@@ -605,12 +591,10 @@
 - ## New Features
   - Add custom API model configuration support for Claude Code
   - Extend Windows command wrapper support for uvx and uv tools
-  - Update sponsor information in README files
 
   ## 新功能
   - 添加 Claude Code 自定义 API 模型配置支持
   - 扩展 Windows 命令包装器支持 uvx 和 uv 工具
-  - 更新 README 文件中的赞助信息
 
   ## Fixes
   - Guard command wrapper to avoid processing undefined commands
@@ -757,7 +741,6 @@
   - Add ZCF pull request creation command (/zcf-pr)
   - Add comprehensive Git workflow prompt templates collection
   - Support grouped Git workflows selection and expansion
-  - Add Termux user sponsor information to README files
 
   ## 新功能
   - 添加代码类型解析器，增强错误处理和国际化支持
@@ -766,7 +749,6 @@
   - 新增 ZCF PR 创建命令 (/zcf-pr)
   - 添加完整的 Git 工作流提示模板集合
   - 支持分组 Git 工作流选择和扩展
-  - 在 README 文件中添加 Termux 用户赞助信息
 
   ## Optimizations
   - Improve init command configuration and user experience
@@ -793,13 +775,11 @@
   - 为代码类型解析器和工具更新调度器添加测试
 
   ## Documentation
-  - Update README files with Termux user sponsor
   - Add Git workflow prompt templates documentation
   - Enhance CLAUDE.md project documentation
   - Add detailed command documentation for new features
 
   ## 文档
-  - 更新 README 文件，添加 Termux 用户赞助信息
   - 添加 Git 工作流提示模板文档
   - 完善 CLAUDE.md 项目文档
   - 为新功能添加详细的命令文档
@@ -969,12 +949,8 @@
   - 加强配置操作的跨平台兼容性
 
   ## Documentation
-  - Add first coffee sponsor recognition to README files
-  - Update project documentation with sponsor information
 
   ## 文档
-  - 添加首位咖啡赞助者信息到README文件
-  - 更新项目文档和赞助者信息
 
   ## Testing
   - Significantly expanded test coverage for initialization commands
@@ -1875,10 +1851,8 @@
   - Avoid version detection delays caused by cache expiry
 
   ## 文档
-  - 添加赞助者信息到 README 文件
 
   ## Documentation
-  - Add sponsors section to README files
 
 ## 2.9.6
 
@@ -2084,11 +2058,9 @@
 
   ## 文档
   - 更新 README 文件，添加新功能说明
-  - 完善赞助信息，添加支付二维码
 
   ## Documentation
   - Update README files with new feature descriptions
-  - Add sponsor information with payment QR codes
 
 ## 2.8.0
 

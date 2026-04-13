@@ -380,7 +380,7 @@ gitbook/
 ### 步骤 5.1: 简化 README.md (英文)
 - **状态**: ⏳ 待执行
 - **文件**: `/Users/miaoda/Documents/code/zcf/README.md`
-- **保留**: Banner、徽章、赞助商、Star 图
+- **保留**: Banner、徽章、Star 图
 - **添加**: 文档链接 (https://zcf.ufomiao.com)
 - **添加**: 项目简述
 - **添加**: "安装后获得什么" 章节

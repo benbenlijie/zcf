@@ -24,38 +24,6 @@ title: ZCF - Zero-Config Code Flow
 
 </div>
 
-## ♥️ 赞助商 AI API
-
-
-[![GLM](https://raw.githubusercontent.com/UfoMiao/zcf/main/src/assets/GLM.png)](https://www.bigmodel.cn/claude-code?ic=RRVJPB5SII)
-本项目由 Z智谱 提供赞助, 他们通过 GLM CODING PLAN 对本项目提供技术支持。
-GLM CODING PLAN 是专为AI编码打造的订阅套餐，每月最低仅需20元，即可在十余款主流AI编码工具如 Claude Code、Cline、Roo Code 中畅享智谱旗舰模型GLM-4.7（受限于算力，GLM-5 目前仅限Pro用户开放），为开发者提供顶尖的编码体验。
-智谱AI为本产品提供了特别优惠，使用以下链接购买可以享受九折优惠：https://www.bigmodel.cn/claude-code?ic=RRVJPB5SII
-
----
-
-[![赞助商 AI API](https://raw.githubusercontent.com/UfoMiao/zcf/main/src/assets/302.ai.jpg)](https://share.302.ai/gAT9VG)
-[302.AI](https://share.302.ai/gAT9VG) 是一个按用量付费的企业级AI资源平台，提供市场上最新、最全面的AI模型和API，以及多种开箱即用的在线AI应用。
-
----
-
-<table>
-<tbody>
-<tr>
-<td width="180"><a href="https://www.packyapi.com/register?aff=zcf"><img src="https://raw.githubusercontent.com/UfoMiao/zcf/main/src/assets/packycode.png" alt="PackyCode" width="150"></a></td>
-<td>感谢 PackyCode 赞助了本项目！PackyCode 是一家稳定、高效的API中转服务商，提供 Claude Code、Codex、Gemini 等多种中转服务。PackyCode 为本软件的用户提供了特别优惠，使用<a href="https://www.packyapi.com/register?aff=zcf">此链接</a>注册并在充值时填写"zcf"优惠码，可以享受9折优惠。</td>
-</tr>
-<tr>
-<td width="180"><a href="https://www.aicodemirror.com/register?invitecode=ZCFZCF"><img src="https://raw.githubusercontent.com/UfoMiao/zcf/main/src/assets/AICodeMirror.jpg" alt="AICodeMirror" width="150"></a></td>
-<td>感谢 AICodeMirror 赞助了本项目！AICodeMirror 提供 Claude Code/Codex/Gemini CLI 官方高稳定中转服务，支持企业级高并发、极速开票、7x24专属技术支持。Claude Code/Codex/Gemini 官方渠道低至 3.8/0.2/10.9 折，充值更有折上折！AICodeMirror 为 ZCF 的用户提供了特别福利，通过<a href="https://www.aicodemirror.com/register?invitecode=ZCFZCF">此链接</a>注册的用户，可享受首充8折，企业客户最高可享 7.5折！</td>
-</tr>
-<tr>
-<td width="180"><a href="https://crazyrouter.com/?utm_source=github&utm_medium=sponsor&utm_campaign=zcf&aff=yJFo"><img src="https://raw.githubusercontent.com/UfoMiao/zcf/main/src/assets/crazyrouter.svg" alt="Crazyrouter" width="150"></a></td>
-<td>感谢 Crazyrouter 赞助了本项目！Crazyrouter 是一个高性能 AI API 聚合网关 — 一个 Key 调用 300+ 模型（GPT、Claude、Gemini、DeepSeek 等），所有模型低至官方价格 5.5 折，支持自动故障转移、智能路由和无限并发。完全兼容 OpenAI 格式，可无缝接入 Claude Code、Codex 和 Gemini CLI。Crazyrouter 为 ZCF 用户提供了专属福利，通过<a href="https://crazyrouter.com/?utm_source=github&utm_medium=sponsor&utm_campaign=zcf&aff=yJFo">此链接</a>注册即送 $2 免费额度！</td>
-</tr>
-</tbody>
-</table>
-
 ## 项目概述
 
 ZCF（Zero-Config Code Flow）是一个面向专业开发者的 CLI 工具，目标是在几分钟内完成 Claude Code 与 Codex 的端到端环境初始化。通过 `npx @benbenwu/zcf` 可以一站式完成配置目录创建、API/代理接入、MCP 服务接入、工作流导入、输出风格与记忆配置，以及常用工具安装。
