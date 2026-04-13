@@ -48,6 +48,57 @@ npx @benbenwu/zcf → 选择 +（检查更新）→ 选择 Codex
 
 > ✅ **自动处理**：如果升级失败，ZCF 会提供详细的错误信息，帮助诊断问题。
 
+## 可选增强：gstack
+
+ZCF 支持把 [garrytan/gstack](https://github.com/garrytan/gstack) 作为 Codex 的可选增强包进行管理。它不是 Codex 运行前置，也不会默认安装。
+
+### 适用场景
+
+- 需要额外的 Codex workflow/skills 增强能力
+- 希望通过 ZCF 统一管理安装、更新和卸载
+
+### 前置要求
+
+- `git`
+- `bun`
+
+如果缺少任一前置依赖，ZCF 会在安装时直接报错并停止，不会自动安装这些系统工具。
+
+### 安装方式
+
+```bash
+# 非交互安装 Codex 时一并安装 gstack
+npx @benbenwu/zcf i -s -T codex --install-gstack true
+```
+
+交互模式下：
+
+- `npx @benbenwu/zcf`
+- 切换到 `Codex`
+- 选择 `1. 完整初始化`
+- 在初始化末尾确认是否安装 `gstack`
+
+### 独立管理
+
+通过 Codex 菜单可以单独管理 gstack：
+
+- `npx @benbenwu/zcf`
+- 切换到 `Codex`
+- 选择 `7. 管理 gstack`
+
+该菜单支持：
+
+- 安装/重装
+- 更新
+- 卸载
+
+### 更新与卸载
+
+- `check-updates --code-type codex` 会在更新 Codex CLI 后，继续检查由 ZCF 管理的 `gstack`
+- Codex 自定义卸载中新增 `gstack` 选项
+
+> 💡 **边界说明**：ZCF 仅管理它自己安装并标记为受管的 `gstack` 实例，不会尝试接管未知来源的第三方修改。
+
 ## 配置文件管理
 
 ### 目录结构

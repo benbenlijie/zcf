@@ -48,6 +48,57 @@ npx @benbenwu/zcf → Select + (Check Updates) → Select Codex
 
 > ✅ **Automatic Processing**: If upgrade fails, ZCF will provide detailed error information to help diagnose issues.
 
+## Optional Enhancement: gstack
+
+ZCF can manage [garrytan/gstack](https://github.com/garrytan/gstack) as an optional enhancement pack for Codex. It is not required for Codex itself and is not installed by default.
+
+### When to use it
+
+- You want additional Codex workflow/skills capabilities
+- You want ZCF to handle install, update, and uninstall flows for it
+
+### Prerequisites
+
+- `git`
+- `bun`
+
+If either prerequisite is missing, ZCF stops with a clear error instead of trying to install system tooling automatically.
+
+### Installation
+
+```bash
+# Install gstack together with Codex in non-interactive mode
+npx @benbenwu/zcf i -s -T codex --install-gstack true
+```
+
+In interactive mode:
+
+- `npx @benbenwu/zcf`
+- switch to `Codex`
+- choose `1. Full initialization`
+- confirm the `gstack` prompt near the end of initialization
+
+### Standalone Management
+
+You can manage gstack directly from the Codex menu:
+
+- `npx @benbenwu/zcf`
+- switch to `Codex`
+- choose `7. Manage gstack`
+
+The menu supports:
+
+- install/reinstall
+- update
+- uninstall
+
+### Updates and Uninstall
+
+- `check-updates --code-type codex` now checks ZCF-managed `gstack` after the Codex CLI update flow
+- custom Codex uninstall now includes a `gstack` item
+
+> 💡 **Boundary**: ZCF only manages the `gstack` instance it installed and marked as managed. It does not try to take over unknown third-party modifications.
+
 ## Configuration File Management
 
 ### Directory Structure
