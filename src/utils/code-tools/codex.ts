@@ -24,8 +24,8 @@ import { parseToml } from '../toml-edit'
 import { readDefaultTomlConfig, readZcfConfig, updateTomlConfig, updateZcfConfig } from '../zcf-config'
 import { detectConfigManagementMode } from './codex-config-detector'
 import { configureCodexMcp } from './codex-configure'
-import { checkGraphifyUpdate, getGraphifyScope, getGraphifyStatus, getManagedGraphifyFlag, installOrUpdateGraphifyForCodex, uninstallGraphifyForCodex } from './graphify-installer'
-import { checkGstackUpdate, detectGstackManagedByRepo, getGstackStatus, installOrUpdateGstackForCodex, uninstallGstackForCodex } from './gstack-installer'
+import { checkGraphifyUpdate, getGraphifyScope, getGraphifyStatus, getManagedGraphifyFlag, installOrUpdateGraphifyForCodex, isGraphifyPrerequisiteError, uninstallGraphifyForCodex } from './graphify-installer'
+import { checkGstackUpdate, detectGstackManagedByRepo, getGstackStatus, installOrUpdateGstackForCodex, isGstackPrerequisiteError, uninstallGstackForCodex } from './gstack-installer'
 
 // Cache to avoid repeated backups in skip-prompt mode
 let cachedSkipPromptBackup: string | null = null
@@ -1999,7 +1999,7 @@ export async function runCodexFullInit(
 async function maybeInstallGraphify(options?: CodexFullInitOptions): Promise<void> {
   if (options?.installGraphify) {
     const scope = options.graphifyScope || 'global'
-    await installOrUpdateGraphifyForCodex(true, undefined, scope)
+    await runGraphifyInstallAction(scope)
     return
   }
 
@@ -2028,12 +2028,39 @@ async function maybeInstallGraphify(options?: CodexFullInitOptions): Promise<voi
     default: getGraphifyScope(),
   })
 
-  await installOrUpdateGraphifyForCodex(true, undefined, scope)
+  await runGraphifyInstallAction(scope)
+}
+
+function displayGraphifyInstallError(error: unknown): boolean {
+  if (!isGraphifyPrerequisiteError(error)) {
+    return false
+  }
+
+  console.log(ansis.red(error.message))
+  for (const detail of error.details) {
+    console.log(ansis.gray(`  ${detail}`))
+  }
+
+  return true
+}
+
+async function runGraphifyInstallAction(scope: 'global' | 'project' = getGraphifyScope(), markManaged = true): Promise<boolean> {
+  try {
+    await installOrUpdateGraphifyForCodex(markManaged, undefined, scope)
+    return true
+  }
+  catch (error) {
+    if (displayGraphifyInstallError(error)) {
+      return false
+    }
+
+    throw error
+  }
 }
 
 async function maybeInstallGstack(options?: CodexFullInitOptions): Promise<void> {
   if (options?.installGstack) {
-    await installOrUpdateGstackForCodex(true)
+    await runGstackInstallAction()
     return
   }
 
@@ -2051,7 +2078,34 @@ async function maybeInstallGstack(options?: CodexFullInitOptions): Promise<void>
     return
   }
 
-  await installOrUpdateGstackForCodex(true)
+  await runGstackInstallAction()
+}
+
+function displayGstackInstallError(error: unknown): boolean {
+  if (!isGstackPrerequisiteError(error)) {
+    return false
+  }
+
+  console.log(ansis.red(error.message))
+  for (const detail of error.details) {
+    console.log(ansis.gray(`  ${detail}`))
+  }
+
+  return true
+}
+
+async function runGstackInstallAction(markManaged: boolean = true): Promise<boolean> {
+  try {
+    await installOrUpdateGstackForCodex(markManaged)
+    return true
+  }
+  catch (error) {
+    if (displayGstackInstallError(error)) {
+      return false
+    }
+
+    throw error
+  }
 }
 
 function ensureCodexAgentsLanguageDirective(aiOutputLang: AiOutputLanguage | string): void {
@@ -2137,7 +2191,7 @@ async function handleManagedGraphifyUpdate(skipPrompt: boolean): Promise<void> {
     }
   }
 
-  await installOrUpdateGraphifyForCodex(true, undefined, scope)
+  await runGraphifyInstallAction(scope)
 }
 
 async function handleManagedGstackUpdate(skipPrompt: boolean): Promise<void> {
@@ -2170,7 +2224,7 @@ async function handleManagedGstackUpdate(skipPrompt: boolean): Promise<void> {
     }
   }
 
-  await installOrUpdateGstackForCodex(true)
+  await runGstackInstallAction()
 }
 
 export async function runCodexUpdate(force = false, skipPrompt = false): Promise<boolean> {
@@ -2385,7 +2439,7 @@ export async function manageCodexGstack(): Promise<void> {
     return
   }
 
-  await installOrUpdateGstackForCodex(true)
+  await runGstackInstallAction()
 }
 
 export async function manageCodexGraphify(): Promise<void> {
@@ -2461,12 +2515,12 @@ export async function manageCodexGraphify(): Promise<void> {
       default: scope === 'global' ? 'project' : 'global',
     })
 
-    await installOrUpdateGraphifyForCodex(true, undefined, nextScope)
+    await runGraphifyInstallAction(nextScope)
     console.log(ansis.green(i18n.t('codex:graphifyScopeSwitchSuccess', { scope: i18n.t(`codex:graphifyScope.${nextScope}`) })))
     return
   }
 
-  await installOrUpdateGraphifyForCodex(true, undefined, scope)
+  await runGraphifyInstallAction(scope)
 }
 
 /**

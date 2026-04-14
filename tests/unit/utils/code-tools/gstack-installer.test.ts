@@ -13,8 +13,10 @@ vi.mock('tinyexec', () => ({
 }))
 
 const mockCommandExists = vi.hoisted(() => vi.fn())
+const mockGetPlatform = vi.hoisted(() => vi.fn())
 vi.mock('../../../../src/utils/platform', () => ({
   commandExists: mockCommandExists,
+  getPlatform: mockGetPlatform,
 }))
 
 const mockUpdateTomlConfig = vi.hoisted(() => vi.fn())
@@ -38,6 +40,13 @@ vi.mock('../../../../src/i18n', () => ({
       return key
     }),
   },
+  format: (template: string, values: Record<string, any>) => {
+    let result = template
+    for (const [key, value] of Object.entries(values)) {
+      result = result.replace(`{{${key}}}`, String(value))
+    }
+    return result
+  },
 }))
 
 vi.mock('ansis', () => ({
@@ -51,6 +60,7 @@ vi.mock('ansis', () => ({
 describe('gstack-installer', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockGetPlatform.mockReturnValue('linux')
     mockReadDefaultTomlConfig.mockReturnValue({
       codex: {
         enabled: true,
@@ -77,6 +87,52 @@ describe('gstack-installer', () => {
     const { installOrUpdateGstackForCodex } = await import('../../../../src/utils/code-tools/gstack-installer')
 
     await expect(installOrUpdateGstackForCodex()).rejects.toThrow('codex:gstackGitRequired')
+  })
+
+  it('should throw structured prerequisite error when bun is missing', async () => {
+    mockCommandExists
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(false)
+
+    const { installOrUpdateGstackForCodex, isGstackPrerequisiteError } = await import('../../../../src/utils/code-tools/gstack-installer')
+
+    try {
+      await installOrUpdateGstackForCodex()
+      throw new Error('Expected installOrUpdateGstackForCodex to throw')
+    }
+    catch (error) {
+      expect(isGstackPrerequisiteError(error)).toBe(true)
+      expect(error).toMatchObject({
+        code: 'GSTACK_PREREQUISITE_ERROR',
+        missing: ['bun'],
+        message: 'codex:gstackBunRequired',
+        details: [
+          'codex:gstackBunInstallHint',
+          'codex:gstackBunInstallCommandUnix',
+          'codex:gstackBunDocsHint',
+          'codex:gstackRetryHint',
+        ],
+      })
+    }
+  })
+
+  it('should show Windows bun command when bun is missing on Windows', async () => {
+    mockGetPlatform.mockReturnValue('windows')
+    mockCommandExists
+      .mockResolvedValueOnce(true)
+      .mockResolvedValueOnce(false)
+
+    const { installOrUpdateGstackForCodex } = await import('../../../../src/utils/code-tools/gstack-installer')
+
+    await expect(installOrUpdateGstackForCodex()).rejects.toMatchObject({
+      code: 'GSTACK_PREREQUISITE_ERROR',
+      details: [
+        'codex:gstackBunInstallHint',
+        'codex:gstackBunInstallCommandWindows',
+        'codex:gstackBunDocsHint',
+        'codex:gstackRetryHint',
+      ],
+    })
   })
 
   it('should install gstack and persist managed state', async () => {

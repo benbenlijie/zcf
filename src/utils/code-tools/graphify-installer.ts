@@ -1,15 +1,15 @@
-import type { CodexConfig } from '../../types/toml-config'
 import type { SupportedLang } from '../../constants'
-import ansis from 'ansis'
+import type { CodexConfig } from '../../types/toml-config'
 import { existsSync } from 'node:fs'
 import process from 'node:process'
+import ansis from 'ansis'
 import { join } from 'pathe'
 import { exec } from 'tinyexec'
 import { CODEX_AGENTS_FILE, CODEX_GRAPHIFY_DIR, CODEX_HOOKS_FILE, ZCF_CONFIG_FILE } from '../../constants'
 import { ensureI18nInitialized, i18n } from '../../i18n'
 import { ensureDir, exists, readFile, writeFile } from '../fs-operations'
 import { readJsonConfig, writeJsonConfig } from '../json-config'
-import { commandExists } from '../platform'
+import { commandExists, getPlatform } from '../platform'
 import { moveToTrash } from '../trash'
 import { readDefaultTomlConfig, readZcfConfig, updateTomlConfig } from '../zcf-config'
 
@@ -46,6 +46,12 @@ export interface GraphifyStatus {
 export interface GraphifyUpdateStatus extends GraphifyStatus {
   latestVersion: string | null
   needsUpdate: boolean
+}
+
+export interface GraphifyPrerequisiteError extends Error {
+  code: 'GRAPHIFY_PREREQUISITE_ERROR'
+  missing: ['python3']
+  details: string[]
 }
 
 function persistGraphifyState(state: { installed?: boolean, managed?: boolean, version?: string | null }): void {
@@ -214,6 +220,40 @@ async function detectPythonCommand(): Promise<string | null> {
   return null
 }
 
+function createGraphifyPrerequisiteError(): GraphifyPrerequisiteError {
+  const details = [
+    i18n.t('codex:graphifyPythonInstallHint'),
+    getPythonInstallCommandHint(),
+    i18n.t('codex:graphifyPythonDocsHint'),
+    i18n.t('codex:graphifyRetryHint'),
+  ]
+
+  const error = new Error(i18n.t('codex:graphifyPythonRequired')) as GraphifyPrerequisiteError
+  error.name = 'GraphifyPrerequisiteError'
+  error.code = 'GRAPHIFY_PREREQUISITE_ERROR'
+  error.missing = ['python3']
+  error.details = details
+  return error
+}
+
+function getPythonInstallCommandHint(): string {
+  const platform = getPlatform()
+
+  if (platform === 'windows') {
+    return i18n.t('codex:graphifyPythonInstallCommandWindows')
+  }
+
+  if (platform === 'macos') {
+    return i18n.t('codex:graphifyPythonInstallCommandMacos')
+  }
+
+  return i18n.t('codex:graphifyPythonInstallCommandLinux')
+}
+
+export function isGraphifyPrerequisiteError(error: unknown): error is GraphifyPrerequisiteError {
+  return error instanceof Error && (error as Partial<GraphifyPrerequisiteError>).code === 'GRAPHIFY_PREREQUISITE_ERROR'
+}
+
 async function execPython(pythonCommand: string, args: string[]): Promise<string | null> {
   try {
     const result = await exec(pythonCommand, args)
@@ -354,9 +394,8 @@ export async function installOrUpdateGraphifyForCodex(
   ensureI18nInitialized()
 
   const pythonCommand = await detectPythonCommand()
-  if (!pythonCommand) {
-    throw new Error(i18n.t('codex:graphifyPythonRequired'))
-  }
+  if (!pythonCommand)
+    throw createGraphifyPrerequisiteError()
 
   const paths = resolveGraphifyPaths(scope)
 

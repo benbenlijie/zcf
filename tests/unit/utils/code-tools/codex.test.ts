@@ -118,8 +118,38 @@ vi.mock('../../../../src/utils/code-tools/gstack-installer', () => ({
     path: '/home/test/.codex/skills/gstack',
   }),
   installOrUpdateGstackForCodex: vi.fn().mockResolvedValue(undefined),
+  isGstackPrerequisiteError: vi.fn((error: unknown) => (error as any)?.code === 'GSTACK_PREREQUISITE_ERROR'),
   uninstallGstackForCodex: vi.fn().mockResolvedValue({ removed: true }),
   detectGstackManagedByRepo: vi.fn(() => false),
+}))
+vi.mock('../../../../src/utils/code-tools/graphify-installer', () => ({
+  checkGraphifyUpdate: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    latestVersion: null,
+    needsUpdate: false,
+    path: '/home/test/.codex/skills/graphify',
+    pythonCommand: 'python3',
+    scope: 'global',
+    agentsPath: '/home/test/.codex/AGENTS.md',
+    hooksPath: '/home/test/.codex/hooks.json',
+  }),
+  getGraphifyScope: vi.fn(() => 'global'),
+  getGraphifyStatus: vi.fn().mockResolvedValue({
+    installed: false,
+    managed: false,
+    version: null,
+    path: '/home/test/.codex/skills/graphify',
+    pythonCommand: null,
+    scope: 'global',
+    agentsPath: '/home/test/.codex/AGENTS.md',
+    hooksPath: '/home/test/.codex/hooks.json',
+  }),
+  getManagedGraphifyFlag: vi.fn(() => false),
+  installOrUpdateGraphifyForCodex: vi.fn().mockResolvedValue(undefined),
+  isGraphifyPrerequisiteError: vi.fn((error: unknown) => (error as any)?.code === 'GRAPHIFY_PREREQUISITE_ERROR'),
+  uninstallGraphifyForCodex: vi.fn().mockResolvedValue({ removed: true }),
 }))
 vi.mock('../../../../src/utils/mcp-selector', () => ({
   selectMcpServices: vi.fn(),
@@ -267,6 +297,60 @@ describe('codex code tool utilities', () => {
 
     // Ensure installCodex is invoked for CLI installation
     expect(mockedInstallCodex).toHaveBeenCalledWith(false)
+  })
+
+  it('manageCodexGraphify should show guidance instead of throwing when Python 3 is missing', async () => {
+    const inquirer = await import('inquirer')
+    vi.mocked(inquirer.default.prompt).mockResolvedValueOnce({ action: 'install' })
+
+    const graphifyInstaller = await import('../../../../src/utils/code-tools/graphify-installer')
+    vi.mocked(graphifyInstaller.installOrUpdateGraphifyForCodex).mockRejectedValueOnce({
+      code: 'GRAPHIFY_PREREQUISITE_ERROR',
+      message: 'codex:graphifyPythonRequired',
+      details: [
+        'codex:graphifyPythonInstallHint',
+        'codex:graphifyPythonInstallCommandLinux',
+        'codex:graphifyRetryHint',
+      ],
+    })
+
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    const codexModule = await import('../../../../src/utils/code-tools/codex')
+
+    await expect(codexModule.manageCodexGraphify()).resolves.toBeUndefined()
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:graphifyPythonRequired'))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:graphifyPythonInstallCommandLinux'))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:graphifyRetryHint'))
+
+    logSpy.mockRestore()
+  })
+
+  it('manageCodexGstack should show guidance instead of throwing when bun is missing', async () => {
+    const inquirer = await import('inquirer')
+    vi.mocked(inquirer.default.prompt).mockResolvedValueOnce({ action: 'install' })
+
+    const gstackInstaller = await import('../../../../src/utils/code-tools/gstack-installer')
+    vi.mocked(gstackInstaller.installOrUpdateGstackForCodex).mockRejectedValueOnce({
+      code: 'GSTACK_PREREQUISITE_ERROR',
+      message: 'codex:gstackBunRequired',
+      details: [
+        'codex:gstackBunInstallHint',
+        'codex:gstackBunInstallCommandUnix',
+        'codex:gstackRetryHint',
+      ],
+    })
+
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    const codexModule = await import('../../../../src/utils/code-tools/codex')
+
+    await expect(codexModule.manageCodexGstack()).resolves.toBeUndefined()
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:gstackBunRequired'))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:gstackBunInstallCommandUnix'))
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('codex:gstackRetryHint'))
+
+    logSpy.mockRestore()
   })
 
   it('runCodexWorkflowImport should copy templates for current language', async () => {

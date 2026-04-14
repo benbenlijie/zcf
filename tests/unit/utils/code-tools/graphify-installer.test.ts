@@ -6,8 +6,10 @@ vi.mock('tinyexec', () => ({
 }))
 
 const mockCommandExists = vi.hoisted(() => vi.fn())
+const mockGetPlatform = vi.hoisted(() => vi.fn())
 vi.mock('../../../../src/utils/platform', () => ({
   commandExists: mockCommandExists,
+  getPlatform: mockGetPlatform,
 }))
 
 const mockReadDefaultTomlConfig = vi.hoisted(() => vi.fn())
@@ -70,6 +72,7 @@ vi.mock('ansis', () => ({
 describe('graphify-installer', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockGetPlatform.mockReturnValue('linux')
     mockReadDefaultTomlConfig.mockReturnValue({
       codex: {
         enabled: true,
@@ -97,6 +100,52 @@ describe('graphify-installer', () => {
     const { detectGraphifyVersion } = await import('../../../../src/utils/code-tools/graphify-installer')
 
     await expect(detectGraphifyVersion()).resolves.toBe('0.4.8')
+  })
+
+  it('should throw structured prerequisite error when Python 3 is missing', async () => {
+    mockCommandExists
+      .mockResolvedValueOnce(false)
+      .mockResolvedValueOnce(false)
+
+    const { installOrUpdateGraphifyForCodex, isGraphifyPrerequisiteError } = await import('../../../../src/utils/code-tools/graphify-installer')
+
+    try {
+      await installOrUpdateGraphifyForCodex()
+      throw new Error('Expected installOrUpdateGraphifyForCodex to throw')
+    }
+    catch (error) {
+      expect(isGraphifyPrerequisiteError(error)).toBe(true)
+      expect(error).toMatchObject({
+        code: 'GRAPHIFY_PREREQUISITE_ERROR',
+        missing: ['python3'],
+        message: 'codex:graphifyPythonRequired',
+        details: [
+          'codex:graphifyPythonInstallHint',
+          'codex:graphifyPythonInstallCommandLinux',
+          'codex:graphifyPythonDocsHint',
+          'codex:graphifyRetryHint',
+        ],
+      })
+    }
+  })
+
+  it('should show macOS-specific Python install hint on macOS', async () => {
+    mockGetPlatform.mockReturnValue('macos')
+    mockCommandExists
+      .mockResolvedValueOnce(false)
+      .mockResolvedValueOnce(false)
+
+    const { installOrUpdateGraphifyForCodex } = await import('../../../../src/utils/code-tools/graphify-installer')
+
+    await expect(installOrUpdateGraphifyForCodex()).rejects.toMatchObject({
+      code: 'GRAPHIFY_PREREQUISITE_ERROR',
+      details: [
+        'codex:graphifyPythonInstallHint',
+        'codex:graphifyPythonInstallCommandMacos',
+        'codex:graphifyPythonDocsHint',
+        'codex:graphifyRetryHint',
+      ],
+    })
   })
 
   it('should install graphify package and write managed assets', async () => {

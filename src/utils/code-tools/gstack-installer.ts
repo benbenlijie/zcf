@@ -4,8 +4,8 @@ import ansis from 'ansis'
 import { join } from 'pathe'
 import { exec } from 'tinyexec'
 import { CODEX_GSTACK_DIR, ZCF_CONFIG_FILE } from '../../constants'
-import { ensureI18nInitialized, i18n } from '../../i18n'
-import { commandExists } from '../platform'
+import { ensureI18nInitialized, format, i18n } from '../../i18n'
+import { commandExists, getPlatform } from '../platform'
 import { moveToTrash } from '../trash'
 import { readDefaultTomlConfig, updateTomlConfig } from '../zcf-config'
 
@@ -21,6 +21,14 @@ export interface GstackStatus {
 export interface GstackUpdateStatus extends GstackStatus {
   latestVersion: string | null
   needsUpdate: boolean
+}
+
+export type GstackPrerequisiteName = 'git' | 'bun'
+
+export interface GstackPrerequisiteError extends Error {
+  code: 'GSTACK_PREREQUISITE_ERROR'
+  missing: GstackPrerequisiteName[]
+  details: string[]
 }
 
 function persistGstackState(state: { installed?: boolean, managed?: boolean, version?: string | null }): void {
@@ -78,19 +86,60 @@ async function detectLatestRemoteVersion(repoDir: string = CODEX_GSTACK_DIR): Pr
   }
 }
 
+function createGstackPrerequisiteError(missing: GstackPrerequisiteName[]): GstackPrerequisiteError {
+  const message = missing.length === 1
+    ? i18n.t(missing[0] === 'git' ? 'codex:gstackGitRequired' : 'codex:gstackBunRequired')
+    : format(i18n.t('codex:gstackPrerequisitesRequired'), { dependencies: missing.join(', ') })
+
+  const details: string[] = []
+
+  if (missing.includes('git')) {
+    details.push(i18n.t('codex:gstackGitInstallHint'))
+  }
+
+  if (missing.includes('bun')) {
+    details.push(i18n.t('codex:gstackBunInstallHint'))
+    details.push(getBunInstallCommandHint())
+    details.push(i18n.t('codex:gstackBunDocsHint'))
+  }
+
+  details.push(i18n.t('codex:gstackRetryHint'))
+
+  const error = new Error(message) as GstackPrerequisiteError
+  error.name = 'GstackPrerequisiteError'
+  error.code = 'GSTACK_PREREQUISITE_ERROR'
+  error.missing = missing
+  error.details = details
+  return error
+}
+
+function getBunInstallCommandHint(): string {
+  if (getPlatform() === 'windows') {
+    return i18n.t('codex:gstackBunInstallCommandWindows')
+  }
+
+  return i18n.t('codex:gstackBunInstallCommandUnix')
+}
+
+export function isGstackPrerequisiteError(error: unknown): error is GstackPrerequisiteError {
+  return error instanceof Error && (error as Partial<GstackPrerequisiteError>).code === 'GSTACK_PREREQUISITE_ERROR'
+}
+
 async function ensurePrerequisites(): Promise<void> {
   const [hasGit, hasBun] = await Promise.all([
     commandExists('git'),
     commandExists('bun'),
   ])
 
-  if (!hasGit) {
-    throw new Error(i18n.t('codex:gstackGitRequired'))
-  }
+  const missing: GstackPrerequisiteName[] = []
 
-  if (!hasBun) {
-    throw new Error(i18n.t('codex:gstackBunRequired'))
-  }
+  if (!hasGit)
+    missing.push('git')
+  if (!hasBun)
+    missing.push('bun')
+
+  if (missing.length > 0)
+    throw createGstackPrerequisiteError(missing)
 }
 
 async function runSetup(repoDir: string): Promise<void> {
